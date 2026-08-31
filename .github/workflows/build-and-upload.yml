@@ -1,0 +1,74 @@
+name: Build Flutter APK/AAB for Google Play
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.29.3'
+          channel: 'stable'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Configure upload signing key
+        env:
+          UPLOAD_KEYSTORE_BASE64: ${{ secrets.UPLOAD_KEYSTORE_BASE64 }}
+          UPLOAD_KEYSTORE_PASSWORD: ${{ secrets.UPLOAD_KEYSTORE_PASSWORD }}
+          UPLOAD_KEY_ALIAS: ${{ secrets.UPLOAD_KEY_ALIAS }}
+          UPLOAD_KEY_PASSWORD: ${{ secrets.UPLOAD_KEY_PASSWORD }}
+        run: |
+          test -n "$UPLOAD_KEYSTORE_BASE64"
+          test -n "$UPLOAD_KEYSTORE_PASSWORD"
+          test -n "$UPLOAD_KEY_ALIAS"
+          test -n "$UPLOAD_KEY_PASSWORD"
+          echo "$UPLOAD_KEYSTORE_BASE64" | base64 --decode > android/app/upload-keystore.jks
+          cat > android/key.properties << EOF
+          storePassword=$UPLOAD_KEYSTORE_PASSWORD
+          keyPassword=$UPLOAD_KEY_PASSWORD
+          keyAlias=$UPLOAD_KEY_ALIAS
+          storeFile=upload-keystore.jks
+          EOF
+
+      - name: Build Release APK
+        run: flutter build apk --release
+
+      - name: Build Release AAB
+        run: flutter build appbundle --release
+
+      - name: Upload APK to artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vinerox-apk
+          path: build/app/outputs/apk/release/app-release.apk
+
+      - name: Upload AAB to artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vinerox-aab
+          path: build/app/outputs/bundle/release/app-release.aab
+
+      - name: Notify build success
+        run: |
+          echo "Build completed successfully."
+          echo "APK: build/app/outputs/apk/release/app-release.apk"
+          echo "AAB: build/app/outputs/bundle/release/app-release.aab"
