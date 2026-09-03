@@ -46,7 +46,7 @@ jobs:
           storePassword=$UPLOAD_KEYSTORE_PASSWORD
           keyPassword=$UPLOAD_KEY_PASSWORD
           keyAlias=$UPLOAD_KEY_ALIAS
-          storeFile=app/upload-keystore.jks
+          storeFile=upload-keystore.jks
           EOF
 
       - name: Build Release APK
