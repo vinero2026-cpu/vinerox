@@ -42,6 +42,11 @@ class ApiClient {
     return Map<String, dynamic>.from(r.data);
   }
 
+  Future<Map<String, dynamic>> positions() async {
+    final r = await _dio.get('/api/positions');
+    return Map<String, dynamic>.from(r.data);
+  }
+
   Future<Map<String, dynamic>> openTrade(String ticker,
       {double investment = 10000}) async {
     final r = await _dio.post('/api/trades/open', data: {
@@ -62,6 +67,11 @@ class ApiClient {
 
   Future<Map<String, dynamic>> health() async {
     final r = await _dio.get('/api/health');
+    return Map<String, dynamic>.from(r.data);
+  }
+
+  Future<Map<String, dynamic>> syncHealth() async {
+    final r = await _dio.get('/api/health/sync');
     return Map<String, dynamic>.from(r.data);
   }
 

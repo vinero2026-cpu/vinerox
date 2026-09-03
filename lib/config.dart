@@ -2,10 +2,12 @@
 class AppConfig {
   /// Base URL for the FastAPI backend.
   /// Override at build time:
-  ///   flutter run --dart-define=API_BASE=http://192.168.1.50:8787
+  ///   flutter run --dart-define=API_BASE=https://api.vinero.app
   static const String apiBase = String.fromEnvironment(
     'API_BASE',
-    defaultValue: 'http://178.105.85.44:8787', // Hetzner cloud server
+    // Public TLS endpoint on Hetzner. Never use the raw HTTP port in releases:
+    // Android can reject clear-text traffic and it bypasses the reverse proxy.
+    defaultValue: 'https://api.vinero.app',
   );
 
   /// Dev bypass uid; sent in `x-dev-user` header when [useDevBypass] is true.

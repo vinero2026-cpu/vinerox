@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../config.dart';
-import 'home_screen.dart';
+import 'app_shell.dart';
 import '../theme.dart';
 
 /// Lightweight login screen. When [AppConfig.useDevBypass] is true we just
@@ -24,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
     await Future.delayed(const Duration(milliseconds: 300));
     if (!mounted) return;
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const HomeScreen()),
+      MaterialPageRoute(builder: (_) => const AppShell()),
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' show FontFeature;
+import 'dart:async';
 
 import '../api/client.dart';
 import '../models/pick.dart';
@@ -20,16 +21,23 @@ class _HomeScreenState extends State<HomeScreen>
   static const _tiers = ['BESTSTOCK', 'GOLD', 'SILVER', 'WATCH'];
   late final TabController _tab;
   final ApiClient _api = ApiClient();
+  late Future<Map<String, dynamic>> _syncFuture;
+  Timer? _syncTimer;
 
   @override
   void initState() {
     super.initState();
     _tab = TabController(length: _tiers.length, vsync: this);
+    _syncFuture = _api.syncHealth();
+    _syncTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+      if (mounted) setState(() => _syncFuture = _api.syncHealth());
+    });
   }
 
   @override
   void dispose() {
     _tab.dispose();
+    _syncTimer?.cancel();
     super.dispose();
   }
 
@@ -65,6 +73,26 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
           actions: [
+            FutureBuilder<Map<String, dynamic>>(
+              future: _syncFuture,
+              builder: (context, snapshot) {
+                final status = snapshot.hasError
+                    ? 'DOWN'
+                    : (snapshot.data?['overall']?.toString() ?? 'SYNC');
+                final color = status == 'OK'
+                    ? VineroxTheme.bull
+                    : (status == 'WARN'
+                        ? VineroxTheme.gold
+                        : VineroxTheme.bear);
+                return Tooltip(
+                  message: 'Data sync: $status',
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: Icon(Icons.sync_rounded, color: color, size: 19),
+                  ),
+                );
+              },
+            ),
             // ── LIVE indicator ─────────────────────────────────────────
             Container(
               padding:
