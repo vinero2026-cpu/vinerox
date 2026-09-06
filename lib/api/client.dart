@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import '../config.dart';
 import '../models/pick.dart';
+import 'arena_auth.dart';
 
 class ApiClient {
   ApiClient({Future<String?> Function()? tokenProvider})
-      : _tokenProvider = tokenProvider ?? _firebaseIdToken {
+      : _tokenProvider = tokenProvider ?? ArenaAuth.scannerToken {
     _dio = Dio(BaseOptions(
       baseUrl: AppConfig.apiBase,
       connectTimeout: const Duration(seconds: 8),
@@ -25,17 +25,6 @@ class ApiClient {
         handler.next(options);
       },
     ));
-  }
-
-  /// Resolved per request so an expired ID token is refreshed automatically.
-  static Future<String?> _firebaseIdToken() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return null;
-    try {
-      return await user.getIdToken();
-    } on FirebaseAuthException {
-      return null;
-    }
   }
 
   late final Dio _dio;

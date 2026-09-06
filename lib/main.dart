@@ -1,17 +1,20 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
+import 'api/arena_auth.dart';
+import 'screens/app_shell.dart';
 import 'screens/login_screen.dart';
 import 'theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(const VineroxApp());
+  final signedIn = await ArenaAuth.hasSession();
+  runApp(VineroxApp(signedIn: signedIn));
 }
 
 class VineroxApp extends StatelessWidget {
-  const VineroxApp({super.key});
+  const VineroxApp({super.key, this.signedIn = false});
+
+  final bool signedIn;
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +29,9 @@ class VineroxApp extends StatelessWidget {
           textDirection: TextDirection.ltr,
           child: child!,
         ),
-        home: const LoginScreen(),
+        home: signedIn ? const AppShell() : const LoginScreen(),
       ),
     );
   }
 }
+

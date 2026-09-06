@@ -49,3 +49,5 @@ app.*.map.json
 *.keystore
 *.pem
 /android/key.properties
+
+android/app/google-services.json

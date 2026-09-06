@@ -1,12 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
+import '../api/arena_auth.dart';
 import '../config.dart';
 import 'app_shell.dart';
 import '../theme.dart';
 
-/// Sign-in screen. Uses Firebase + Google Sign-In against the production API.
+/// Sign-in against VINEROX Arena, the identity provider. The Arena session is
+/// exchanged for a short-lived scanner token that the mobile API accepts.
 /// [AppConfig.useDevBypass] short-circuits auth for local backend work only.
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,7 +16,17 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _username = TextEditingController();
+  final _password = TextEditingController();
   bool _busy = false;
+  bool _registering = false;
+
+  @override
+  void dispose() {
+    _username.dispose();
+    _password.dispose();
+    super.dispose();
+  }
 
   void _goToApp() {
     if (!mounted) return;
@@ -25,33 +35,31 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Future<void> _enter() async {
+  Future<void> _run(Future<void> Function() action) async {
     setState(() => _busy = true);
-
-    if (AppConfig.useDevBypass) {
-      await Future<void>.delayed(const Duration(milliseconds: 300));
+    try {
+      await action();
       _goToApp();
+    } on ArenaAuthException catch (e) {
+      _fail(e.message);
+    } catch (e) {
+      _fail('Could not reach VINEROX. Check your connection.');
+    }
+  }
+
+  Future<void> _enter() async {
+    if (AppConfig.useDevBypass) {
+      return _run(() => Future<void>.delayed(const Duration(milliseconds: 200)));
+    }
+    final user = _username.text.trim();
+    final pass = _password.text;
+    if (user.isEmpty || pass.isEmpty) {
+      _fail('Enter your username and password.');
       return;
     }
-
-    try {
-      final googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) {
-        if (mounted) setState(() => _busy = false);
-        return;
-      }
-      final googleAuth = await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-      await FirebaseAuth.instance.signInWithCredential(credential);
-      _goToApp();
-    } on FirebaseAuthException catch (e) {
-      _fail(e.message ?? 'Sign-in failed (${e.code}).');
-    } catch (e) {
-      _fail('Sign-in failed: $e');
-    }
+    return _run(() => _registering
+        ? ArenaAuth.register(user, pass, null)
+        : ArenaAuth.login(user, pass));
   }
 
   void _fail(String message) {
@@ -67,11 +75,12 @@ class _LoginScreenState extends State<LoginScreen> {
       textDirection: TextDirection.ltr,
       child: Scaffold(
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
                 // VINERO mascot face avatar
                 Container(
                   width: 96,
@@ -109,7 +118,37 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 4),
                 Text('Mobile Companion',
                     style: Theme.of(context).textTheme.bodySmall),
-                const SizedBox(height: 48),
+                const SizedBox(height: 32),
+                if (!AppConfig.useDevBypass) ...[
+                  TextField(
+                    controller: _username,
+                    enabled: !_busy,
+                    autocorrect: false,
+                    enableSuggestions: false,
+                    textInputAction: TextInputAction.next,
+                    decoration: const InputDecoration(
+                      labelText: 'Username',
+                      prefixIcon: Icon(Icons.person_outline),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _password,
+                    enabled: !_busy,
+                    obscureText: true,
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (_) {
+                      if (!_busy) _enter();
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Password',
+                      prefixIcon: Icon(Icons.lock_outline),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                ],
                 SizedBox(
                   width: double.infinity,
                   child: FilledButton(
@@ -124,14 +163,33 @@ class _LoginScreenState extends State<LoginScreen> {
                         ? 'Loading...'
                         : (AppConfig.useDevBypass
                             ? 'Enter (Dev mode)'
-                            : 'Sign in with Google')),
+                            : (_registering ? 'Create account' : 'Sign in'))),
                   ),
                 ),
-                const SizedBox(height: 12),
-                if (AppConfig.useDevBypass)
+                if (!AppConfig.useDevBypass) ...[
+                  TextButton(
+                    onPressed: _busy
+                        ? null
+                        : () => setState(() => _registering = !_registering),
+                    child: Text(_registering
+                        ? 'I already have an account'
+                        : 'Create a new account'),
+                  ),
+                  const Divider(height: 24),
+                  // Lets Play reviewers and testers in without creating an account.
+                  TextButton.icon(
+                    onPressed: _busy ? null : () => _run(ArenaAuth.guest),
+                    icon: const Icon(Icons.explore_outlined),
+                    label: const Text('Continue as guest'),
+                  ),
+                ],
+                if (AppConfig.useDevBypass) ...[
+                  const SizedBox(height: 12),
                   Text('Dev bypass active — uid=${AppConfig.devUid}',
                       style: Theme.of(context).textTheme.bodySmall),
-              ],
+                ],
+                ],
+              ),
             ),
           ),
         ),

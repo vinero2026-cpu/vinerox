@@ -1,8 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../api/arena_auth.dart';
 import '../api/client.dart';
 import '../theme.dart';
 import 'login_screen.dart';
@@ -62,16 +61,7 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   Future<void> _clearSession() async {
-    try {
-      await GoogleSignIn().signOut();
-    } catch (_) {
-      // Nothing to revoke locally.
-    }
-    try {
-      await FirebaseAuth.instance.signOut();
-    } catch (_) {
-      // Identity was already removed server-side.
-    }
+    await ArenaAuth.signOut();
   }
 
   @override

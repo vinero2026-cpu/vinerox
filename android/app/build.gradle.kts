@@ -3,7 +3,6 @@ import java.util.Properties
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    id("com.google.gms.google-services")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -18,7 +17,8 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace = "app.vinero.vinorox_mobile"
     compileSdk = 36
-    ndkVersion = flutter.ndkVersion
+    // Highest NDK required by the bundled plugins (path_provider, sqflite, ...).
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

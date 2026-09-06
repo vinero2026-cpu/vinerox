@@ -10,14 +10,20 @@ class AppConfig {
     defaultValue: 'https://api.vinero.app',
   );
 
+  /// VINEROX Arena — the identity provider. Accounts live here, and it mints
+  /// the short-lived scanner token that [apiBase] verifies via a shared secret.
+  static const String arenaBase = String.fromEnvironment(
+    'ARENA_BASE',
+    defaultValue: 'https://vinero.app',
+  );
+
   /// Dev bypass uid; sent in `x-dev-user` header when [useDevBypass] is true.
-  /// Useful while Firebase isn't wired yet.
   static const String devUid = String.fromEnvironment(
     'DEV_UID',
     defaultValue: 'dev-user-001',
   );
 
-  /// Toggle Firebase auth off and use the dev header.
+  /// Toggle Arena SSO off and use the dev header instead.
   /// Only ever enable this against a local backend — production rejects the
   /// `x-dev-user` header, so a release build with this on cannot load any data.
   ///   flutter run --dart-define=USE_DEV_BYPASS=true
