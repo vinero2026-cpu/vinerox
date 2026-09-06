@@ -1,29 +1,45 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../config.dart';
 import '../models/pick.dart';
 
 class ApiClient {
-  ApiClient({String? idToken}) : _idToken = idToken {
+  ApiClient({Future<String?> Function()? tokenProvider})
+      : _tokenProvider = tokenProvider ?? _firebaseIdToken {
     _dio = Dio(BaseOptions(
       baseUrl: AppConfig.apiBase,
       connectTimeout: const Duration(seconds: 8),
       receiveTimeout: const Duration(seconds: 12),
     ));
     _dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) {
+      onRequest: (options, handler) async {
         if (AppConfig.useDevBypass) {
           options.headers['x-dev-user'] = AppConfig.devUid;
-        } else if (_idToken != null) {
-          options.headers['Authorization'] = 'Bearer $_idToken';
+        } else {
+          final token = await _tokenProvider();
+          if (token != null) {
+            options.headers['Authorization'] = 'Bearer $token';
+          }
         }
         handler.next(options);
       },
     ));
   }
 
+  /// Resolved per request so an expired ID token is refreshed automatically.
+  static Future<String?> _firebaseIdToken() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return null;
+    try {
+      return await user.getIdToken();
+    } on FirebaseAuthException {
+      return null;
+    }
+  }
+
   late final Dio _dio;
-  final String? _idToken;
+  final Future<String?> Function() _tokenProvider;
 
   Future<Map<String, dynamic>> me() async {
     final r = await _dio.get('/api/me');
@@ -88,5 +104,11 @@ class ApiClient {
       'cancel_url': cancelUrl,
     });
     return r.data['url'] as String?;
+  }
+
+  /// Permanently deletes the signed-in account and its data.
+  /// Required by Google Play policy for apps that allow account creation.
+  Future<void> deleteAccount() async {
+    await _dio.delete('/api/me', data: {'confirm': 'DELETE'});
   }
 }

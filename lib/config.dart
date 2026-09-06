@@ -18,10 +18,11 @@ class AppConfig {
   );
 
   /// Toggle Firebase auth off and use the dev header.
-  /// Override:
-  ///   flutter run --dart-define=USE_DEV_BYPASS=false
+  /// Only ever enable this against a local backend — production rejects the
+  /// `x-dev-user` header, so a release build with this on cannot load any data.
+  ///   flutter run --dart-define=USE_DEV_BYPASS=true
   static const bool useDevBypass = bool.fromEnvironment(
     'USE_DEV_BYPASS',
-    defaultValue: true,
+    defaultValue: false,
   );
 }

@@ -1,11 +1,12 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/login_screen.dart';
 import 'theme.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Firebase.initializeApp(...) — wire when project is provisioned.
+  await Firebase.initializeApp();
   runApp(const VineroxApp());
 }
 
@@ -17,7 +18,7 @@ class VineroxApp extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: MaterialApp(
-        title: 'VINEROX Mobile',
+        title: 'StockArena',
         debugShowCheckedModeBanner: false,
         theme: VineroxTheme.dark(),
         // Force LTR for the entire app — all text, lists, rows, menus

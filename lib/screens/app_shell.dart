@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../api/client.dart';
 import '../theme.dart';
+import 'account_screen.dart';
 import 'home_screen.dart';
 import 'narrator_screen.dart';
 
@@ -162,6 +163,14 @@ class MoreScreen extends StatelessWidget {
                 ),
               ),
             ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.manage_accounts_outlined),
+            title: const Text('Account'),
+            subtitle: const Text('Privacy, terms and account deletion'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => AccountScreen(api: api))),
           ),
         ],
       ),

@@ -1,12 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../config.dart';
 import 'app_shell.dart';
 import '../theme.dart';
 
-/// Lightweight login screen. When [AppConfig.useDevBypass] is true we just
-/// skip auth and jump straight into the app — this lets the team validate
-/// the UX before Firebase project / Stripe accounts are provisioned.
+/// Sign-in screen. Uses Firebase + Google Sign-In against the production API.
+/// [AppConfig.useDevBypass] short-circuits auth for local backend work only.
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -17,15 +18,47 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool _busy = false;
 
-  Future<void> _enter() async {
-    setState(() => _busy = true);
-    // TODO: replace with FirebaseAuth.instance.signInWithEmailAndPassword(...)
-    // or GoogleSignIn flow when Firebase is wired.
-    await Future.delayed(const Duration(milliseconds: 300));
+  void _goToApp() {
     if (!mounted) return;
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => const AppShell()),
     );
+  }
+
+  Future<void> _enter() async {
+    setState(() => _busy = true);
+
+    if (AppConfig.useDevBypass) {
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+      _goToApp();
+      return;
+    }
+
+    try {
+      final googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) {
+        if (mounted) setState(() => _busy = false);
+        return;
+      }
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      _goToApp();
+    } on FirebaseAuthException catch (e) {
+      _fail(e.message ?? 'Sign-in failed (${e.code}).');
+    } catch (e) {
+      _fail('Sign-in failed: $e');
+    }
+  }
+
+  void _fail(String message) {
+    if (!mounted) return;
+    setState(() => _busy = false);
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -57,10 +90,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   clipBehavior: Clip.antiAlias,
                   child: Image.asset(
-                    'assets/vinero_logo.png',
+                    'assets/stockarena_mark.png',
                     fit: BoxFit.cover,
-                    // Show the face portion of the logo
-                    alignment: const Alignment(-0.1, -0.8),
                     errorBuilder: (_, __, ___) => const Icon(
                       Icons.bolt_rounded,
                       size: 52,
@@ -69,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                Text('VINEROX',
+                Text('STOCKARENA',
                     style:
                         Theme.of(context).textTheme.titleLarge?.copyWith(
                             letterSpacing: 4,

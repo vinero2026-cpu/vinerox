@@ -3,6 +3,7 @@ import java.util.Properties
 plugins {
     id("com.android.application")
     id("kotlin-android")
+    id("com.google.gms.google-services")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -48,7 +49,7 @@ android {
                     storeFile = file(keystoreProperties["storeFile"] as String)
                     storePassword = keystoreProperties["storePassword"] as String
                 }
-            } else {
+            } else if (gradle.startParameter.taskNames.any { it.contains("Release") }) {
                 throw GradleException("Missing android/key.properties upload-key configuration.")
             }
         }
