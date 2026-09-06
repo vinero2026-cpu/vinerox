@@ -7,7 +7,16 @@ import 'theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final signedIn = await ArenaAuth.hasSession();
+
+  // Nothing before runApp may throw: an uncaught error here kills the process
+  // before a single frame is drawn, which the launcher reports as a crash.
+  var signedIn = false;
+  try {
+    signedIn = await ArenaAuth.hasSession();
+  } catch (_) {
+    signedIn = false;
+  }
+
   runApp(VineroxApp(signedIn: signedIn));
 }
 
