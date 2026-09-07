@@ -30,11 +30,11 @@ class _ShopScreenState extends State<ShopScreen> {
     final api = ArenaApi.instance;
     final results = await Future.wait([
       api.balances().catchError((_) => <String, dynamic>{}),
-      api.blitzCatalog().catchError((_) => <String, dynamic>{}),
       api.chests().catchError((_) => <String, dynamic>{}),
+      api.fanBudget().catchError((_) => <String, dynamic>{}),
     ]);
     return _ShopBundle(
-        wallet: results[0], catalog: results[1], chests: results[2]);
+        wallet: results[0], chests: results[1], fanBudget: results[2]);
   }
 
   Future<void> _refresh() async {
@@ -43,11 +43,11 @@ class _ShopScreenState extends State<ShopScreen> {
     await next;
   }
 
-  Future<void> _buy(String cardId, String name) async {
+  Future<void> _open(String id) async {
     final messenger = ScaffoldMessenger.of(context);
     try {
-      await ArenaApi.instance.blitzBuyCard(cardId);
-      messenger.showSnackBar(SnackBar(content: Text('$name added to your deck.')));
+      await ArenaApi.instance.openChest(id);
+      messenger.showSnackBar(const SnackBar(content: Text('Chest opened.')));
       await _refresh();
     } on ApiException catch (e) {
       messenger.showSnackBar(SnackBar(content: Text(e.message)));
@@ -70,31 +70,31 @@ class _ShopScreenState extends State<ShopScreen> {
           children: [
             _WalletBar(wallet: data.wallet),
             const SizedBox(height: 14),
-            _EarnCard(onDone: _refresh),
+            _EarnCard(
+                available: data.dailyAvailable, onDone: _refresh),
             const SizedBox(height: 14),
             SectionCard(
-              title: 'Card shop',
-              trailing: const Text('Paid with Vineros',
-                  style: TextStyle(fontSize: 11, color: AC.textFaint)),
-              child: data.cards.isEmpty
+              title: 'Your chests',
+              trailing: Text('${data.chestList.length} waiting',
+                  style: const TextStyle(fontSize: 11, color: AC.textFaint)),
+              child: data.chestList.isEmpty
                   ? const EmptyState(
-                      icon: Icons.style_rounded,
-                      title: 'Shop is restocking',
-                      subtitle: 'New cards arrive with every market session.',
+                      icon: Icons.inventory_2_rounded,
+                      title: 'No chests yet',
+                      subtitle:
+                          'Claim the daily chest and win duels to earn more.',
                     )
                   : Column(
                       children: [
-                        for (var i = 0; i < data.cards.length; i++) ...[
+                        for (var i = 0; i < data.chestList.length; i++) ...[
                           if (i > 0) const Divider(height: 20),
-                          _CardRow(
-                            card: data.cards[i],
-                            balance: data.vineros,
-                            onBuy: _buy,
-                          ),
+                          _ChestRow(chest: data.chestList[i], onOpen: _open),
                         ],
                       ],
                     ),
             ),
+            const SizedBox(height: 14),
+            _FanBudgetCard(data: data, onDone: _refresh),
             if (kRealMoneyTopUpsEnabled) ...[
               const SizedBox(height: 14),
               const _TopUpPlaceholder(),
@@ -110,20 +110,19 @@ class _ShopScreenState extends State<ShopScreen> {
 
 class _ShopBundle {
   _ShopBundle(
-      {required this.wallet, required this.catalog, required this.chests});
+      {required this.wallet, required this.chests, required this.fanBudget});
 
   final Map<String, dynamic> wallet;
-  final Map<String, dynamic> catalog;
   final Map<String, dynamic> chests;
+  final Map<String, dynamic> fanBudget;
 
-  int get vineros => wallet.intOr('vcoin', wallet.intOr('vineros', 0));
-  int get vpoints => wallet.intOr('vpoints', wallet.intOr('points', 0));
-
-  List<Map<String, dynamic>> get cards {
-    final direct = catalog.rows('cards');
-    if (direct.isNotEmpty) return direct;
-    return catalog.rows('catalog');
-  }
+  int get vineros => wallet.intOr('vcoin');
+  int get vpoints => wallet.intOr('vpoints');
+  int get rate => wallet.intOr('rate', 100);
+  bool get dailyAvailable => chests['daily_available'] == true;
+  List<Map<String, dynamic>> get chestList => chests.rows('chests');
+  bool get canAppeal => fanBudget['available'] == true;
+  double get boardApproval => fanBudget.dbl('board_approval', 50);
 }
 
 class _WalletBar extends StatelessWidget {
@@ -132,8 +131,9 @@ class _WalletBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vineros = wallet.intOr('vcoin', wallet.intOr('vineros', 0));
-    final vpoints = wallet.intOr('vpoints', wallet.intOr('points', 0));
+    final vineros = wallet.intOr('vcoin');
+    final vpoints = wallet.intOr('vpoints');
+    final rank = wallet.intOr('vpoints_rank');
     return Row(
       children: [
         Expanded(
@@ -151,13 +151,114 @@ class _WalletBar extends StatelessWidget {
               icon: Icons.star_rounded,
               color: AC.teal),
         ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: StatChip(
+              label: 'Rank',
+              value: rank > 0 ? '#$rank' : '—',
+              icon: Icons.trending_up_rounded,
+              color: AC.blue),
+        ),
       ],
     );
   }
 }
 
+class _ChestRow extends StatelessWidget {
+  const _ChestRow({required this.chest, required this.onOpen});
+
+  final Map<String, dynamic> chest;
+  final Future<void> Function(String id) onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final id = chest.str('id', chest.str('chest_id'));
+    final kind = chest.str('kind', chest.str('tier', 'BRONZE'));
+    final colour = AC.tier(kind);
+    return Row(
+      children: [
+        Container(
+          width: 42,
+          height: 42,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: colour.withValues(alpha: .15),
+            border: Border.all(color: colour.withValues(alpha: .4)),
+          ),
+          child: Icon(Icons.inventory_2_rounded, size: 19, color: colour),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text('$kind chest',
+              style:
+                  const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+        ),
+        FilledButton(
+          style: FilledButton.styleFrom(
+            minimumSize: const Size(76, 36),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+          ),
+          onPressed: id.isEmpty ? null : () => onOpen(id),
+          child: const Text('OPEN'),
+        ),
+      ],
+    );
+  }
+}
+
+class _FanBudgetCard extends StatelessWidget {
+  const _FanBudgetCard({required this.data, required this.onDone});
+
+  final _ShopBundle data;
+  final Future<void> Function() onDone;
+
+  Future<void> _appeal(BuildContext context) async {
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      await ArenaApi.instance.appealToFans();
+      messenger.showSnackBar(
+          const SnackBar(content: Text('The fans answered your call.')));
+      await onDone();
+    } on ApiException catch (e) {
+      messenger.showSnackBar(SnackBar(content: Text(e.message)));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SectionCard(
+      title: 'Fan budget',
+      trailing: Text('Board ${data.boardApproval.round()}/100',
+          style: const TextStyle(fontSize: 11, color: AC.textFaint)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            data.canAppeal
+                ? 'Your supporters can fund one emergency transfer per season.'
+                : 'You have already used the fan appeal this season.',
+            style: const TextStyle(fontSize: 13, color: AC.textDim),
+          ),
+          const SizedBox(height: 12),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: AC.teal,
+              foregroundColor: const Color(0xFF04211B),
+            ),
+            onPressed: data.canAppeal ? () => _appeal(context) : null,
+            child: const Text('Ask the fans for help'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _EarnCard extends StatelessWidget {
-  const _EarnCard({required this.onDone});
+  const _EarnCard({required this.available, required this.onDone});
+
+  final bool available;
   final Future<void> Function() onDone;
 
   Future<void> _claim(BuildContext context) async {
@@ -198,18 +299,21 @@ class _EarnCard extends StatelessWidget {
             child: const Icon(Icons.redeem_rounded, color: AC.teal, size: 21),
           ),
           const SizedBox(width: 14),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Earn Vineros for free',
+                const Text('Earn Vineros for free',
                     style: TextStyle(
                         fontFamily: 'Fredoka',
                         fontSize: 16,
                         fontWeight: FontWeight.w600)),
-                SizedBox(height: 2),
-                Text('Daily chest, duel wins and derby rewards.',
-                    style: TextStyle(fontSize: 12, color: AC.textDim)),
+                const SizedBox(height: 2),
+                Text(
+                    available
+                        ? 'Your daily chest is ready to claim.'
+                        : 'Come back tomorrow for the next chest.',
+                    style: const TextStyle(fontSize: 12, color: AC.textDim)),
               ],
             ),
           ),
@@ -221,89 +325,11 @@ class _EarnCard extends StatelessWidget {
               minimumSize: const Size(74, 40),
               padding: const EdgeInsets.symmetric(horizontal: 14),
             ),
-            onPressed: () => _claim(context),
+            onPressed: available ? () => _claim(context) : null,
             child: const Text('CLAIM'),
           ),
         ],
       ),
-    );
-  }
-}
-
-class _CardRow extends StatelessWidget {
-  const _CardRow({
-    required this.card,
-    required this.balance,
-    required this.onBuy,
-  });
-
-  final Map<String, dynamic> card;
-  final int balance;
-  final Future<void> Function(String id, String name) onBuy;
-
-  @override
-  Widget build(BuildContext context) {
-    final id = card.str('id', card.str('card_id'));
-    final name = card.str('name', card.str('title', 'Card'));
-    final rarity = card.str('rarity', 'COMMON');
-    final price = card.intOr('price', card.intOr('cost', 0));
-    final owned = card['owned'] == true;
-    final affordable = balance >= price;
-    final rarityColor = AC.tier(rarity);
-
-    return Row(
-      children: [
-        Container(
-          width: 40,
-          height: 40,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: rarityColor.withValues(alpha: .15),
-            border: Border.all(color: rarityColor.withValues(alpha: .4)),
-          ),
-          child: Icon(Icons.style_rounded, size: 19, color: rarityColor),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w600)),
-              const SizedBox(height: 2),
-              Text(rarity.toUpperCase(),
-                  style: TextStyle(
-                      fontSize: 10,
-                      letterSpacing: .8,
-                      fontWeight: FontWeight.w800,
-                      color: rarityColor)),
-            ],
-          ),
-        ),
-        const SizedBox(width: 8),
-        if (owned)
-          const Text('OWNED',
-              style: TextStyle(
-                  fontSize: 11, fontWeight: FontWeight.w800, color: AC.textFaint))
-        else
-          FilledButton(
-            style: FilledButton.styleFrom(
-              minimumSize: const Size(76, 36),
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              backgroundColor: affordable ? AC.gold : AC.surfaceHi,
-              foregroundColor:
-                  affordable ? const Color(0xFF1A1206) : AC.textFaint,
-              textStyle:
-                  const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
-            ),
-            onPressed: affordable && id.isNotEmpty ? () => onBuy(id, name) : null,
-            child: Text('$price'),
-          ),
-      ],
     );
   }
 }

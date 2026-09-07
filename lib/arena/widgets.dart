@@ -179,6 +179,7 @@ class CrestBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final id = crest.replaceAll('.svg', '');
     final accent = color ?? AC.gold;
+
     if (_known.contains(id)) {
       return SizedBox(
         width: size,
@@ -186,6 +187,12 @@ class CrestBadge extends StatelessWidget {
         child: SvgPicture.asset('assets/crests/$id.svg', fit: BoxFit.contain),
       );
     }
+
+    // The backend also stores crests as raw emoji.
+    final isEmoji = crest.isNotEmpty &&
+        !RegExp(r'^[\x00-\x7F]+$').hasMatch(crest) &&
+        crest.runes.length <= 4;
+
     final initials = fallbackName
         .trim()
         .split(RegExp(r'\s+'))
@@ -193,6 +200,7 @@ class CrestBadge extends StatelessWidget {
         .take(2)
         .map((w) => w[0].toUpperCase())
         .join();
+
     return Container(
       width: size,
       height: size,
@@ -203,10 +211,10 @@ class CrestBadge extends StatelessWidget {
         border: Border.all(color: accent.withValues(alpha: .55), width: 2),
       ),
       child: Text(
-        initials.isEmpty ? 'SA' : initials,
+        isEmoji ? crest : (initials.isEmpty ? 'SA' : initials),
         style: TextStyle(
-          fontFamily: 'Fredoka',
-          fontSize: size * .36,
+          fontFamily: isEmoji ? null : 'Fredoka',
+          fontSize: size * (isEmoji ? .48 : .36),
           fontWeight: FontWeight.w700,
           color: accent,
         ),

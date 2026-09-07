@@ -194,6 +194,9 @@ class ArenaApi {
   Future<Map<String, dynamic>> appealToFans() =>
       post('/api/club/fan-budget/appeal');
 
+  Future<List<dynamic>> notifications() =>
+      getList('/api/notifications', key: 'notifications');
+
   // -------------------------------------------------------------- league ----
 
   Future<Map<String, dynamic>> leagueMe() => getMap('/api/league/me');
@@ -213,38 +216,15 @@ class ArenaApi {
   Future<Map<String, dynamic>> balances() => getMap('/api/economy/balances');
   Future<List<dynamic>> ranks({String board = 'XP', String period = 'weekly'}) =>
       getList('/api/leaderboard/ranks',
-          query: {'board': board, 'period': period}, key: 'ranks');
+          query: {'board': board, 'period': period}, key: 'entries');
   Future<List<dynamic>> champions() =>
       getList('/api/leaderboard/champions', key: 'champions');
 
   // -------------------------------------------------------------- arenas ----
 
-  Future<List<dynamic>> arenasToday() =>
-      getList('/api/arenas/today', key: 'arenas');
+  Future<Map<String, dynamic>> arenasToday() => getMap('/api/arenas/today');
   Future<Map<String, dynamic>> joinArena(String id, String pick) =>
       post('/api/arenas/$id/join', {'pick': pick});
-
-  // --------------------------------------------------------------- blitz ----
-
-  Future<Map<String, dynamic>> blitzCatalog() => getMap('/api/blitz/catalog');
-  Future<Map<String, dynamic>> blitzInventory() => getMap('/api/blitz/inventory');
-  Future<Map<String, dynamic>> blitzCardPrices() =>
-      getMap('/api/blitz/card/prices');
-  Future<Map<String, dynamic>> blitzBuyCard(String cardId) =>
-      post('/api/blitz/card/buy', {'card_id': cardId});
-  Future<Map<String, dynamic>> blitzLootbox() => post('/api/blitz/lootbox');
-
-  // -------------------------------------------------------------- social ----
-
-  Future<List<dynamic>> friends() => getList('/api/social/friends', key: 'friends');
-  Future<Map<String, dynamic>> requestFriend(String uid) =>
-      post('/api/social/friends/request', {'uid': uid});
-  Future<List<dynamic>> searchPlayers(String q) =>
-      getList('/api/social/search', query: {'q': q}, key: 'results');
-  Future<Map<String, dynamic>> referral() => getMap('/api/social/referral');
-
-  Future<List<dynamic>> notifications() =>
-      getList('/api/notifications', key: 'notifications');
 }
 
 /// Small helpers so widgets never crash on an unexpected payload shape.

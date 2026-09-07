@@ -30,11 +30,13 @@ class _MyTeamScreenState extends State<MyTeamScreen> {
       api.clubProfile().catchError((_) => <String, dynamic>{}),
       api.leagueMe().catchError((_) => <String, dynamic>{}),
       api.balances().catchError((_) => <String, dynamic>{}),
+      api.leagueArena().catchError((_) => <String, dynamic>{}),
     ]);
     return _TeamBundle(
       club: results[0],
       league: results[1],
       wallet: results[2],
+      arena: results[3],
     );
   }
 
@@ -77,78 +79,106 @@ class _MyTeamScreenState extends State<MyTeamScreen> {
 }
 
 class _TeamBundle {
-  _TeamBundle({required this.club, required this.league, required this.wallet});
+  _TeamBundle({
+    required this.club,
+    required this.league,
+    required this.wallet,
+    required this.arena,
+  });
 
   final Map<String, dynamic> club;
   final Map<String, dynamic> league;
   final Map<String, dynamic> wallet;
+  final Map<String, dynamic> arena;
+
+  /// My row inside the live arena standings — it carries the lineup.
+  Map<String, dynamic> get meInArena {
+    for (final row in arena.rows('standings')) {
+      if (row['is_me'] == true) return row;
+    }
+    for (final row in league.rows('members')) {
+      if (row['is_me'] == true) return row;
+    }
+    return const {};
+  }
 
   String get clubName {
-    final v = club.str('team_name', club.str('club_name'));
+    final v = club.str('club_name');
     return v.isEmpty ? 'Your Club' : v;
   }
 
   String get managerName {
-    final v = club.str('manager_name', club.str('manager'));
-    return v.isEmpty ? 'Manager' : v;
+    for (final row in league.rows('members')) {
+      if (row['is_me'] == true) {
+        final m = row.str('manager');
+        if (m.isNotEmpty) return m;
+      }
+    }
+    return 'Manager';
   }
 
-  String get crest => club.str('crest', club.str('crest_id'));
+  String get crest => club.str('crest');
 
   Color get clubColour {
-    final raw = club.str('color', club.str('colour')).replaceAll('#', '');
+    final raw = club.str('club_color').replaceAll('#', '');
     final parsed = int.tryParse(raw, radix: 16);
     if (parsed == null) return AC.gold;
     return Color(raw.length <= 6 ? 0xFF000000 | parsed : parsed);
   }
 
-  String get stadiumTier {
-    final v = club.str('stadium_tier', club.str('tier'));
-    return v.isEmpty ? 'Startup Office' : v;
+  String get stadiumName {
+    final v = club.child('stadium').str('name');
+    return v.isEmpty ? 'Coffee-Shop Laptop' : v;
   }
 
-  double get fans {
-    final v = club.dbl('fan_mood', club.dbl('fans', -1));
-    return v < 0 ? 0.2 : (v > 1 ? v / 100 : v);
-  }
+  Map<String, dynamic> get nextStadium => club.child('next_stadium');
 
-  double get board {
-    final v = club.dbl('board_trust', club.dbl('board', -1));
-    return v < 0 ? 0.5 : (v > 1 ? v / 100 : v);
-  }
+  /// Board approval is 0..100 on the server.
+  double get board => (club.dbl('board_approval', 50) / 100).clamp(0.0, 1.0);
+
+  /// The server exposes reputation rather than a fan meter.
+  double get fans => (club.dbl('reputation', 50) / 100).clamp(0.0, 1.0);
 
   String get mood {
-    final v = club.str('mood', club.str('fan_mood_label'));
-    return v.isEmpty ? 'Watchful' : v;
+    final b = club.dbl('board_approval', 50);
+    if (b >= 75) return 'Delighted';
+    if (b >= 60) return 'Encouraged';
+    if (b >= 40) return 'Watchful';
+    if (b >= 25) return 'Restless';
+    return 'Furious';
   }
 
-  int get division => league.intOr('division', league.intOr('tier', 50));
-  int get rank => league.intOr('rank', league.intOr('position', 0));
-  int get rankOf => league.intOr('league_size', 25);
-  int get vineros => wallet.intOr('vcoin', wallet.intOr('vineros', 0));
-  int get vpoints => wallet.intOr('vpoints', wallet.intOr('points', 0));
-
-  List<Map<String, dynamic>> get starters {
-    final team = league.rows('team');
-    if (team.isNotEmpty) {
-      return team.where((p) => p['bench'] != true).toList();
-    }
-    return league.rows('starters');
+  String get tierName {
+    final v = league.str('tier_name');
+    return v.isEmpty ? 'League ${league.intOr('tier', 50)}' : v;
   }
 
-  List<Map<String, dynamic>> get bench {
-    final team = league.rows('team');
-    if (team.isNotEmpty) {
-      return team.where((p) => p['bench'] == true).toList();
-    }
-    return league.rows('bench');
-  }
+  int get rank => league.intOr('my_rank');
+  int get rankOf => league.intOr('size', league.intOr('capacity', 25));
+  int get seasonDay => league.intOr('day_index');
+  int get seasonDays => league.intOr('season_days', 30);
+
+  int get vineros => wallet.intOr('vcoin');
+  int get vpoints => wallet.intOr('vpoints');
+  int get treasury => club.intOr('balance');
+  int get prestige => club.intOr('prestige');
+  int get academyLevel => club.intOr('academy_level', 1);
+
+  List<Map<String, dynamic>> get lineup => meInArena.rows('lineup');
+  Map<String, dynamic> get captain => meInArena.child('captain');
+
+  DateTime? get opensAt => DateTime.tryParse(arena.str('open_at'))?.toLocal();
+  bool get sessionStarted => arena['started'] == true;
+  String get tradeDate => arena.str('trade_date');
 
   String get boardAdvice {
-    final v = league.str('board_advice', club.str('board_advice'));
-    if (v.isNotEmpty) return v;
-    if (board >= .75) return 'The board is happy. Push for promotion and hold the pace.';
-    if (board >= .5) return 'Strengthen your positions and keep building.';
+    final b = club.dbl('board_approval', 50);
+    if (lineup.isEmpty) {
+      return 'You have no lineup for $tradeDate. Sign stocks in the MARKET tab '
+          'before the session locks.';
+    }
+    if (b >= 75) return 'The board is delighted. Push for promotion and hold the pace.';
+    if (b >= 50) return 'Strengthen your positions and keep building.';
     return 'Improve positions and consider swapping the weakest stocks.';
   }
 }
@@ -215,8 +245,8 @@ class _ClubHeader extends StatelessWidget {
                   spacing: 8,
                   runSpacing: 8,
                   children: [
-                    _Pill(text: data.stadiumTier, color: accent),
-                    _Pill(text: 'League ${data.division}', color: AC.blue),
+                    _Pill(text: data.stadiumName, color: accent),
+                    _Pill(text: data.tierName, color: AC.blue),
                     if (data.rank > 0)
                       _Pill(
                           text: '#${data.rank} of ${data.rankOf}',
@@ -268,9 +298,9 @@ class _MoraleRow extends StatelessWidget {
               fontSize: 12, fontWeight: FontWeight.w700, color: AC.gold)),
       child: Column(
         children: [
-          MeterBar(label: 'Fans', value: data.fans, color: AC.fansColor),
+          MeterBar(label: 'Reputation', value: data.fans, color: AC.fansColor),
           const SizedBox(height: 14),
-          MeterBar(label: 'Board trust', value: data.board, color: AC.boardColor),
+          MeterBar(label: 'Board approval', value: data.board, color: AC.boardColor),
           const SizedBox(height: 16),
           Row(
             children: [
@@ -284,10 +314,18 @@ class _MoraleRow extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: StatChip(
-                    label: 'V-Points',
-                    value: '${data.vpoints}',
-                    icon: Icons.star_rounded,
+                    label: 'Treasury',
+                    value: '${data.treasury}',
+                    icon: Icons.account_balance_wallet_rounded,
                     color: AC.teal),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: StatChip(
+                    label: 'Academy',
+                    value: 'Lv ${data.academyLevel}',
+                    icon: Icons.school_rounded,
+                    color: AC.purple),
               ),
             ],
           ),
@@ -314,20 +352,18 @@ class _NextUpCardState extends State<_NextUpCard> {
   @override
   void initState() {
     super.initState();
-    _left = _untilNextOpen();
+    _left = _remaining();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (!mounted) return;
-      setState(() => _left = _untilNextOpen());
+      setState(() => _left = _remaining());
     });
   }
 
-  /// US market opens at 09:30 New York time; approximated in local time so the
-  /// countdown never shows a negative value.
-  Duration _untilNextOpen() {
-    final now = DateTime.now().toUtc();
-    var open = DateTime.utc(now.year, now.month, now.day, 13, 30);
-    if (!open.isAfter(now)) open = open.add(const Duration(days: 1));
-    return open.difference(now);
+  Duration _remaining() {
+    final open = widget.data.opensAt;
+    if (open == null) return Duration.zero;
+    final diff = open.difference(DateTime.now());
+    return diff.isNegative ? Duration.zero : diff;
   }
 
   @override
@@ -343,6 +379,12 @@ class _NextUpCardState extends State<_NextUpCard> {
 
   @override
   Widget build(BuildContext context) {
+    final data = widget.data;
+    final live = data.sessionStarted || _left == Duration.zero;
+    final headline = data.opensAt == null
+        ? 'No session scheduled'
+        : (live ? 'Session is live' : 'Opens in $_formatted');
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -364,40 +406,38 @@ class _NextUpCardState extends State<_NextUpCard> {
               shape: BoxShape.circle,
               color: AC.gold.withValues(alpha: .16),
             ),
-            child: const Icon(Icons.sports_esports_rounded,
-                color: AC.gold, size: 22),
+            child: Icon(
+                live ? Icons.bolt_rounded : Icons.schedule_rounded,
+                color: AC.gold,
+                size: 22),
           ),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('1 vs 1 · open 24/7',
-                    style: TextStyle(
+                Text(
+                    data.tradeDate.isEmpty
+                        ? 'Trading session'
+                        : 'Session ${data.tradeDate}',
+                    style: const TextStyle(
                         fontSize: 11,
                         letterSpacing: .8,
                         fontWeight: FontWeight.w700,
                         color: AC.textDim)),
                 const SizedBox(height: 3),
-                Text('Market opens in $_formatted',
+                Text(headline,
                     style: const TextStyle(
                         fontFamily: 'Fredoka',
                         fontSize: 16,
                         fontWeight: FontWeight.w600)),
+                if (data.seasonDay > 0) ...[
+                  const SizedBox(height: 3),
+                  Text('Season day ${data.seasonDay} of ${data.seasonDays}',
+                      style: const TextStyle(fontSize: 11, color: AC.textFaint)),
+                ],
               ],
             ),
-          ),
-          const SizedBox(width: 8),
-          FilledButton(
-            style: FilledButton.styleFrom(
-              minimumSize: const Size(78, 42),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-            ),
-            onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                  content: Text('Matchmaking opens from the LEAGUE tab.')),
-            ),
-            child: const Text('PLAY'),
           ),
         ],
       ),
@@ -411,36 +451,51 @@ class _SquadSection extends StatelessWidget {
   const _SquadSection({required this.data});
   final _TeamBundle data;
 
+  static const _roleOrder = ['HEAVYWEIGHT', 'MIDTIER', 'JOKER'];
+  static const _roleLabel = {
+    'HEAVYWEIGHT': 'Heavyweights',
+    'MIDTIER': 'Mid tier',
+    'JOKER': 'Joker',
+  };
+
   @override
   Widget build(BuildContext context) {
-    final starters = data.starters;
-    final bench = data.bench;
+    final lineup = data.lineup;
+    final captain = data.captain.str('ticker');
+
+    final byRole = <String, List<Map<String, dynamic>>>{};
+    for (final p in lineup) {
+      byRole.putIfAbsent(p.str('role', 'OTHER'), () => []).add(p);
+    }
+    final roles = [
+      ..._roleOrder.where(byRole.containsKey),
+      ...byRole.keys.where((r) => !_roleOrder.contains(r)),
+    ];
 
     return SectionCard(
       title: 'Your squad',
-      trailing: Text('${starters.length} starting · ${bench.length} bench',
+      trailing: Text('${lineup.length} picked',
           style: const TextStyle(fontSize: 11, color: AC.textFaint)),
-      child: starters.isEmpty && bench.isEmpty
+      child: lineup.isEmpty
           ? const EmptyState(
               icon: Icons.groups_2_rounded,
-              title: 'No squad yet',
+              title: 'No lineup yet',
               subtitle:
-                  'Pick your first stocks from the MARKET tab to field a team.',
+                  'Sign stocks from the MARKET tab to field a team for the next session.',
             )
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _PlayerGrid(players: starters),
-                if (bench.isNotEmpty) ...[
-                  const SizedBox(height: 16),
-                  const Text('BENCH',
-                      style: TextStyle(
+                for (final role in roles) ...[
+                  Text(_roleLabel[role] ?? role,
+                      style: const TextStyle(
                           fontSize: 10,
                           letterSpacing: 1,
                           fontWeight: FontWeight.w800,
                           color: AC.textFaint)),
                   const SizedBox(height: 8),
-                  _PlayerGrid(players: bench, dim: true),
+                  _PlayerGrid(players: byRole[role]!, captain: captain),
+                  const SizedBox(height: 14),
                 ],
               ],
             ),
@@ -449,9 +504,9 @@ class _SquadSection extends StatelessWidget {
 }
 
 class _PlayerGrid extends StatelessWidget {
-  const _PlayerGrid({required this.players, this.dim = false});
+  const _PlayerGrid({required this.players, required this.captain});
   final List<Map<String, dynamic>> players;
-  final bool dim;
+  final String captain;
 
   @override
   Widget build(BuildContext context) {
@@ -459,79 +514,88 @@ class _PlayerGrid extends StatelessWidget {
       spacing: 8,
       runSpacing: 8,
       children: [
-        for (final p in players) _PlayerTile(player: p, dim: dim),
+        for (final p in players)
+          _PlayerTile(player: p, isCaptain: p.str('ticker') == captain),
       ],
     );
   }
 }
 
 class _PlayerTile extends StatelessWidget {
-  const _PlayerTile({required this.player, required this.dim});
+  const _PlayerTile({required this.player, required this.isCaptain});
   final Map<String, dynamic> player;
-  final bool dim;
+  final bool isCaptain;
 
   @override
   Widget build(BuildContext context) {
-    final ticker = player.str('ticker', player.str('symbol', '—'));
-    final score = player.dbl('score', player.dbl('vx', 0));
-    final change = player.dbl('change_pct', player.dbl('return_pct', 0));
+    final ticker = player.str('ticker', '—');
+    final company = player.str('company');
+    final score = player.dbl('vx_score');
+    final change = player.dbl('return_pct');
     final up = change >= 0;
     final scoreColor =
         score >= 80 ? AC.bull : (score >= 60 ? AC.gold : AC.textDim);
 
-    return Opacity(
-      opacity: dim ? .72 : 1,
-      child: Container(
-        width: 96,
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 11),
-        decoration: BoxDecoration(
-          color: AC.bgAlt,
-          borderRadius: BorderRadius.circular(AC.radiusSm),
-          border: Border.all(color: AC.stroke),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(ticker,
+    return Container(
+      width: 112,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 11),
+      decoration: BoxDecoration(
+        color: AC.bgAlt,
+        borderRadius: BorderRadius.circular(AC.radiusSm),
+        border: Border.all(
+            color: isCaptain ? AC.gold.withValues(alpha: .6) : AC.stroke),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(ticker,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        fontFamily: 'Fredoka',
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700)),
+              ),
+              if (isCaptain)
+                const Icon(Icons.military_tech_rounded,
+                    size: 14, color: AC.gold),
+            ],
+          ),
+          if (company.isNotEmpty)
+            Text(company,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                    fontFamily: 'Fredoka',
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700)),
-            const SizedBox(height: 6),
-            Row(
-              children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: scoreColor.withValues(alpha: .16),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text('VX ${score.round()}',
-                      style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w800,
-                          color: scoreColor)),
-                ),
-              ],
+                style: const TextStyle(fontSize: 10, color: AC.textFaint)),
+          const SizedBox(height: 6),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: scoreColor.withValues(alpha: .16),
+              borderRadius: BorderRadius.circular(6),
             ),
-            const SizedBox(height: 6),
-            Row(
-              children: [
-                Icon(up ? Icons.trending_up_rounded : Icons.trending_down_rounded,
-                    size: 13, color: up ? AC.bull : AC.bear),
-                const SizedBox(width: 3),
-                Text('${up ? '+' : ''}${change.toStringAsFixed(1)}%',
-                    style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        color: up ? AC.bull : AC.bear)),
-              ],
-            ),
-          ],
-        ),
+            child: Text('VX ${score.round()}',
+                style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w800,
+                    color: scoreColor)),
+          ),
+          const SizedBox(height: 6),
+          Row(
+            children: [
+              Icon(up ? Icons.trending_up_rounded : Icons.trending_down_rounded,
+                  size: 13, color: up ? AC.bull : AC.bear),
+              const SizedBox(width: 3),
+              Text('${up ? '+' : ''}${change.toStringAsFixed(1)}%',
+                  style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: up ? AC.bull : AC.bear)),
+            ],
+          ),
+        ],
       ),
     );
   }

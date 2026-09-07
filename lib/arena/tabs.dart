@@ -113,40 +113,97 @@ class _RankRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final name = row.str('team_name',
-        row.str('username', row.str('name', 'Player $position')));
-    final value = row.intOr('value', row.intOr('score', row.intOr('xp', 0)));
-    final medal = switch (position) {
+    final name = row.str('club', row.str('username', row.str('name', 'Player')));
+    final manager = row.str('manager');
+    final value = row.intOr(
+        'rank_points', row.intOr('season_trophies', row.intOr('value')));
+    final ret = row.dbl('return_pct');
+    final isMe = row['is_me'] == true;
+    final isBot = row['is_bot'] == true;
+    final rank = row.intOr('rank', position);
+    final medal = switch (rank) {
       1 => AC.gold,
       2 => const Color(0xFFB9C3D2),
       3 => const Color(0xFFCD7F32),
       _ => AC.textFaint,
     };
 
-    return Row(
-      children: [
-        SizedBox(
-          width: 30,
-          child: Text('$position',
-              style: TextStyle(
-                  fontFamily: 'Fredoka',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: medal)),
-        ),
-        CrestBadge(
-            crest: row.str('crest'), fallbackName: name, size: 30, color: medal),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Text(name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-        ),
-        Text('$value',
-            style: const TextStyle(
-                fontSize: 14, fontWeight: FontWeight.w700, color: AC.gold)),
-      ],
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      decoration: isMe
+          ? BoxDecoration(
+              color: AC.gold.withValues(alpha: .08),
+              borderRadius: BorderRadius.circular(10),
+            )
+          : null,
+      child: Row(
+        children: [
+          SizedBox(
+            width: 30,
+            child: Text('$rank',
+                style: TextStyle(
+                    fontFamily: 'Fredoka',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: medal)),
+          ),
+          CrestBadge(
+              crest: row.str('crest'),
+              fallbackName: name,
+              size: 30,
+              color: medal),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Flexible(
+                      child: Text(name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: isMe ? AC.gold : AC.text)),
+                    ),
+                    if (isBot) ...[
+                      const SizedBox(width: 6),
+                      const Text('BOT',
+                          style: TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w800,
+                              color: AC.textFaint)),
+                    ],
+                  ],
+                ),
+                if (manager.isNotEmpty)
+                  Text(manager,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style:
+                          const TextStyle(fontSize: 11, color: AC.textFaint)),
+              ],
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text('$value',
+                  style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: AC.gold)),
+              Text('${ret >= 0 ? '+' : ''}${ret.toStringAsFixed(1)}%',
+                  style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: ret >= 0 ? AC.bull : AC.bear)),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -197,10 +254,10 @@ class LeagueScreen extends StatefulWidget {
 }
 
 class _LeagueScreenState extends State<LeagueScreen> {
-  late Future<Map<String, dynamic>> _future = ArenaApi.instance.leagueArena();
+  late Future<Map<String, dynamic>> _future = ArenaApi.instance.leagueMe();
 
   Future<void> _refresh() async {
-    final next = ArenaApi.instance.leagueArena();
+    final next = ArenaApi.instance.leagueMe();
     setState(() => _future = next);
     await next;
   }
@@ -216,19 +273,42 @@ class _LeagueScreenState extends State<LeagueScreen> {
         onRetry: _refresh,
         loadingHeight: 400,
         builder: (context, data) {
-          final standings = data.rows('standings').isNotEmpty
-              ? data.rows('standings')
-              : data.rows('players');
+          final members = data.rows('members');
+          final tierName = data.str('tier_name');
+          final day = data.intOr('day_index');
+          final days = data.intOr('season_days', 30);
           return ListView(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
             physics: const AlwaysScrollableScrollPhysics(),
             children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: StatChip(
+                        label: 'Your rank',
+                        value:
+                            '#${data.intOr('my_rank')} / ${data.intOr('size', 25)}',
+                        icon: Icons.military_tech_rounded,
+                        color: AC.gold),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: StatChip(
+                        label: 'Season ${data.intOr('season_no', 1)}',
+                        value: 'Day $day / $days',
+                        icon: Icons.calendar_month_rounded,
+                        color: AC.teal),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
               SectionCard(
-                title: 'Division ${data.intOr('division', 50)}',
-                trailing: Text(
-                    'Season ${data.str('season', '1')}',
+                title: tierName.isEmpty
+                    ? 'League ${data.intOr('tier', 50)}'
+                    : tierName,
+                trailing: Text('${members.length} clubs',
                     style: const TextStyle(fontSize: 11, color: AC.textFaint)),
-                child: standings.isEmpty
+                child: members.isEmpty
                     ? const EmptyState(
                         icon: Icons.emoji_events_rounded,
                         title: 'The arena is warming up',
@@ -237,9 +317,9 @@ class _LeagueScreenState extends State<LeagueScreen> {
                       )
                     : Column(
                         children: [
-                          for (var i = 0; i < standings.length; i++) ...[
+                          for (var i = 0; i < members.length; i++) ...[
                             if (i > 0) const Divider(height: 18),
-                            _RankRow(position: i + 1, row: standings[i]),
+                            _RankRow(position: i + 1, row: members[i]),
                           ],
                         ],
                       ),
@@ -292,10 +372,8 @@ class _MarketScreenState extends State<MarketScreen> {
         onRetry: _refresh,
         loadingHeight: 400,
         builder: (context, data) {
-          final listings = data.rows('listings').isNotEmpty
-              ? data.rows('listings')
-              : data.rows('market');
-          final balance = data.intOr('vineros', data.intOr('balance', 0));
+          final listings = data.rows('listings');
+          final balance = data.intOr('balance');
           return ListView(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
             physics: const AlwaysScrollableScrollPhysics(),
@@ -350,40 +428,79 @@ class _ListingRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final id = listing.str('listing_id', listing.str('id'));
-    final ticker = listing.str('ticker', listing.str('symbol', '—'));
-    final seller = listing.str('seller', listing.str('owner', 'Manager'));
-    final price = listing.intOr('price', listing.intOr('ask', 0));
-    final score = listing.dbl('score', 0);
+    final id = listing.str('listing_id');
+    final ticker = listing.str('display_ticker', listing.str('ticker', '—'));
+    final seller = listing.str('seller_club', 'Free agent');
+    final sector = listing.str('sector');
+    final role = listing.str('role');
+    final price = listing.intOr('ask_price', listing.intOr('base_price'));
+    final score = listing.dbl('vx_score');
     final affordable = balance >= price;
+    final scoreColor =
+        score >= 70 ? AC.bull : (score >= 40 ? AC.gold : AC.textDim);
 
     return Row(
       children: [
         Container(
-          width: 42,
-          height: 42,
+          width: 46,
+          height: 46,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: AC.bgAlt,
             border: Border.all(color: AC.stroke),
           ),
-          child: Text(ticker.length > 4 ? ticker.substring(0, 4) : ticker,
-              style: const TextStyle(
-                  fontFamily: 'Fredoka',
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700)),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(ticker.length > 5 ? ticker.substring(0, 5) : ticker,
+                  style: const TextStyle(
+                      fontFamily: 'Fredoka',
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700)),
+              Text('${score.round()}',
+                  style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w800,
+                      color: scoreColor)),
+            ],
+          ),
         ),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(ticker,
-                  style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w700)),
+              Row(
+                children: [
+                  Flexible(
+                    child: Text(ticker,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w700)),
+                  ),
+                  if (role.isNotEmpty) ...[
+                    const SizedBox(width: 6),
+                    Container(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                      decoration: BoxDecoration(
+                        color: AC.blue.withValues(alpha: .14),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Text(role,
+                          style: const TextStyle(
+                              fontSize: 8,
+                              letterSpacing: .5,
+                              fontWeight: FontWeight.w800,
+                              color: AC.blue)),
+                    ),
+                  ],
+                ],
+              ),
               const SizedBox(height: 2),
-              Text('VX ${score.round()} · from $seller',
+              Text(sector.isEmpty ? seller : '$sector · $seller',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontSize: 12, color: AC.textDim)),
