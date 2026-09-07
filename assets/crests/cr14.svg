@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+<defs>
+  <linearGradient id="face" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#F2F6FA"/>
+    <stop offset="0.5" stop-color="#C7D0DA"/>
+    <stop offset="1" stop-color="#7E8A98"/>
+  </linearGradient>
+  <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#FDFEFF"/>
+    <stop offset="0.25" stop-color="#F2F6FA"/>
+    <stop offset="0.55" stop-color="#C7D0DA"/>
+    <stop offset="1" stop-color="#7E8A98"/>
+  </linearGradient>
+  <linearGradient id="emb" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#FFFFFF"/>
+    <stop offset="0.5" stop-color="#F3F7FB"/>
+    <stop offset="1" stop-color="#C4CED9"/>
+  </linearGradient>
+  <linearGradient id="embDark" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#F2F6FA"/>
+    <stop offset="1" stop-color="#7E8A98"/>
+  </linearGradient>
+  <radialGradient id="gloss" cx="0.5" cy="0.28" r="0.6">
+    <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.55"/>
+    <stop offset="0.55" stop-color="#FFFFFF" stop-opacity="0.10"/>
+    <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+    <stop offset="0" stop-color="#E6ECF2" stop-opacity="0.55"/>
+    <stop offset="1" stop-color="#E6ECF2" stop-opacity="0"/>
+  </radialGradient>
+  <filter id="ds" x="-30%" y="-30%" width="160%" height="160%">
+    <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000000" flood-opacity="0.45"/>
+  </filter>
+  <filter id="embds" x="-40%" y="-40%" width="180%" height="180%">
+    <feDropShadow dx="0" dy="2" stdDeviation="1.6" flood-color="#0A0E14" flood-opacity="0.5"/>
+  </filter>
+</defs>
+  <path d="M128 24 L216 60 L216 128 C216 172 178 206 128 232 C78 206 40 172 40 128 L40 60 Z" fill="#0B1220" filter="url(#ds)"/>
+  <path d="M128 24 L216 60 L216 128 C216 172 178 206 128 232 C78 206 40 172 40 128 L40 60 Z" fill="url(#rim)"/>
+  <path d="M128 24 L216 60 L216 128 C216 172 178 206 128 232 C78 206 40 172 40 128 L40 60 Z" fill="none" stroke="#0A0E14" stroke-opacity="0.35" stroke-width="2"/>
+  <g transform="translate(128 128) scale(0.82) translate(-128 -128)">
+    <path d="M128 24 L216 60 L216 128 C216 172 178 206 128 232 C78 206 40 172 40 128 L40 60 Z" fill="url(#face)"/>
+    <path d="M128 24 L216 60 L216 128 C216 172 178 206 128 232 C78 206 40 172 40 128 L40 60 Z" fill="url(#gloss)"/>
+    <path d="M128 24 L216 60 L216 128 C216 172 178 206 128 232 C78 206 40 172 40 128 L40 60 Z" fill="none" stroke="#FFFFFF" stroke-opacity="0.25" stroke-width="2"/>
+  </g>
+  <circle cx="128" cy="118" r="66" fill="url(#glow)"/>
+  <g filter="url(#embds)" transform="translate(128 118)">
+  <path d="M0 -8 C-30 -30 -66 -26 -92 -6 C-64 -8 -60 0 -40 2 C-58 6 -54 16 -34 16
+           C-50 22 -42 34 -22 30 C-30 40 -10 44 0 30 Z" fill="url(#emb)" stroke="#2A323D" stroke-opacity="0.55" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M0 -8 C30 -30 66 -26 92 -6 C64 -8 60 0 40 2 C58 6 54 16 34 16
+           C50 22 42 34 22 30 C30 40 10 44 0 30 Z" fill="url(#embDark)" stroke="#0A0E14" stroke-opacity="0.5" stroke-width="2.5" stroke-linejoin="round"/>
+</g>
+</svg>

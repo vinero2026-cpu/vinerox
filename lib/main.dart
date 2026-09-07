@@ -1,45 +1,47 @@
 import 'package:flutter/material.dart';
 
-import 'api/arena_auth.dart';
-import 'screens/app_shell.dart';
-import 'screens/login_screen.dart';
-import 'theme.dart';
+import 'arena/api.dart';
+import 'arena/app_shell.dart';
+import 'arena/sign_in_screen.dart';
+import 'arena/theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Nothing before runApp may throw: an uncaught error here kills the process
   // before a single frame is drawn, which the launcher reports as a crash.
-  var signedIn = false;
   try {
-    signedIn = await ArenaAuth.hasSession();
+    await ArenaApi.instance.restore();
   } catch (_) {
-    signedIn = false;
+    // Start signed out rather than crashing on a corrupt preference store.
   }
 
-  runApp(VineroxApp(signedIn: signedIn));
+  runApp(const StockArenaApp());
 }
 
-class VineroxApp extends StatelessWidget {
-  const VineroxApp({super.key, this.signedIn = false});
+class StockArenaApp extends StatefulWidget {
+  const StockArenaApp({super.key});
 
-  final bool signedIn;
+  @override
+  State<StockArenaApp> createState() => _StockArenaAppState();
+}
+
+class _StockArenaAppState extends State<StockArenaApp> {
+  late bool _signedIn = ArenaApi.instance.isSignedIn;
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: MaterialApp(
-        title: 'StockArena',
-        debugShowCheckedModeBanner: false,
-        theme: VineroxTheme.dark(),
-        // Force LTR for the entire app — all text, lists, rows, menus
-        builder: (context, child) => Directionality(
-          textDirection: TextDirection.ltr,
-          child: child!,
-        ),
-        home: signedIn ? const AppShell() : const LoginScreen(),
+    return MaterialApp(
+      title: 'Stock Arena',
+      debugShowCheckedModeBanner: false,
+      theme: buildArenaTheme(),
+      builder: (context, child) => Directionality(
+        textDirection: TextDirection.ltr,
+        child: child!,
       ),
+      home: _signedIn
+          ? AppShell(onSignedOut: () => setState(() => _signedIn = false))
+          : SignInScreen(onSignedIn: () => setState(() => _signedIn = true)),
     );
   }
 }

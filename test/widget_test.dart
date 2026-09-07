@@ -4,10 +4,10 @@ import 'package:vinerox_mobile/main.dart';
 
 void main() {
   testWidgets('app boots without throwing', (WidgetTester tester) async {
-    await tester.pumpWidget(const VineroxApp());
+    await tester.pumpWidget(const StockArenaApp());
     await tester.pump();
 
-    expect(find.byType(VineroxApp), findsOneWidget);
+    expect(find.byType(StockArenaApp), findsOneWidget);
   });
 }
 

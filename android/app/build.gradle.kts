@@ -14,6 +14,11 @@ if (keystorePropertiesFile.exists()) {
     keystorePropertiesFile.inputStream().use(keystoreProperties::load)
 }
 
+// A partially filled key.properties is worse than none: it fails the build with
+// an opaque cast error, so require every field before using it.
+val hasUploadKey = listOf("keyAlias", "keyPassword", "storeFile", "storePassword")
+    .all { !(keystoreProperties[it] as String?).isNullOrBlank() }
+
 android {
     namespace = "app.vinero.vinorox_mobile"
     compileSdk = 36
@@ -42,7 +47,7 @@ android {
 
     buildTypes {
         release {
-            if (keystorePropertiesFile.exists()) {
+            if (hasUploadKey) {
                 signingConfig = signingConfigs.create("release") {
                     keyAlias = keystoreProperties["keyAlias"] as String
                     keyPassword = keystoreProperties["keyPassword"] as String
@@ -50,7 +55,10 @@ android {
                     storePassword = keystoreProperties["storePassword"] as String
                 }
             } else if (gradle.startParameter.taskNames.any { it.contains("Release") }) {
-                throw GradleException("Missing android/key.properties upload-key configuration.")
+                throw GradleException(
+                    "Missing or incomplete android/key.properties — need keyAlias, " +
+                        "keyPassword, storeFile and storePassword."
+                )
             }
         }
     }

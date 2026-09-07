@@ -1,0 +1,4205 @@
+{
+ "version": 2,
+ "cards": [
+  {
+   "id": "c001_alpha_surge",
+   "name": "Alpha Surge",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "🐂",
+   "flavor": "Ride the green wave — every gain multiplied while it runs.",
+   "asset_path": "cards/alpha_surge",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c002_rogue_rally",
+   "name": "Rogue Rally",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "🚀",
+   "flavor": "Slam the throttle on your profits and never look back.",
+   "asset_path": "cards/rogue_rally",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c003_frost_rush",
+   "name": "Frost Rush",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "✨",
+   "flavor": "The bulls are loose. Cash in on the stampede.",
+   "asset_path": "cards/frost_rush",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c004_atomic_multiplier",
+   "name": "Atomic Multiplier",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "💰",
+   "flavor": "Turn a good run into a legendary one.",
+   "asset_path": "cards/atomic_multiplier",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c005_electric_momentum",
+   "name": "Electric Momentum",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "📈",
+   "flavor": "Ride the green wave — every gain multiplied while it runs.",
+   "asset_path": "cards/electric_momentum",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c006_onyx_breakout",
+   "name": "Onyx Breakout",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "🔥",
+   "flavor": "Slam the throttle on your profits and never look back.",
+   "asset_path": "cards/onyx_breakout",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c007_wild_uptrend",
+   "name": "Wild Uptrend",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "⚡",
+   "flavor": "The bulls are loose. Cash in on the stampede.",
+   "asset_path": "cards/wild_uptrend",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c008_quantum_bull_run",
+   "name": "Quantum Bull Run",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "💎",
+   "flavor": "Turn a good run into a legendary one.",
+   "asset_path": "cards/quantum_bull_run",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c009_solar_moonshot",
+   "name": "Solar Moonshot",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "🌟",
+   "flavor": "Ride the green wave — every gain multiplied while it runs.",
+   "asset_path": "cards/solar_moonshot",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c010_ultra_pump",
+   "name": "Ultra Pump",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "💹",
+   "flavor": "Slam the throttle on your profits and never look back.",
+   "asset_path": "cards/ultra_pump",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c011_steel_spike",
+   "name": "Steel Spike",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "🐂",
+   "flavor": "The bulls are loose. Cash in on the stampede.",
+   "asset_path": "cards/steel_spike",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c012_ghost_jackpot",
+   "name": "Ghost Jackpot",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "🚀",
+   "flavor": "Turn a good run into a legendary one.",
+   "asset_path": "cards/ghost_jackpot",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c013_platinum_boost",
+   "name": "Platinum Boost",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "✨",
+   "flavor": "Ride the green wave — every gain multiplied while it runs.",
+   "asset_path": "cards/platinum_boost",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c014_frozen_surge",
+   "name": "Frozen Surge",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "💰",
+   "flavor": "Slam the throttle on your profits and never look back.",
+   "asset_path": "cards/frozen_surge",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c015_astral_rally",
+   "name": "Astral Rally",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "📈",
+   "flavor": "The bulls are loose. Cash in on the stampede.",
+   "asset_path": "cards/astral_rally",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c016_alpha_rush",
+   "name": "Alpha Rush",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "🔥",
+   "flavor": "Turn a good run into a legendary one.",
+   "asset_path": "cards/alpha_rush",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c017_rogue_multiplier",
+   "name": "Rogue Multiplier",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "⚡",
+   "flavor": "Ride the green wave — every gain multiplied while it runs.",
+   "asset_path": "cards/rogue_multiplier",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c018_frost_momentum",
+   "name": "Frost Momentum",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "💎",
+   "flavor": "Slam the throttle on your profits and never look back.",
+   "asset_path": "cards/frost_momentum",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c019_atomic_breakout",
+   "name": "Atomic Breakout",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "🌟",
+   "flavor": "The bulls are loose. Cash in on the stampede.",
+   "asset_path": "cards/atomic_breakout",
+   "base_stats": {
+    "value": 1.9,
+    "duration_sec": 16,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c020_electric_uptrend",
+   "name": "Electric Uptrend",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "💹",
+   "flavor": "Turn a good run into a legendary one.",
+   "asset_path": "cards/electric_uptrend",
+   "base_stats": {
+    "value": 1.9,
+    "duration_sec": 16,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c021_onyx_bull_run",
+   "name": "Onyx Bull Run",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "🐂",
+   "flavor": "Ride the green wave — every gain multiplied while it runs.",
+   "asset_path": "cards/onyx_bull_run",
+   "base_stats": {
+    "value": 1.9,
+    "duration_sec": 16,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c022_wild_moonshot",
+   "name": "Wild Moonshot",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "🚀",
+   "flavor": "Slam the throttle on your profits and never look back.",
+   "asset_path": "cards/wild_moonshot",
+   "base_stats": {
+    "value": 1.9,
+    "duration_sec": 16,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c023_quantum_pump",
+   "name": "Quantum Pump",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "✨",
+   "flavor": "The bulls are loose. Cash in on the stampede.",
+   "asset_path": "cards/quantum_pump",
+   "base_stats": {
+    "value": 1.9,
+    "duration_sec": 16,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c024_solar_spike",
+   "name": "Solar Spike",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "💰",
+   "flavor": "Turn a good run into a legendary one.",
+   "asset_path": "cards/solar_spike",
+   "base_stats": {
+    "value": 1.9,
+    "duration_sec": 16,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c025_ultra_jackpot",
+   "name": "Ultra Jackpot",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "📈",
+   "flavor": "Ride the green wave — every gain multiplied while it runs.",
+   "asset_path": "cards/ultra_jackpot",
+   "base_stats": {
+    "value": 1.9,
+    "duration_sec": 16,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c026_steel_boost",
+   "name": "Steel Boost",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "🔥",
+   "flavor": "Slam the throttle on your profits and never look back.",
+   "asset_path": "cards/steel_boost",
+   "base_stats": {
+    "value": 1.9,
+    "duration_sec": 16,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c027_ghost_surge",
+   "name": "Ghost Surge",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "⚡",
+   "flavor": "The bulls are loose. Cash in on the stampede.",
+   "asset_path": "cards/ghost_surge",
+   "base_stats": {
+    "value": 1.9,
+    "duration_sec": 16,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c028_platinum_rally",
+   "name": "Platinum Rally",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "💎",
+   "flavor": "Turn a good run into a legendary one.",
+   "asset_path": "cards/platinum_rally",
+   "base_stats": {
+    "value": 1.9,
+    "duration_sec": 16,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c029_frozen_rush",
+   "name": "Frozen Rush",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "🌟",
+   "flavor": "Ride the green wave — every gain multiplied while it runs.",
+   "asset_path": "cards/frozen_rush",
+   "base_stats": {
+    "value": 1.9,
+    "duration_sec": 16,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c030_astral_multiplier",
+   "name": "Astral Multiplier",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "💹",
+   "flavor": "Slam the throttle on your profits and never look back.",
+   "asset_path": "cards/astral_multiplier",
+   "base_stats": {
+    "value": 1.9,
+    "duration_sec": 16,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c031_alpha_momentum",
+   "name": "Alpha Momentum",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "🐂",
+   "flavor": "The bulls are loose. Cash in on the stampede.",
+   "asset_path": "cards/alpha_momentum",
+   "base_stats": {
+    "value": 1.9,
+    "duration_sec": 16,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c032_rogue_breakout",
+   "name": "Rogue Breakout",
+   "rarity": "epic",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "🚀",
+   "flavor": "Turn a good run into a legendary one.",
+   "asset_path": "cards/rogue_breakout",
+   "base_stats": {
+    "value": 2.3,
+    "duration_sec": 20,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c033_frost_uptrend",
+   "name": "Frost Uptrend",
+   "rarity": "epic",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "✨",
+   "flavor": "Ride the green wave — every gain multiplied while it runs.",
+   "asset_path": "cards/frost_uptrend",
+   "base_stats": {
+    "value": 2.3,
+    "duration_sec": 20,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c034_atomic_bull_run",
+   "name": "Atomic Bull Run",
+   "rarity": "epic",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "💰",
+   "flavor": "Slam the throttle on your profits and never look back.",
+   "asset_path": "cards/atomic_bull_run",
+   "base_stats": {
+    "value": 2.3,
+    "duration_sec": 20,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c035_electric_moonshot",
+   "name": "Electric Moonshot",
+   "rarity": "epic",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "📈",
+   "flavor": "The bulls are loose. Cash in on the stampede.",
+   "asset_path": "cards/electric_moonshot",
+   "base_stats": {
+    "value": 2.3,
+    "duration_sec": 20,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c036_onyx_pump",
+   "name": "Onyx Pump",
+   "rarity": "epic",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "🔥",
+   "flavor": "Turn a good run into a legendary one.",
+   "asset_path": "cards/onyx_pump",
+   "base_stats": {
+    "value": 2.3,
+    "duration_sec": 20,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c037_wild_spike",
+   "name": "Wild Spike",
+   "rarity": "epic",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "⚡",
+   "flavor": "Ride the green wave — every gain multiplied while it runs.",
+   "asset_path": "cards/wild_spike",
+   "base_stats": {
+    "value": 2.3,
+    "duration_sec": 20,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c038_quantum_jackpot",
+   "name": "Quantum Jackpot",
+   "rarity": "legendary",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "💎",
+   "flavor": "Slam the throttle on your profits and never look back.",
+   "asset_path": "cards/quantum_jackpot",
+   "base_stats": {
+    "value": 3.0,
+    "duration_sec": 25,
+    "cooldown_sec": 90
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c039_solar_boost",
+   "name": "Solar Boost",
+   "rarity": "legendary",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "🌟",
+   "flavor": "The bulls are loose. Cash in on the stampede.",
+   "asset_path": "cards/solar_boost",
+   "base_stats": {
+    "value": 3.0,
+    "duration_sec": 25,
+    "cooldown_sec": 90
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c040_ultra_surge",
+   "name": "Ultra Surge",
+   "rarity": "legendary",
+   "category": "blitz-buff",
+   "effect": "multiplier",
+   "icon": "💹",
+   "flavor": "Turn a good run into a legendary one.",
+   "asset_path": "cards/ultra_surge",
+   "base_stats": {
+    "value": 3.0,
+    "duration_sec": 25,
+    "cooldown_sec": 90
+   },
+   "scaling": {
+    "value_per_level": 0.15,
+    "duration_per_level": 3,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c041_onyx_shield",
+   "name": "Onyx Shield",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🛡️",
+   "flavor": "A wall of steel. Blocks the next loss or disruption.",
+   "asset_path": "cards/onyx_shield",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 10,
+    "cooldown_sec": 40
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c042_wild_guard",
+   "name": "Wild Guard",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🏰",
+   "flavor": "Weather the crash behind an unbreakable barrier.",
+   "asset_path": "cards/wild_guard",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 10,
+    "cooldown_sec": 40
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c043_quantum_wall",
+   "name": "Quantum Wall",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🧱",
+   "flavor": "No red candle gets through this guard.",
+   "asset_path": "cards/quantum_wall",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 10,
+    "cooldown_sec": 40
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c044_solar_bastion",
+   "name": "Solar Bastion",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🪨",
+   "flavor": "Hold the line when the market turns.",
+   "asset_path": "cards/solar_bastion",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 10,
+    "cooldown_sec": 40
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c045_ultra_aegis",
+   "name": "Ultra Aegis",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "⛨",
+   "flavor": "A wall of steel. Blocks the next loss or disruption.",
+   "asset_path": "cards/ultra_aegis",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 10,
+    "cooldown_sec": 40
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c046_steel_barrier",
+   "name": "Steel Barrier",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🔰",
+   "flavor": "Weather the crash behind an unbreakable barrier.",
+   "asset_path": "cards/steel_barrier",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 10,
+    "cooldown_sec": 40
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c047_ghost_bunker",
+   "name": "Ghost Bunker",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🛡️",
+   "flavor": "No red candle gets through this guard.",
+   "asset_path": "cards/ghost_bunker",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 10,
+    "cooldown_sec": 40
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c048_platinum_fortress",
+   "name": "Platinum Fortress",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🏰",
+   "flavor": "Hold the line when the market turns.",
+   "asset_path": "cards/platinum_fortress",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 10,
+    "cooldown_sec": 40
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c049_frozen_armor",
+   "name": "Frozen Armor",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🧱",
+   "flavor": "A wall of steel. Blocks the next loss or disruption.",
+   "asset_path": "cards/frozen_armor",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 10,
+    "cooldown_sec": 40
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c050_astral_ward",
+   "name": "Astral Ward",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🪨",
+   "flavor": "Weather the crash behind an unbreakable barrier.",
+   "asset_path": "cards/astral_ward",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 10,
+    "cooldown_sec": 40
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c051_alpha_rampart",
+   "name": "Alpha Rampart",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "⛨",
+   "flavor": "No red candle gets through this guard.",
+   "asset_path": "cards/alpha_rampart",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 10,
+    "cooldown_sec": 40
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c052_rogue_shield",
+   "name": "Rogue Shield",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🔰",
+   "flavor": "Hold the line when the market turns.",
+   "asset_path": "cards/rogue_shield",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 10,
+    "cooldown_sec": 40
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c053_frost_guard",
+   "name": "Frost Guard",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🛡️",
+   "flavor": "A wall of steel. Blocks the next loss or disruption.",
+   "asset_path": "cards/frost_guard",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 10,
+    "cooldown_sec": 40
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c054_atomic_wall",
+   "name": "Atomic Wall",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🏰",
+   "flavor": "Weather the crash behind an unbreakable barrier.",
+   "asset_path": "cards/atomic_wall",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 10,
+    "cooldown_sec": 40
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c055_electric_bastion",
+   "name": "Electric Bastion",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🧱",
+   "flavor": "No red candle gets through this guard.",
+   "asset_path": "cards/electric_bastion",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 14,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c056_onyx_aegis",
+   "name": "Onyx Aegis",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🪨",
+   "flavor": "Hold the line when the market turns.",
+   "asset_path": "cards/onyx_aegis",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 14,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c057_wild_barrier",
+   "name": "Wild Barrier",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "⛨",
+   "flavor": "A wall of steel. Blocks the next loss or disruption.",
+   "asset_path": "cards/wild_barrier",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 14,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c058_quantum_bunker",
+   "name": "Quantum Bunker",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🔰",
+   "flavor": "Weather the crash behind an unbreakable barrier.",
+   "asset_path": "cards/quantum_bunker",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 14,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c059_solar_fortress",
+   "name": "Solar Fortress",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🛡️",
+   "flavor": "No red candle gets through this guard.",
+   "asset_path": "cards/solar_fortress",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 14,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c060_ultra_armor",
+   "name": "Ultra Armor",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🏰",
+   "flavor": "Hold the line when the market turns.",
+   "asset_path": "cards/ultra_armor",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 14,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c061_steel_ward",
+   "name": "Steel Ward",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🧱",
+   "flavor": "A wall of steel. Blocks the next loss or disruption.",
+   "asset_path": "cards/steel_ward",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 14,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c062_ghost_rampart",
+   "name": "Ghost Rampart",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🪨",
+   "flavor": "Weather the crash behind an unbreakable barrier.",
+   "asset_path": "cards/ghost_rampart",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 14,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c063_platinum_shield",
+   "name": "Platinum Shield",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "⛨",
+   "flavor": "No red candle gets through this guard.",
+   "asset_path": "cards/platinum_shield",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 14,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c064_frozen_guard",
+   "name": "Frozen Guard",
+   "rarity": "epic",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🔰",
+   "flavor": "Hold the line when the market turns.",
+   "asset_path": "cards/frozen_guard",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 18,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c065_astral_wall",
+   "name": "Astral Wall",
+   "rarity": "epic",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🛡️",
+   "flavor": "A wall of steel. Blocks the next loss or disruption.",
+   "asset_path": "cards/astral_wall",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 18,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c066_alpha_bastion",
+   "name": "Alpha Bastion",
+   "rarity": "epic",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🏰",
+   "flavor": "Weather the crash behind an unbreakable barrier.",
+   "asset_path": "cards/alpha_bastion",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 18,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c067_rogue_aegis",
+   "name": "Rogue Aegis",
+   "rarity": "epic",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🧱",
+   "flavor": "No red candle gets through this guard.",
+   "asset_path": "cards/rogue_aegis",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 18,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c068_frost_barrier",
+   "name": "Frost Barrier",
+   "rarity": "epic",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🪨",
+   "flavor": "Hold the line when the market turns.",
+   "asset_path": "cards/frost_barrier",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 18,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c069_atomic_bunker",
+   "name": "Atomic Bunker",
+   "rarity": "legendary",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "⛨",
+   "flavor": "A wall of steel. Blocks the next loss or disruption.",
+   "asset_path": "cards/atomic_bunker",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 24,
+    "cooldown_sec": 80
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c070_electric_fortress",
+   "name": "Electric Fortress",
+   "rarity": "legendary",
+   "category": "blitz-buff",
+   "effect": "shield",
+   "icon": "🔰",
+   "flavor": "Weather the crash behind an unbreakable barrier.",
+   "asset_path": "cards/electric_fortress",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 24,
+    "cooldown_sec": 80
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 2,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c071_hyper_dash",
+   "name": "Hyper Dash",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "🏎️",
+   "flavor": "Every correct call rockets you further up the track.",
+   "asset_path": "cards/hyper_dash",
+   "base_stats": {
+    "value": 1.3,
+    "duration_sec": 10,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c072_storm_nitro",
+   "name": "Storm Nitro",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "💨",
+   "flavor": "Pure acceleration — leave your rival in the dust.",
+   "asset_path": "cards/storm_nitro",
+   "base_stats": {
+    "value": 1.3,
+    "duration_sec": 10,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c073_pulse_sprint",
+   "name": "Pulse Sprint",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "⚡",
+   "flavor": "Hit the boost and surge to the front.",
+   "asset_path": "cards/pulse_sprint",
+   "base_stats": {
+    "value": 1.3,
+    "duration_sec": 10,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c074_radiant_overdrive",
+   "name": "Radiant Overdrive",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "🌀",
+   "flavor": "Momentum is a drug. Take the whole dose.",
+   "asset_path": "cards/radiant_overdrive",
+   "base_stats": {
+    "value": 1.3,
+    "duration_sec": 10,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c075_bronze_afterburner",
+   "name": "Bronze Afterburner",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "🛞",
+   "flavor": "Every correct call rockets you further up the track.",
+   "asset_path": "cards/bronze_afterburner",
+   "base_stats": {
+    "value": 1.3,
+    "duration_sec": 10,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c076_feral_accelerator",
+   "name": "Feral Accelerator",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "🔋",
+   "flavor": "Pure acceleration — leave your rival in the dust.",
+   "asset_path": "cards/feral_accelerator",
+   "base_stats": {
+    "value": 1.3,
+    "duration_sec": 10,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c077_iron_slipstream",
+   "name": "Iron Slipstream",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "🏎️",
+   "flavor": "Hit the boost and surge to the front.",
+   "asset_path": "cards/iron_slipstream",
+   "base_stats": {
+    "value": 1.3,
+    "duration_sec": 10,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c078_cyber_boost",
+   "name": "Cyber Boost",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "💨",
+   "flavor": "Momentum is a drug. Take the whole dose.",
+   "asset_path": "cards/cyber_boost",
+   "base_stats": {
+    "value": 1.3,
+    "duration_sec": 10,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c079_apex_launch",
+   "name": "Apex Launch",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "⚡",
+   "flavor": "Every correct call rockets you further up the track.",
+   "asset_path": "cards/apex_launch",
+   "base_stats": {
+    "value": 1.3,
+    "duration_sec": 10,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c080_crypto_kick",
+   "name": "Crypto Kick",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "🌀",
+   "flavor": "Pure acceleration — leave your rival in the dust.",
+   "asset_path": "cards/crypto_kick",
+   "base_stats": {
+    "value": 1.3,
+    "duration_sec": 10,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c081_phoenix_dash",
+   "name": "Phoenix Dash",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "🛞",
+   "flavor": "Hit the boost and surge to the front.",
+   "asset_path": "cards/phoenix_dash",
+   "base_stats": {
+    "value": 1.3,
+    "duration_sec": 10,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c082_sapphire_nitro",
+   "name": "Sapphire Nitro",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "🔋",
+   "flavor": "Momentum is a drug. Take the whole dose.",
+   "asset_path": "cards/sapphire_nitro",
+   "base_stats": {
+    "value": 1.3,
+    "duration_sec": 10,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c083_savage_sprint",
+   "name": "Savage Sprint",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "🏎️",
+   "flavor": "Every correct call rockets you further up the track.",
+   "asset_path": "cards/savage_sprint",
+   "base_stats": {
+    "value": 1.3,
+    "duration_sec": 10,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c084_crimson_overdrive",
+   "name": "Crimson Overdrive",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "💨",
+   "flavor": "Pure acceleration — leave your rival in the dust.",
+   "asset_path": "cards/crimson_overdrive",
+   "base_stats": {
+    "value": 1.3,
+    "duration_sec": 10,
+    "cooldown_sec": 45
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c085_nitro_afterburner",
+   "name": "Nitro Afterburner",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "⚡",
+   "flavor": "Hit the boost and surge to the front.",
+   "asset_path": "cards/nitro_afterburner",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c086_hyper_accelerator",
+   "name": "Hyper Accelerator",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "🌀",
+   "flavor": "Momentum is a drug. Take the whole dose.",
+   "asset_path": "cards/hyper_accelerator",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c087_storm_slipstream",
+   "name": "Storm Slipstream",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "🛞",
+   "flavor": "Every correct call rockets you further up the track.",
+   "asset_path": "cards/storm_slipstream",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c088_pulse_boost",
+   "name": "Pulse Boost",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "🔋",
+   "flavor": "Pure acceleration — leave your rival in the dust.",
+   "asset_path": "cards/pulse_boost",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c089_radiant_launch",
+   "name": "Radiant Launch",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "🏎️",
+   "flavor": "Hit the boost and surge to the front.",
+   "asset_path": "cards/radiant_launch",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c090_bronze_kick",
+   "name": "Bronze Kick",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "💨",
+   "flavor": "Momentum is a drug. Take the whole dose.",
+   "asset_path": "cards/bronze_kick",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c091_feral_dash",
+   "name": "Feral Dash",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "⚡",
+   "flavor": "Every correct call rockets you further up the track.",
+   "asset_path": "cards/feral_dash",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c092_iron_nitro",
+   "name": "Iron Nitro",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "🌀",
+   "flavor": "Pure acceleration — leave your rival in the dust.",
+   "asset_path": "cards/iron_nitro",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c093_cyber_sprint",
+   "name": "Cyber Sprint",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "🛞",
+   "flavor": "Hit the boost and surge to the front.",
+   "asset_path": "cards/cyber_sprint",
+   "base_stats": {
+    "value": 1.5,
+    "duration_sec": 12,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c094_apex_overdrive",
+   "name": "Apex Overdrive",
+   "rarity": "epic",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "🔋",
+   "flavor": "Momentum is a drug. Take the whole dose.",
+   "asset_path": "cards/apex_overdrive",
+   "base_stats": {
+    "value": 1.7,
+    "duration_sec": 15,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c095_crypto_afterburner",
+   "name": "Crypto Afterburner",
+   "rarity": "epic",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "🏎️",
+   "flavor": "Every correct call rockets you further up the track.",
+   "asset_path": "cards/crypto_afterburner",
+   "base_stats": {
+    "value": 1.7,
+    "duration_sec": 15,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c096_phoenix_accelerator",
+   "name": "Phoenix Accelerator",
+   "rarity": "epic",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "💨",
+   "flavor": "Pure acceleration — leave your rival in the dust.",
+   "asset_path": "cards/phoenix_accelerator",
+   "base_stats": {
+    "value": 1.7,
+    "duration_sec": 15,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c097_sapphire_slipstream",
+   "name": "Sapphire Slipstream",
+   "rarity": "epic",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "⚡",
+   "flavor": "Hit the boost and surge to the front.",
+   "asset_path": "cards/sapphire_slipstream",
+   "base_stats": {
+    "value": 1.7,
+    "duration_sec": 15,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c098_savage_boost",
+   "name": "Savage Boost",
+   "rarity": "epic",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "🌀",
+   "flavor": "Momentum is a drug. Take the whole dose.",
+   "asset_path": "cards/savage_boost",
+   "base_stats": {
+    "value": 1.7,
+    "duration_sec": 15,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c099_crimson_launch",
+   "name": "Crimson Launch",
+   "rarity": "legendary",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "🛞",
+   "flavor": "Every correct call rockets you further up the track.",
+   "asset_path": "cards/crimson_launch",
+   "base_stats": {
+    "value": 2.0,
+    "duration_sec": 18,
+    "cooldown_sec": 85
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c100_nitro_kick",
+   "name": "Nitro Kick",
+   "rarity": "legendary",
+   "category": "blitz-buff",
+   "effect": "speedBoost",
+   "icon": "🔋",
+   "flavor": "Pure acceleration — leave your rival in the dust.",
+   "asset_path": "cards/nitro_kick",
+   "base_stats": {
+    "value": 2.0,
+    "duration_sec": 18,
+    "cooldown_sec": 85
+   },
+   "scaling": {
+    "value_per_level": 0.08,
+    "duration_per_level": 2,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c101_onyx_jam",
+   "name": "Onyx Jam",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "📡",
+   "flavor": "Scramble their signal — your rival's gains bleed out.",
+   "asset_path": "cards/onyx_jam",
+   "base_stats": {
+    "value": 0.25,
+    "duration_sec": 8,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c102_wild_static",
+   "name": "Wild Static",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "🕸️",
+   "flavor": "Drop a fog of doubt over the enemy's screen.",
+   "asset_path": "cards/wild_static",
+   "base_stats": {
+    "value": 0.25,
+    "duration_sec": 8,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c103_quantum_disruptor",
+   "name": "Quantum Disruptor",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "📉",
+   "flavor": "Sabotage the competition when it hurts most.",
+   "asset_path": "cards/quantum_disruptor",
+   "base_stats": {
+    "value": 0.25,
+    "duration_sec": 8,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c104_solar_sabotage",
+   "name": "Solar Sabotage",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "🌫️",
+   "flavor": "Jam their momentum and watch them stall.",
+   "asset_path": "cards/solar_sabotage",
+   "base_stats": {
+    "value": 0.25,
+    "duration_sec": 8,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c105_ultra_interference",
+   "name": "Ultra Interference",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "⚠️",
+   "flavor": "Scramble their signal — your rival's gains bleed out.",
+   "asset_path": "cards/ultra_interference",
+   "base_stats": {
+    "value": 0.25,
+    "duration_sec": 8,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c106_steel_scramble",
+   "name": "Steel Scramble",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "🔻",
+   "flavor": "Drop a fog of doubt over the enemy's screen.",
+   "asset_path": "cards/steel_scramble",
+   "base_stats": {
+    "value": 0.25,
+    "duration_sec": 8,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c107_ghost_glitch",
+   "name": "Ghost Glitch",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "📡",
+   "flavor": "Sabotage the competition when it hurts most.",
+   "asset_path": "cards/ghost_glitch",
+   "base_stats": {
+    "value": 0.25,
+    "duration_sec": 8,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c108_platinum_hex",
+   "name": "Platinum Hex",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "🕸️",
+   "flavor": "Jam their momentum and watch them stall.",
+   "asset_path": "cards/platinum_hex",
+   "base_stats": {
+    "value": 0.25,
+    "duration_sec": 8,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c109_frozen_curse",
+   "name": "Frozen Curse",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "📉",
+   "flavor": "Scramble their signal — your rival's gains bleed out.",
+   "asset_path": "cards/frozen_curse",
+   "base_stats": {
+    "value": 0.25,
+    "duration_sec": 8,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c110_astral_blackout",
+   "name": "Astral Blackout",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "🌫️",
+   "flavor": "Drop a fog of doubt over the enemy's screen.",
+   "asset_path": "cards/astral_blackout",
+   "base_stats": {
+    "value": 0.25,
+    "duration_sec": 8,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c111_alpha_jam",
+   "name": "Alpha Jam",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "⚠️",
+   "flavor": "Sabotage the competition when it hurts most.",
+   "asset_path": "cards/alpha_jam",
+   "base_stats": {
+    "value": 0.25,
+    "duration_sec": 8,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c112_rogue_static",
+   "name": "Rogue Static",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "🔻",
+   "flavor": "Jam their momentum and watch them stall.",
+   "asset_path": "cards/rogue_static",
+   "base_stats": {
+    "value": 0.25,
+    "duration_sec": 8,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c113_frost_disruptor",
+   "name": "Frost Disruptor",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "📡",
+   "flavor": "Scramble their signal — your rival's gains bleed out.",
+   "asset_path": "cards/frost_disruptor",
+   "base_stats": {
+    "value": 0.25,
+    "duration_sec": 8,
+    "cooldown_sec": 50
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c114_atomic_sabotage",
+   "name": "Atomic Sabotage",
+   "rarity": "rare",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "🕸️",
+   "flavor": "Drop a fog of doubt over the enemy's screen.",
+   "asset_path": "cards/atomic_sabotage",
+   "base_stats": {
+    "value": 0.35,
+    "duration_sec": 10,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c115_electric_interference",
+   "name": "Electric Interference",
+   "rarity": "rare",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "📉",
+   "flavor": "Sabotage the competition when it hurts most.",
+   "asset_path": "cards/electric_interference",
+   "base_stats": {
+    "value": 0.35,
+    "duration_sec": 10,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c116_onyx_scramble",
+   "name": "Onyx Scramble",
+   "rarity": "rare",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "🌫️",
+   "flavor": "Jam their momentum and watch them stall.",
+   "asset_path": "cards/onyx_scramble",
+   "base_stats": {
+    "value": 0.35,
+    "duration_sec": 10,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c117_wild_glitch",
+   "name": "Wild Glitch",
+   "rarity": "rare",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "⚠️",
+   "flavor": "Scramble their signal — your rival's gains bleed out.",
+   "asset_path": "cards/wild_glitch",
+   "base_stats": {
+    "value": 0.35,
+    "duration_sec": 10,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c118_quantum_hex",
+   "name": "Quantum Hex",
+   "rarity": "rare",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "🔻",
+   "flavor": "Drop a fog of doubt over the enemy's screen.",
+   "asset_path": "cards/quantum_hex",
+   "base_stats": {
+    "value": 0.35,
+    "duration_sec": 10,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c119_solar_curse",
+   "name": "Solar Curse",
+   "rarity": "rare",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "📡",
+   "flavor": "Sabotage the competition when it hurts most.",
+   "asset_path": "cards/solar_curse",
+   "base_stats": {
+    "value": 0.35,
+    "duration_sec": 10,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c120_ultra_blackout",
+   "name": "Ultra Blackout",
+   "rarity": "rare",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "🕸️",
+   "flavor": "Jam their momentum and watch them stall.",
+   "asset_path": "cards/ultra_blackout",
+   "base_stats": {
+    "value": 0.35,
+    "duration_sec": 10,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c121_steel_jam",
+   "name": "Steel Jam",
+   "rarity": "rare",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "📉",
+   "flavor": "Scramble their signal — your rival's gains bleed out.",
+   "asset_path": "cards/steel_jam",
+   "base_stats": {
+    "value": 0.35,
+    "duration_sec": 10,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c122_ghost_static",
+   "name": "Ghost Static",
+   "rarity": "rare",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "🌫️",
+   "flavor": "Drop a fog of doubt over the enemy's screen.",
+   "asset_path": "cards/ghost_static",
+   "base_stats": {
+    "value": 0.35,
+    "duration_sec": 10,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c123_platinum_disruptor",
+   "name": "Platinum Disruptor",
+   "rarity": "epic",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "⚠️",
+   "flavor": "Sabotage the competition when it hurts most.",
+   "asset_path": "cards/platinum_disruptor",
+   "base_stats": {
+    "value": 0.45,
+    "duration_sec": 12,
+    "cooldown_sec": 65
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c124_frozen_sabotage",
+   "name": "Frozen Sabotage",
+   "rarity": "epic",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "🔻",
+   "flavor": "Jam their momentum and watch them stall.",
+   "asset_path": "cards/frozen_sabotage",
+   "base_stats": {
+    "value": 0.45,
+    "duration_sec": 12,
+    "cooldown_sec": 65
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c125_astral_interference",
+   "name": "Astral Interference",
+   "rarity": "epic",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "📡",
+   "flavor": "Scramble their signal — your rival's gains bleed out.",
+   "asset_path": "cards/astral_interference",
+   "base_stats": {
+    "value": 0.45,
+    "duration_sec": 12,
+    "cooldown_sec": 65
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c126_alpha_scramble",
+   "name": "Alpha Scramble",
+   "rarity": "epic",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "🕸️",
+   "flavor": "Drop a fog of doubt over the enemy's screen.",
+   "asset_path": "cards/alpha_scramble",
+   "base_stats": {
+    "value": 0.45,
+    "duration_sec": 12,
+    "cooldown_sec": 65
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c127_rogue_glitch",
+   "name": "Rogue Glitch",
+   "rarity": "legendary",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "📉",
+   "flavor": "Sabotage the competition when it hurts most.",
+   "asset_path": "cards/rogue_glitch",
+   "base_stats": {
+    "value": 0.55,
+    "duration_sec": 14,
+    "cooldown_sec": 90
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c128_frost_hex",
+   "name": "Frost Hex",
+   "rarity": "legendary",
+   "category": "blitz-attack",
+   "effect": "debuff",
+   "icon": "🌫️",
+   "flavor": "Jam their momentum and watch them stall.",
+   "asset_path": "cards/frost_hex",
+   "base_stats": {
+    "value": 0.55,
+    "duration_sec": 14,
+    "cooldown_sec": 90
+   },
+   "scaling": {
+    "value_per_level": 0.02,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 3,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c129_quantum_freeze",
+   "name": "Quantum Freeze",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "❄️",
+   "flavor": "Ice the competition — lock their controls for a beat.",
+   "asset_path": "cards/quantum_freeze",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 2,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c130_solar_frost",
+   "name": "Solar Frost",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "🧊",
+   "flavor": "Flash-freeze the enemy at the worst possible moment.",
+   "asset_path": "cards/solar_frost",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 2,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c131_ultra_ice",
+   "name": "Ultra Ice",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "🥶",
+   "flavor": "A blizzard of pure stasis. They can't move.",
+   "asset_path": "cards/ultra_ice",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 2,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c132_steel_blizzard",
+   "name": "Steel Blizzard",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "⏸️",
+   "flavor": "Cold as a bear market. Freeze them solid.",
+   "asset_path": "cards/steel_blizzard",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 2,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c133_ghost_stasis",
+   "name": "Ghost Stasis",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "🌨️",
+   "flavor": "Ice the competition — lock their controls for a beat.",
+   "asset_path": "cards/ghost_stasis",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 2,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c134_platinum_cryo",
+   "name": "Platinum Cryo",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "❄️",
+   "flavor": "Flash-freeze the enemy at the worst possible moment.",
+   "asset_path": "cards/platinum_cryo",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 2,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c135_frozen_chill",
+   "name": "Frozen Chill",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "🧊",
+   "flavor": "A blizzard of pure stasis. They can't move.",
+   "asset_path": "cards/frozen_chill",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 2,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c136_astral_deep_freeze",
+   "name": "Astral Deep Freeze",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "🥶",
+   "flavor": "Cold as a bear market. Freeze them solid.",
+   "asset_path": "cards/astral_deep_freeze",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 2,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c137_alpha_glacier",
+   "name": "Alpha Glacier",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "⏸️",
+   "flavor": "Ice the competition — lock their controls for a beat.",
+   "asset_path": "cards/alpha_glacier",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 2,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c138_rogue_whiteout",
+   "name": "Rogue Whiteout",
+   "rarity": "common",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "🌨️",
+   "flavor": "Flash-freeze the enemy at the worst possible moment.",
+   "asset_path": "cards/rogue_whiteout",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 2,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c139_frost_freeze",
+   "name": "Frost Freeze",
+   "rarity": "rare",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "❄️",
+   "flavor": "A blizzard of pure stasis. They can't move.",
+   "asset_path": "cards/frost_freeze",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 3,
+    "cooldown_sec": 65
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c140_atomic_frost",
+   "name": "Atomic Frost",
+   "rarity": "rare",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "🧊",
+   "flavor": "Cold as a bear market. Freeze them solid.",
+   "asset_path": "cards/atomic_frost",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 3,
+    "cooldown_sec": 65
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c141_electric_ice",
+   "name": "Electric Ice",
+   "rarity": "rare",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "🥶",
+   "flavor": "Ice the competition — lock their controls for a beat.",
+   "asset_path": "cards/electric_ice",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 3,
+    "cooldown_sec": 65
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c142_onyx_blizzard",
+   "name": "Onyx Blizzard",
+   "rarity": "rare",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "⏸️",
+   "flavor": "Flash-freeze the enemy at the worst possible moment.",
+   "asset_path": "cards/onyx_blizzard",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 3,
+    "cooldown_sec": 65
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c143_wild_stasis",
+   "name": "Wild Stasis",
+   "rarity": "rare",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "🌨️",
+   "flavor": "A blizzard of pure stasis. They can't move.",
+   "asset_path": "cards/wild_stasis",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 3,
+    "cooldown_sec": 65
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c144_quantum_cryo",
+   "name": "Quantum Cryo",
+   "rarity": "rare",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "❄️",
+   "flavor": "Cold as a bear market. Freeze them solid.",
+   "asset_path": "cards/quantum_cryo",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 3,
+    "cooldown_sec": 65
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c145_solar_chill",
+   "name": "Solar Chill",
+   "rarity": "rare",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "🧊",
+   "flavor": "Ice the competition — lock their controls for a beat.",
+   "asset_path": "cards/solar_chill",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 3,
+    "cooldown_sec": 65
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c146_ultra_deep_freeze",
+   "name": "Ultra Deep Freeze",
+   "rarity": "epic",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "🥶",
+   "flavor": "Flash-freeze the enemy at the worst possible moment.",
+   "asset_path": "cards/ultra_deep_freeze",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 4,
+    "cooldown_sec": 75
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c147_steel_glacier",
+   "name": "Steel Glacier",
+   "rarity": "epic",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "⏸️",
+   "flavor": "A blizzard of pure stasis. They can't move.",
+   "asset_path": "cards/steel_glacier",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 4,
+    "cooldown_sec": 75
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c148_ghost_whiteout",
+   "name": "Ghost Whiteout",
+   "rarity": "epic",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "🌨️",
+   "flavor": "Cold as a bear market. Freeze them solid.",
+   "asset_path": "cards/ghost_whiteout",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 4,
+    "cooldown_sec": 75
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c149_platinum_freeze",
+   "name": "Platinum Freeze",
+   "rarity": "legendary",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "❄️",
+   "flavor": "Ice the competition — lock their controls for a beat.",
+   "asset_path": "cards/platinum_freeze",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 5,
+    "cooldown_sec": 100
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c150_frozen_frost",
+   "name": "Frozen Frost",
+   "rarity": "legendary",
+   "category": "blitz-attack",
+   "effect": "freeze",
+   "icon": "🧊",
+   "flavor": "Flash-freeze the enemy at the worst possible moment.",
+   "asset_path": "cards/frozen_frost",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 5,
+    "cooldown_sec": 100
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c151_phoenix_eye",
+   "name": "Phoenix Eye",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "reveal",
+   "icon": "👁️",
+   "flavor": "Peek behind the curtain — see the next wave before it breaks.",
+   "asset_path": "cards/phoenix_eye",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 3,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c152_sapphire_oracle",
+   "name": "Sapphire Oracle",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "reveal",
+   "icon": "🔮",
+   "flavor": "Read the tape like a prophet.",
+   "asset_path": "cards/sapphire_oracle",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 3,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c153_savage_vision",
+   "name": "Savage Vision",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "reveal",
+   "icon": "🔭",
+   "flavor": "Knowledge is edge. See what others can't.",
+   "asset_path": "cards/savage_vision",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 3,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c154_crimson_foresight",
+   "name": "Crimson Foresight",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "reveal",
+   "icon": "📡",
+   "flavor": "The future, revealed for a precious few seconds.",
+   "asset_path": "cards/crimson_foresight",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 3,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c155_nitro_scanner",
+   "name": "Nitro Scanner",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "reveal",
+   "icon": "🎯",
+   "flavor": "Peek behind the curtain — see the next wave before it breaks.",
+   "asset_path": "cards/nitro_scanner",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 3,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c156_hyper_radar",
+   "name": "Hyper Radar",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "reveal",
+   "icon": "🧿",
+   "flavor": "Read the tape like a prophet.",
+   "asset_path": "cards/hyper_radar",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 3,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c157_storm_prophecy",
+   "name": "Storm Prophecy",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "reveal",
+   "icon": "👁️",
+   "flavor": "Knowledge is edge. See what others can't.",
+   "asset_path": "cards/storm_prophecy",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 3,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c158_pulse_insight",
+   "name": "Pulse Insight",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "reveal",
+   "icon": "🔮",
+   "flavor": "The future, revealed for a precious few seconds.",
+   "asset_path": "cards/pulse_insight",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 3,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c159_radiant_scope",
+   "name": "Radiant Scope",
+   "rarity": "common",
+   "category": "blitz-buff",
+   "effect": "reveal",
+   "icon": "🔭",
+   "flavor": "Peek behind the curtain — see the next wave before it breaks.",
+   "asset_path": "cards/radiant_scope",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 3,
+    "cooldown_sec": 55
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c160_bronze_sixth_sense",
+   "name": "Bronze Sixth Sense",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "reveal",
+   "icon": "📡",
+   "flavor": "Read the tape like a prophet.",
+   "asset_path": "cards/bronze_sixth_sense",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 4,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c161_feral_eye",
+   "name": "Feral Eye",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "reveal",
+   "icon": "🎯",
+   "flavor": "Knowledge is edge. See what others can't.",
+   "asset_path": "cards/feral_eye",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 4,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c162_iron_oracle",
+   "name": "Iron Oracle",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "reveal",
+   "icon": "🧿",
+   "flavor": "The future, revealed for a precious few seconds.",
+   "asset_path": "cards/iron_oracle",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 4,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c163_cyber_vision",
+   "name": "Cyber Vision",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "reveal",
+   "icon": "👁️",
+   "flavor": "Peek behind the curtain — see the next wave before it breaks.",
+   "asset_path": "cards/cyber_vision",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 4,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c164_apex_foresight",
+   "name": "Apex Foresight",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "reveal",
+   "icon": "🔮",
+   "flavor": "Read the tape like a prophet.",
+   "asset_path": "cards/apex_foresight",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 4,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c165_crypto_scanner",
+   "name": "Crypto Scanner",
+   "rarity": "rare",
+   "category": "blitz-buff",
+   "effect": "reveal",
+   "icon": "🔭",
+   "flavor": "Knowledge is edge. See what others can't.",
+   "asset_path": "cards/crypto_scanner",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 4,
+    "cooldown_sec": 60
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c166_phoenix_radar",
+   "name": "Phoenix Radar",
+   "rarity": "epic",
+   "category": "blitz-buff",
+   "effect": "reveal",
+   "icon": "📡",
+   "flavor": "The future, revealed for a precious few seconds.",
+   "asset_path": "cards/phoenix_radar",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 5,
+    "cooldown_sec": 70
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c167_sapphire_prophecy",
+   "name": "Sapphire Prophecy",
+   "rarity": "epic",
+   "category": "blitz-buff",
+   "effect": "reveal",
+   "icon": "🎯",
+   "flavor": "Peek behind the curtain — see the next wave before it breaks.",
+   "asset_path": "cards/sapphire_prophecy",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 5,
+    "cooldown_sec": 70
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c168_savage_insight",
+   "name": "Savage Insight",
+   "rarity": "epic",
+   "category": "blitz-buff",
+   "effect": "reveal",
+   "icon": "🧿",
+   "flavor": "Read the tape like a prophet.",
+   "asset_path": "cards/savage_insight",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 5,
+    "cooldown_sec": 70
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c169_crimson_scope",
+   "name": "Crimson Scope",
+   "rarity": "legendary",
+   "category": "blitz-buff",
+   "effect": "reveal",
+   "icon": "👁️",
+   "flavor": "Knowledge is edge. See what others can't.",
+   "asset_path": "cards/crimson_scope",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 6,
+    "cooldown_sec": 95
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c170_nitro_sixth_sense",
+   "name": "Nitro Sixth Sense",
+   "rarity": "legendary",
+   "category": "blitz-buff",
+   "effect": "reveal",
+   "icon": "🔮",
+   "flavor": "The future, revealed for a precious few seconds.",
+   "asset_path": "cards/nitro_sixth_sense",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 6,
+    "cooldown_sec": 95
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 1,
+    "cooldown_reduction_per_level": 4,
+    "max_level": 10
+   }
+  },
+  {
+   "id": "c171_feral_swap",
+   "name": "Feral Swap",
+   "rarity": "common",
+   "category": "portfolio-management",
+   "effect": "swap",
+   "icon": "🔄",
+   "flavor": "Cut the dead weight — replace a lagging stock mid-session.",
+   "asset_path": "cards/feral_swap",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c172_iron_trade",
+   "name": "Iron Trade",
+   "rarity": "common",
+   "category": "portfolio-management",
+   "effect": "swap",
+   "icon": "♻️",
+   "flavor": "Rotate out of the losers before the bell.",
+   "asset_path": "cards/iron_trade",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c173_cyber_rotation",
+   "name": "Cyber Rotation",
+   "rarity": "common",
+   "category": "portfolio-management",
+   "effect": "swap",
+   "icon": "🔀",
+   "flavor": "A fresh pick, right when you need it.",
+   "asset_path": "cards/cyber_rotation",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c174_apex_shuffle",
+   "name": "Apex Shuffle",
+   "rarity": "common",
+   "category": "portfolio-management",
+   "effect": "swap",
+   "icon": "🧩",
+   "flavor": "Rebalance on the fly and seize the day.",
+   "asset_path": "cards/apex_shuffle",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c175_crypto_rebalance",
+   "name": "Crypto Rebalance",
+   "rarity": "common",
+   "category": "portfolio-management",
+   "effect": "swap",
+   "icon": "🔄",
+   "flavor": "Cut the dead weight — replace a lagging stock mid-session.",
+   "asset_path": "cards/crypto_rebalance",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c176_phoenix_switch",
+   "name": "Phoenix Switch",
+   "rarity": "common",
+   "category": "portfolio-management",
+   "effect": "swap",
+   "icon": "♻️",
+   "flavor": "Rotate out of the losers before the bell.",
+   "asset_path": "cards/phoenix_switch",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c177_sapphire_pivot",
+   "name": "Sapphire Pivot",
+   "rarity": "common",
+   "category": "portfolio-management",
+   "effect": "swap",
+   "icon": "🔀",
+   "flavor": "A fresh pick, right when you need it.",
+   "asset_path": "cards/sapphire_pivot",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c178_savage_reshuffle",
+   "name": "Savage Reshuffle",
+   "rarity": "rare",
+   "category": "portfolio-management",
+   "effect": "swap",
+   "icon": "🧩",
+   "flavor": "Rebalance on the fly and seize the day.",
+   "asset_path": "cards/savage_reshuffle",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c179_crimson_swap",
+   "name": "Crimson Swap",
+   "rarity": "rare",
+   "category": "portfolio-management",
+   "effect": "swap",
+   "icon": "🔄",
+   "flavor": "Cut the dead weight — replace a lagging stock mid-session.",
+   "asset_path": "cards/crimson_swap",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c180_nitro_trade",
+   "name": "Nitro Trade",
+   "rarity": "rare",
+   "category": "portfolio-management",
+   "effect": "swap",
+   "icon": "♻️",
+   "flavor": "Rotate out of the losers before the bell.",
+   "asset_path": "cards/nitro_trade",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c181_hyper_rotation",
+   "name": "Hyper Rotation",
+   "rarity": "rare",
+   "category": "portfolio-management",
+   "effect": "swap",
+   "icon": "🔀",
+   "flavor": "A fresh pick, right when you need it.",
+   "asset_path": "cards/hyper_rotation",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c182_storm_shuffle",
+   "name": "Storm Shuffle",
+   "rarity": "epic",
+   "category": "portfolio-management",
+   "effect": "swap",
+   "icon": "🧩",
+   "flavor": "Rebalance on the fly and seize the day.",
+   "asset_path": "cards/storm_shuffle",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c183_pulse_rebalance",
+   "name": "Pulse Rebalance",
+   "rarity": "epic",
+   "category": "portfolio-management",
+   "effect": "swap",
+   "icon": "🔄",
+   "flavor": "Cut the dead weight — replace a lagging stock mid-session.",
+   "asset_path": "cards/pulse_rebalance",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c184_radiant_switch",
+   "name": "Radiant Switch",
+   "rarity": "epic",
+   "category": "portfolio-management",
+   "effect": "swap",
+   "icon": "♻️",
+   "flavor": "Rotate out of the losers before the bell.",
+   "asset_path": "cards/radiant_switch",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c185_bronze_pivot",
+   "name": "Bronze Pivot",
+   "rarity": "legendary",
+   "category": "portfolio-management",
+   "effect": "swap",
+   "icon": "🔀",
+   "flavor": "A fresh pick, right when you need it.",
+   "asset_path": "cards/bronze_pivot",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c186_obsidian_insurance",
+   "name": "Obsidian Insurance",
+   "rarity": "common",
+   "category": "portfolio-management",
+   "effect": "insurance",
+   "icon": "🏦",
+   "flavor": "Sleep easy — safeguards your squad against a brutal red day.",
+   "asset_path": "cards/obsidian_insurance",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c187_blazing_hedge",
+   "name": "Blazing Hedge",
+   "rarity": "common",
+   "category": "portfolio-management",
+   "effect": "insurance",
+   "icon": "💼",
+   "flavor": "Lock in a floor under your portfolio.",
+   "asset_path": "cards/blazing_hedge",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c188_sonic_safety_net",
+   "name": "Sonic Safety Net",
+   "rarity": "common",
+   "category": "portfolio-management",
+   "effect": "insurance",
+   "icon": "🛟",
+   "flavor": "When the storm hits, you're covered.",
+   "asset_path": "cards/sonic_safety_net",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c189_diamond_guarantee",
+   "name": "Diamond Guarantee",
+   "rarity": "common",
+   "category": "portfolio-management",
+   "effect": "insurance",
+   "icon": "🔒",
+   "flavor": "Unbreakable hands, guaranteed.",
+   "asset_path": "cards/diamond_guarantee",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c190_titan_cover",
+   "name": "Titan Cover",
+   "rarity": "common",
+   "category": "portfolio-management",
+   "effect": "insurance",
+   "icon": "🪙",
+   "flavor": "Sleep easy — safeguards your squad against a brutal red day.",
+   "asset_path": "cards/titan_cover",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c191_shadow_protection",
+   "name": "Shadow Protection",
+   "rarity": "common",
+   "category": "portfolio-management",
+   "effect": "insurance",
+   "icon": "🏦",
+   "flavor": "Lock in a floor under your portfolio.",
+   "asset_path": "cards/shadow_protection",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c192_bionic_assurance",
+   "name": "Bionic Assurance",
+   "rarity": "common",
+   "category": "portfolio-management",
+   "effect": "insurance",
+   "icon": "💼",
+   "flavor": "When the storm hits, you're covered.",
+   "asset_path": "cards/bionic_assurance",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c193_cosmic_vault",
+   "name": "Cosmic Vault",
+   "rarity": "rare",
+   "category": "portfolio-management",
+   "effect": "insurance",
+   "icon": "🛟",
+   "flavor": "Unbreakable hands, guaranteed.",
+   "asset_path": "cards/cosmic_vault",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c194_ruby_insurance",
+   "name": "Ruby Insurance",
+   "rarity": "rare",
+   "category": "portfolio-management",
+   "effect": "insurance",
+   "icon": "🔒",
+   "flavor": "Sleep easy — safeguards your squad against a brutal red day.",
+   "asset_path": "cards/ruby_insurance",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c195_royal_hedge",
+   "name": "Royal Hedge",
+   "rarity": "rare",
+   "category": "portfolio-management",
+   "effect": "insurance",
+   "icon": "🪙",
+   "flavor": "Lock in a floor under your portfolio.",
+   "asset_path": "cards/royal_hedge",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c196_turbo_safety_net",
+   "name": "Turbo Safety Net",
+   "rarity": "rare",
+   "category": "portfolio-management",
+   "effect": "insurance",
+   "icon": "🏦",
+   "flavor": "When the storm hits, you're covered.",
+   "asset_path": "cards/turbo_safety_net",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c197_plasma_guarantee",
+   "name": "Plasma Guarantee",
+   "rarity": "epic",
+   "category": "portfolio-management",
+   "effect": "insurance",
+   "icon": "💼",
+   "flavor": "Unbreakable hands, guaranteed.",
+   "asset_path": "cards/plasma_guarantee",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c198_mega_cover",
+   "name": "Mega Cover",
+   "rarity": "epic",
+   "category": "portfolio-management",
+   "effect": "insurance",
+   "icon": "🛟",
+   "flavor": "Sleep easy — safeguards your squad against a brutal red day.",
+   "asset_path": "cards/mega_cover",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c199_volt_protection",
+   "name": "Volt Protection",
+   "rarity": "epic",
+   "category": "portfolio-management",
+   "effect": "insurance",
+   "icon": "🔒",
+   "flavor": "Lock in a floor under your portfolio.",
+   "asset_path": "cards/volt_protection",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  },
+  {
+   "id": "c200_rocket_assurance",
+   "name": "Rocket Assurance",
+   "rarity": "legendary",
+   "category": "portfolio-management",
+   "effect": "insurance",
+   "icon": "🪙",
+   "flavor": "When the storm hits, you're covered.",
+   "asset_path": "cards/rocket_assurance",
+   "base_stats": {
+    "value": 1.0,
+    "duration_sec": 0,
+    "cooldown_sec": 0
+   },
+   "scaling": {
+    "value_per_level": 0.0,
+    "duration_per_level": 0,
+    "cooldown_reduction_per_level": 0,
+    "max_level": 5
+   }
+  }
+ ]
+}
