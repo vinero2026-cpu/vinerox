@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'arena/api.dart';
 import 'arena/app_shell.dart';
-import 'arena/onboarding_screen.dart';
+import 'arena/master_onboarding_screen.dart';
 import 'arena/sign_in_screen.dart';
 import 'arena/theme.dart';
 
@@ -72,12 +72,11 @@ class _StockArenaAppState extends State<StockArenaApp> {
         _Stage.signedOut => SignInScreen(onSignedIn: _onSignedIn),
         _Stage.checking => const Scaffold(
             body: Center(child: CircularProgressIndicator(strokeWidth: 2.4))),
-        _Stage.onboarding =>
-          OnboardingScreen(onFinished: () => setState(() => _stage = _Stage.ready)),
+        _Stage.onboarding => MasterOnboardingScreen(
+            onFinished: () => setState(() => _stage = _Stage.ready)),
         _Stage.ready => AppShell(
             onSignedOut: () => setState(() => _stage = _Stage.signedOut)),
       },
     );
   }
 }
-
