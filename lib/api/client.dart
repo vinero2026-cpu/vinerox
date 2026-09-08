@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 
 import '../config.dart';
 import '../models/pick.dart';
+import '../models/master_stock.dart';
 import 'arena_auth.dart';
 
 class ApiClient {
@@ -36,10 +37,21 @@ class ApiClient {
   }
 
   Future<List<Pick>> picks({String tier = 'BESTSTOCK', int limit = 20}) async {
-    final r = await _dio.get('/api/picks',
-        queryParameters: {'tier': tier, 'limit': limit});
+    final r = await _dio
+        .get('/api/picks', queryParameters: {'tier': tier, 'limit': limit});
     final list = (r.data['picks'] as List).cast<Map>();
-    return list.map((m) => Pick.fromJson(Map<String, dynamic>.from(m))).toList();
+    return list
+        .map((m) => Pick.fromJson(Map<String, dynamic>.from(m)))
+        .toList();
+  }
+
+  Future<List<MasterStock>> masterStocks({int limit = 100}) async {
+    final r =
+        await _dio.get('/api/stocks/master', queryParameters: {'limit': limit});
+    final list = (r.data['rows'] as List).cast<Map>();
+    return list
+        .map((row) => MasterStock.fromJson(Map<String, dynamic>.from(row)))
+        .toList();
   }
 
   Future<Map<String, dynamic>> portfolio() async {
