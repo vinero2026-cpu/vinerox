@@ -55,17 +55,21 @@ class _AppShellState extends State<AppShell> {
       body: IndexedStack(
         index: _index,
         children: const [
-          ShopScreen(),
-          RankScreen(),
-          LeagueScreen(),
-          MyTeamScreen(),
-          MarketScreen(),
+          _PageAtmosphere(kind: _PageAtmosphereKind.shop, child: ShopScreen()),
+          _PageAtmosphere(kind: _PageAtmosphereKind.rank, child: RankScreen()),
+          _PageAtmosphere(kind: _PageAtmosphereKind.league, child: LeagueScreen()),
+          _PageAtmosphere(kind: _PageAtmosphereKind.team, child: MyTeamScreen()),
+          _PageAtmosphere(kind: _PageAtmosphereKind.market, child: MarketScreen()),
         ],
       ),
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
-          backgroundColor: AC.bgAlt,
-          indicatorColor: AC.gold.withValues(alpha: .18),
+          backgroundColor: Colors.transparent,
+          indicatorColor: AC.gold.withValues(alpha: .22),
+          indicatorShape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18),
+              side: BorderSide(color: AC.gold.withValues(alpha: .35))),
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
           labelTextStyle: WidgetStateProperty.resolveWith(
             (states) => TextStyle(
               fontSize: 11,
@@ -84,12 +88,19 @@ class _AppShellState extends State<AppShell> {
             ),
           ),
         ),
-        child: NavigationBar(
-          height: 66,
-          selectedIndex: _index,
-          onDestinationSelected: (i) => setState(() => _index = i),
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-          destinations: const [
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [AC.surfaceHi, AC.bgAlt],
+            ),
+          ),
+          child: NavigationBar(
+            height: 76,
+            selectedIndex: _index,
+            onDestinationSelected: (i) => setState(() => _index = i),
+            destinations: const [
             NavigationDestination(
                 icon: Icon(Icons.storefront_outlined),
                 selectedIcon: Icon(Icons.storefront_rounded),
@@ -110,9 +121,39 @@ class _AppShellState extends State<AppShell> {
                 icon: Icon(Icons.swap_horiz_outlined),
                 selectedIcon: Icon(Icons.swap_horiz_rounded),
                 label: 'MARKET'),
-          ],
+            ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+enum _PageAtmosphereKind { shop, rank, league, team, market }
+
+class _PageAtmosphere extends StatelessWidget {
+  const _PageAtmosphere({required this.kind, required this.child});
+  final _PageAtmosphereKind kind;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = switch (kind) {
+      _PageAtmosphereKind.shop => const [Color(0xFF211A0D), AC.bg],
+      _PageAtmosphereKind.rank => const [Color(0xFF0D1B31), AC.bg],
+      _PageAtmosphereKind.league => const [Color(0xFF082A2A), AC.bg],
+      _PageAtmosphereKind.team => const [Color(0xFF24152A), AC.bg],
+      _PageAtmosphereKind.market => const [Color(0xFF0D241F), AC.bg],
+    };
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: RadialGradient(
+          center: const Alignment(0.72, -0.9),
+          radius: 1.15,
+          colors: [colors.first.withValues(alpha: .72), colors.last],
+        ),
+      ),
+      child: child,
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import 'theme.dart';
 
@@ -108,6 +109,83 @@ class StatChip extends StatelessWidget {
       ),
     );
   }
+}
+
+class StockLogo extends StatelessWidget {
+  const StockLogo({
+    super.key,
+    required this.ticker,
+    this.logoUrl,
+    this.size = 48,
+    this.color = AC.teal,
+  });
+
+  final String ticker;
+  final String? logoUrl;
+  final double size;
+  final Color color;
+
+  String get _url {
+    final supplied = logoUrl?.trim() ?? '';
+    if (supplied.isNotEmpty) return supplied;
+    final symbol = ticker.trim().toUpperCase();
+    return symbol.isEmpty
+        ? ''
+        : 'https://financialmodelingprep.com/image-stock/$symbol.png';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final symbol = ticker.trim().toUpperCase();
+    final short = symbol.isEmpty
+      ? '?'
+      : symbol.substring(0, symbol.length > 3 ? 3 : symbol.length);
+    return Container(
+      width: size,
+      height: size,
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(size * .27),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [color.withValues(alpha: .55), AC.surfaceHi],
+        ),
+        border: Border.all(color: color.withValues(alpha: .75), width: 1.2),
+        boxShadow: [
+          BoxShadow(color: color.withValues(alpha: .22), blurRadius: 10),
+          const BoxShadow(color: Colors.black54, offset: Offset(1, 2), blurRadius: 3),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(size * .2),
+        child: _url.isEmpty
+            ? _fallback(short)
+            : CachedNetworkImage(
+                imageUrl: _url,
+                fit: BoxFit.contain,
+                color: Colors.white,
+                colorBlendMode: BlendMode.modulate,
+                errorWidget: (_, __, ___) => _fallback(short),
+                placeholder: (_, __) => _fallback(short),
+              ),
+      ),
+    );
+  }
+
+  Widget _fallback(String short) => Container(
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+              colors: [color.withValues(alpha: .28), AC.bgAlt]),
+        ),
+        child: Text(short,
+            style: TextStyle(
+                color: color,
+                fontFamily: 'Fredoka',
+                fontSize: size * .27,
+                fontWeight: FontWeight.w800)),
+      );
 }
 
 class SectionCard extends StatelessWidget {

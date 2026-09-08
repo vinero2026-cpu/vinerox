@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/client.dart';
 import '../models/master_stock.dart';
@@ -34,31 +35,6 @@ class _MasterOnboardingScreenState extends State<MasterOnboardingScreen> {
   String? _expectation;
   List<MasterStock> _squad = const [];
 
-  static const _flags = [
-    '🇺🇸',
-    '🇬🇧',
-    '🇮🇱',
-    '🇨🇦',
-    '🇦🇺',
-    '🇩🇪',
-    '🇫🇷',
-    '🇯🇵'
-  ];
-  static const _colors = [
-    Color(0xFF2FD3A6),
-    Color(0xFFF5B940),
-    Color(0xFF4B9BFF),
-    Color(0xFFF2565A),
-    Color(0xFF9A7BFF),
-    Color(0xFFFF8A3D),
-  ];
-  static const _expectations = [
-    'I am here to lead the league',
-    'I am here to beat everyone',
-    'I am targeting a top five finish',
-    'I have no opinion yet',
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -68,7 +44,9 @@ class _MasterOnboardingScreenState extends State<MasterOnboardingScreen> {
   Future<void> _loadLowScoreSquad() async {
     try {
       final rows = await _master.masterStocks(limit: 1000);
-      final eligible = rows.where((stock) => stock.score < 20).toList()
+      final eligible = rows
+          .where((stock) => stock.status == 'ok' && stock.score >= 80)
+          .toList()
         ..shuffle(Random());
       if (mounted) setState(() => _squad = eligible.take(6).toList());
     } catch (_) {
@@ -129,6 +107,10 @@ class _MasterOnboardingScreenState extends State<MasterOnboardingScreen> {
         try {
           await ArenaApi.instance.post('/api/club/identity', body);
         } catch (_) {}
+      }
+      if (_profileImage != null) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString(kClubProfileImagePath, _profileImage!.path);
       }
       if (mounted) widget.onFinished();
     } finally {

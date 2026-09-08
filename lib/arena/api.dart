@@ -15,6 +15,8 @@ const kPrivacyUrl = 'https://vinero.app/legal/privacy.html';
 const kTermsUrl = 'https://vinero.app/legal/terms.html';
 const kDeleteAccountUrl = 'https://vinero.app/legal/delete-account.html';
 
+const kClubProfileImagePath = 'club_profile_image_path';
+
 class ApiException implements Exception {
   ApiException(this.message, {this.statusCode, this.code});
   final String message;

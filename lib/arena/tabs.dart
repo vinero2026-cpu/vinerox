@@ -254,10 +254,18 @@ class LeagueScreen extends StatefulWidget {
 }
 
 class _LeagueScreenState extends State<LeagueScreen> {
-  late Future<Map<String, dynamic>> _future = ArenaApi.instance.leagueMe();
+  late Future<_LeagueBundle> _future = _load();
+
+  Future<_LeagueBundle> _load() async {
+    final results = await Future.wait([
+      ArenaApi.instance.leagueMe(),
+      ArenaApi.instance.leagueArena().catchError((_) => <String, dynamic>{}),
+    ]);
+    return _LeagueBundle(league: results[0], arena: results[1]);
+  }
 
   Future<void> _refresh() async {
-    final next = ArenaApi.instance.leagueMe();
+    final next = _load();
     setState(() => _future = next);
     await next;
   }
@@ -268,43 +276,43 @@ class _LeagueScreenState extends State<LeagueScreen> {
       onRefresh: _refresh,
       color: AC.gold,
       backgroundColor: AC.surface,
-      child: AsyncView<Map<String, dynamic>>(
+      child: AsyncView<_LeagueBundle>(
         future: _future,
         onRetry: _refresh,
         loadingHeight: 400,
         builder: (context, data) {
-          final members = data.rows('members');
-          final tierName = data.str('tier_name');
-          final day = data.intOr('day_index');
-          final days = data.intOr('season_days', 30);
+          final league = data.league;
+          final members = league.rows('members');
+          final tierName = league.str('tier_name');
+          final day = league.intOr('day_index');
+          final days = league.intOr('season_days', 30);
+          final rank = league.intOr('my_rank');
+          final size = league.intOr('size', 25);
+          final live = data.arena['started'] == true;
+          final progress = days == 0 ? 0.0 : (day / days).clamp(0.0, 1.0);
           return ListView(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
             physics: const AlwaysScrollableScrollPhysics(),
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: StatChip(
-                        label: 'Your rank',
-                        value:
-                            '#${data.intOr('my_rank')} / ${data.intOr('size', 25)}',
-                        icon: Icons.military_tech_rounded,
-                        color: AC.gold),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: StatChip(
-                        label: 'Season ${data.intOr('season_no', 1)}',
-                        value: 'Day $day / $days',
-                        icon: Icons.calendar_month_rounded,
-                        color: AC.teal),
-                  ),
-                ],
+              _LeagueHero(
+                title: tierName.isEmpty ? 'VINEROX LEAGUE' : tierName,
+                season: league.intOr('season_no', 1),
+                day: day,
+                days: days,
+                rank: rank,
+                size: size,
+                live: live,
               ),
               const SizedBox(height: 14),
+              MeterBar(
+                  label: 'Season progress',
+                  value: progress,
+                  color: live ? AC.teal : AC.gold,
+                  trailing: 'DAY $day / $days'),
+              const SizedBox(height: 16),
               SectionCard(
                 title: tierName.isEmpty
-                    ? 'League ${data.intOr('tier', 50)}'
+                    ? 'League ${league.intOr('tier', 50)}'
                     : tierName,
                 trailing: Text('${members.length} clubs',
                     style: const TextStyle(fontSize: 11, color: AC.textFaint)),
@@ -327,6 +335,78 @@ class _LeagueScreenState extends State<LeagueScreen> {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+class _LeagueBundle {
+  const _LeagueBundle({required this.league, required this.arena});
+  final Map<String, dynamic> league;
+  final Map<String, dynamic> arena;
+}
+
+class _LeagueHero extends StatelessWidget {
+  const _LeagueHero({
+    required this.title,
+    required this.season,
+    required this.day,
+    required this.days,
+    required this.rank,
+    required this.size,
+    required this.live,
+  });
+
+  final String title;
+  final int season, day, days, rank, size;
+  final bool live;
+
+  @override
+  Widget build(BuildContext context) {
+    final accent = live ? AC.teal : AC.gold;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: accent.withValues(alpha: .55)),
+        gradient: LinearGradient(
+          colors: [accent.withValues(alpha: .22), AC.surface],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(live ? Icons.bolt_rounded : Icons.emoji_events_rounded,
+                  color: accent, size: 23),
+              const SizedBox(width: 8),
+              Text(live ? 'LIVE LEAGUE' : 'SEASON $season',
+                  style: TextStyle(
+                      color: accent,
+                      fontSize: 11,
+                      letterSpacing: 1.5,
+                      fontWeight: FontWeight.w900)),
+              const Spacer(),
+              Text('#$rank / $size',
+                  style: const TextStyle(
+                      fontFamily: 'Fredoka',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700)),
+            ],
+          ),
+          const SizedBox(height: 13),
+          Text(title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                  fontFamily: 'Fredoka', fontSize: 27, fontWeight: FontWeight.w700)),
+          const SizedBox(height: 3),
+          Text('$day days played  •  $days day season',
+              style: const TextStyle(color: AC.textDim, fontSize: 12)),
+        ],
       ),
     );
   }
@@ -441,32 +521,12 @@ class _ListingRow extends StatelessWidget {
 
     return Row(
       children: [
-        Container(
-          width: 46,
-          height: 46,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: AC.bgAlt,
-            border: Border.all(color: AC.stroke),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(ticker.length > 5 ? ticker.substring(0, 5) : ticker,
-                  style: const TextStyle(
-                      fontFamily: 'Fredoka',
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700)),
-              Text('${score.round()}',
-                  style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w800,
-                      color: scoreColor)),
-            ],
-          ),
-        ),
-        const SizedBox(width: 12),
+            StockLogo(
+                ticker: ticker,
+                logoUrl: listing.str('logo_url', listing.str('logoUrl')),
+                size: 46,
+                color: scoreColor),
+            const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

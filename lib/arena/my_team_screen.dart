@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'api.dart';
 import 'theme.dart';
@@ -26,6 +28,7 @@ class _MyTeamScreenState extends State<MyTeamScreen> {
 
   Future<_TeamBundle> _load() async {
     final api = ArenaApi.instance;
+    final prefs = await SharedPreferences.getInstance();
     final results = await Future.wait([
       api.clubProfile().catchError((_) => <String, dynamic>{}),
       api.leagueMe().catchError((_) => <String, dynamic>{}),
@@ -37,6 +40,7 @@ class _MyTeamScreenState extends State<MyTeamScreen> {
       league: results[1],
       wallet: results[2],
       arena: results[3],
+      profileImagePath: prefs.getString(kClubProfileImagePath),
     );
   }
 
@@ -84,12 +88,14 @@ class _TeamBundle {
     required this.league,
     required this.wallet,
     required this.arena,
+    required this.profileImagePath,
   });
 
   final Map<String, dynamic> club;
   final Map<String, dynamic> league;
   final Map<String, dynamic> wallet;
   final Map<String, dynamic> arena;
+  final String? profileImagePath;
 
   /// My row inside the live arena standings — it carries the lineup.
   Map<String, dynamic> get meInArena {
@@ -118,6 +124,13 @@ class _TeamBundle {
   }
 
   String get crest => club.str('crest');
+
+  File? get profileImage {
+    final path = profileImagePath;
+    if (path == null || path.isEmpty) return null;
+    final file = File(path);
+    return file.existsSync() ? file : null;
+  }
 
   Color get clubColour {
     final raw = club.str('club_color').replaceAll('#', '');
@@ -192,67 +205,112 @@ class _ClubHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final accent = data.clubColour;
+    final profileImage = data.profileImage;
     return Container(
-      padding: const EdgeInsets.all(16),
+      height: 294,
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AC.radius),
-        border: Border.all(color: accent.withValues(alpha: .35)),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            accent.withValues(alpha: .18),
-            AC.surface,
-          ],
-        ),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: accent.withValues(alpha: .65)),
+        boxShadow: [
+          BoxShadow(color: accent.withValues(alpha: .18), blurRadius: 26),
+        ],
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
+        fit: StackFit.expand,
         children: [
-          CrestBadge(
-            crest: data.crest,
-            fallbackName: data.clubName,
-            size: 58,
-            color: accent,
+          Image.asset('assets/branding/backdrop.jpg', fit: BoxFit.cover),
+          DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  AC.bg.withValues(alpha: .12),
+                  AC.bg.withValues(alpha: .42),
+                  AC.bg.withValues(alpha: .96),
+                ],
+              ),
+            ),
           ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          Positioned(
+            top: 14,
+            left: 16,
+            right: 16,
+            child: Row(
               children: [
-                // Full name on two lines — the old build truncated to
-                // "Vinero Tes" / "Test Manag".
-                Text(
-                  data.clubName,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontFamily: 'Fredoka',
-                    fontSize: 21,
-                    height: 1.15,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  data.managerName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: AC.textDim, fontSize: 13),
-                ),
-                const SizedBox(height: 10),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    _Pill(text: data.stadiumName, color: accent),
-                    _Pill(text: data.tierName, color: AC.blue),
-                    if (data.rank > 0)
-                      _Pill(
-                          text: '#${data.rank} of ${data.rankOf}',
-                          color: AC.teal),
+                const Text('MY TEAM',
+                    style: TextStyle(
+                        color: AC.gold,
+                        fontSize: 11,
+                        letterSpacing: 1.8,
+                        fontWeight: FontWeight.w900)),
+                const Spacer(),
+                _Pill(text: data.tierName, color: accent),
+              ],
+            ),
+          ),
+          Positioned(
+            top: 40,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                width: 132,
+                height: 132,
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: accent.withValues(alpha: .2),
+                  border: Border.all(color: accent, width: 3),
+                  boxShadow: [
+                    BoxShadow(color: accent.withValues(alpha: .45), blurRadius: 22),
                   ],
                 ),
+                child: ClipOval(
+                  child: profileImage != null
+                      ? Image.file(profileImage, fit: BoxFit.cover)
+                      : Center(
+                          child: CrestBadge(
+                              crest: data.crest,
+                              fallbackName: data.clubName,
+                              size: 92,
+                              color: accent)),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 16,
+            right: 16,
+            bottom: 62,
+            child: Column(
+              children: [
+                Text(data.clubName.toUpperCase(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontFamily: 'Fredoka',
+                        fontSize: 25,
+                        fontWeight: FontWeight.w700)),
+                const SizedBox(height: 2),
+                Text('${data.managerName}  •  ${data.stadiumName}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: AC.textDim, fontSize: 12)),
+              ],
+            ),
+          ),
+          Positioned(
+            left: 12,
+            right: 12,
+            bottom: 10,
+            child: Row(
+              children: [
+                Expanded(child: _HudStat(label: 'VINEROS', value: '${data.vineros}', color: AC.gold)),
+                Expanded(child: _HudStat(label: 'TREASURY', value: '${data.treasury}', color: AC.teal)),
+                Expanded(child: _HudStat(label: 'RANK', value: data.rank > 0 ? '#${data.rank}' : '--', color: AC.blue)),
               ],
             ),
           ),
@@ -260,6 +318,25 @@ class _ClubHeader extends StatelessWidget {
       ),
     );
   }
+}
+
+class _HudStat extends StatelessWidget {
+  const _HudStat({required this.label, required this.value, required this.color});
+  final String label;
+  final String value;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) => Column(
+        children: [
+          Text(value,
+              style: TextStyle(
+                  color: color, fontFamily: 'Fredoka', fontSize: 18, fontWeight: FontWeight.w700)),
+          Text(label,
+              style: const TextStyle(
+                  color: AC.textFaint, fontSize: 8, letterSpacing: 1, fontWeight: FontWeight.w800)),
+        ],
+      );
 }
 
 class _Pill extends StatelessWidget {
@@ -530,6 +607,7 @@ class _PlayerTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final ticker = player.str('ticker', '—');
     final company = player.str('company');
+    final logoUrl = player.str('logo_url', player.str('logoUrl'));
     final score = player.dbl('vx_score');
     final change = player.dbl('return_pct');
     final up = change >= 0;
@@ -550,15 +628,16 @@ class _PlayerTile extends StatelessWidget {
         children: [
           Row(
             children: [
+              StockLogo(ticker: ticker, logoUrl: logoUrl, size: 44, color: scoreColor),
+              const SizedBox(width: 8),
               Expanded(
-                child: Text(ticker,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        fontFamily: 'Fredoka',
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700)),
-              ),
+                  child: Text(ticker,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontFamily: 'Fredoka',
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700))),
               if (isCaptain)
                 const Icon(Icons.military_tech_rounded,
                     size: 14, color: AC.gold),
