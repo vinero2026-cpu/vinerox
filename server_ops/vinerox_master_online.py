@@ -14,6 +14,8 @@ SENTINEL = Path(os.environ.get(
     'VINEROX_SENTINEL_DB', '/opt/vinerox/data/vinerox_sentinel.db'))
 MASTER = Path(os.environ.get(
     'VINEROX_MASTER_DB', '/opt/vinerox/data/master_scores.db'))
+WEB_JSON = Path(os.environ.get(
+    'VINEROX_STOCKS_JSON', '/var/www/stocks/master.json'))
 
 
 def rows(connection: sqlite3.Connection, table: str) -> list[dict]:
@@ -83,6 +85,7 @@ def main() -> None:
     old.close()
 
     connection = sqlite3.connect(master_tmp)
+    connection.row_factory = sqlite3.Row
     connection.execute('''CREATE TABLE master_scores (
         ticker TEXT PRIMARY KEY, score REAL NOT NULL, confidence REAL NOT NULL,
         data_quality REAL NOT NULL, metric_scores TEXT NOT NULL,
@@ -134,10 +137,25 @@ def main() -> None:
     connection.execute('INSERT INTO master_runs VALUES (?,?,?,?,?,?,?,?)',
                        (run_id, started, finished, total, scored, scored, 0, 0))
     connection.commit()
+    exported_rows = [dict(row) for row in connection.execute(
+        'SELECT * FROM master_scores ORDER BY score DESC, ticker')]
+    columns = [item[1] for item in connection.execute(
+        'PRAGMA table_info(master_scores)')]
     connection.close()
     if MASTER.exists():
         shutil.copy2(MASTER, backup)
     os.replace(master_tmp, MASTER)
+    if WEB_JSON.parent.exists():
+        web_tmp = WEB_JSON.with_suffix('.json.tmp')
+        web_tmp.write_text(json.dumps({
+            'schema_version': 2,
+            'created_at': finished,
+            'run_id': run_id,
+            'row_count': len(exported_rows),
+            'columns': columns,
+            'rows': exported_rows,
+        }, default=str, ensure_ascii=False), encoding='utf-8')
+        os.replace(web_tmp, WEB_JSON)
     print(json.dumps({'run_id': run_id, 'total': total, 'fresh': scored,
                       'stale': total - scored, 'finished_at': finished}))
 
