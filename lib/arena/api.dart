@@ -1,10 +1,9 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-const kArenaBase =
-    String.fromEnvironment('ARENA_BASE', defaultValue: 'https://vinero.app');
+import '../api/arena_auth.dart';
+import '../config.dart';
 
 /// Google Play forbids selling virtual currency outside Play Billing, so the
 /// real-money top-up packs stay hidden until Play Billing is wired up.
@@ -31,10 +30,8 @@ class ArenaApi {
   ArenaApi._();
   static final ArenaApi instance = ArenaApi._();
 
-  static const _tokenKey = 'arena_session_token';
-
   final Dio _dio = Dio(BaseOptions(
-    baseUrl: kArenaBase,
+    baseUrl: AppConfig.apiBase,
     connectTimeout: const Duration(seconds: 20),
     receiveTimeout: const Duration(seconds: 25),
     headers: {'Accept': 'application/json'},
@@ -46,18 +43,7 @@ class ArenaApi {
   bool get isSignedIn => _token != null && _token!.isNotEmpty;
 
   Future<void> restore() async {
-    final prefs = await SharedPreferences.getInstance();
-    _token = prefs.getString(_tokenKey);
-  }
-
-  Future<void> _persist(String? value) async {
-    _token = value;
-    final prefs = await SharedPreferences.getInstance();
-    if (value == null) {
-      await prefs.remove(_tokenKey);
-    } else {
-      await prefs.setString(_tokenKey, value);
-    }
+    _token = await ArenaAuth.scannerToken();
   }
 
   Options get _auth => Options(headers: {
@@ -118,55 +104,39 @@ class ArenaApi {
 
   // ---------------------------------------------------------------- auth ----
 
-  Future<Map<String, dynamic>> signInAsGuest() =>
-      _authenticate('/api/auth/guest', const {});
+  Future<Map<String, dynamic>> signInAsGuest() async {
+    await ArenaAuth.guest();
+    await restore();
+    return const {};
+  }
 
-  Future<Map<String, dynamic>> signIn(String username, String password) =>
-      _authenticate('/api/auth/login',
-          {'username': username.trim(), 'password': password});
+  Future<Map<String, dynamic>> signIn(String username, String password) async {
+    await ArenaAuth.login(username, password);
+    await restore();
+    return const {};
+  }
 
   Future<Map<String, dynamic>> register({
     required String username,
     required String password,
     String? email,
-  }) =>
-      _authenticate('/api/auth/register', {
-        'username': username.trim(),
-        'password': password,
-        if (email != null && email.trim().isNotEmpty) 'email': email.trim(),
-        'agree_terms': true,
-        'age_confirm': true,
-      });
-
-  Future<Map<String, dynamic>> _authenticate(
-      String path, Map<String, dynamic> body) async {
-    final data = await post(path, body);
-    final token = (data['token'] ??
-            data['access_token'] ??
-            data['session_token'] ??
-            data['jwt'])
-        ?.toString();
-    if (token == null || token.isEmpty) {
-      throw ApiException('Sign-in failed — no session was returned.');
-    }
-    await _persist(token);
-    return data;
+  }) async {
+    await ArenaAuth.register(username, password, email);
+    await restore();
+    return const {};
   }
 
   Future<void> signOut() async {
-    try {
-      await post('/api/auth/logout');
-    } catch (_) {
-      // Local sign-out must succeed even if the server call fails.
-    }
-    await _persist(null);
+    await ArenaAuth.signOut();
+    _token = null;
   }
 
   Future<Map<String, dynamic>> me() => getMap('/api/auth/me');
 
   Future<void> deleteAccount() async {
     await _unwrap(_dio.delete('/api/account', options: _auth));
-    await _persist(null);
+    await ArenaAuth.signOut();
+    _token = null;
   }
 
   // ---------------------------------------------------------------- club ----

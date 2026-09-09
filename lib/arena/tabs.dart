@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'api.dart';
+import 'live_refresh.dart';
 import 'theme.dart';
 import 'widgets.dart';
 
 // =========================================================== RANK ==========
 
 class RankScreen extends StatefulWidget {
-  const RankScreen({super.key});
+  const RankScreen({super.key, required this.refreshController});
+  final LiveRefreshController refreshController;
 
   @override
   State<RankScreen> createState() => _RankScreenState();
@@ -20,10 +22,41 @@ class _RankScreenState extends State<RankScreen> {
 
   String _board = 'XP';
   String _period = 'weekly';
+  int _handledGeneration = 0;
   late Future<List<dynamic>> _future = _load();
 
   Future<List<dynamic>> _load() =>
       ArenaApi.instance.ranks(board: _board, period: _period);
+
+  @override
+  void initState() {
+    super.initState();
+    widget.refreshController.addListener(_onLiveRefresh);
+  }
+
+  @override
+  void dispose() {
+    widget.refreshController.removeListener(_onLiveRefresh);
+    super.dispose();
+  }
+
+  void _onLiveRefresh() {
+    if (!widget.refreshController.isRefreshing || !mounted) return;
+    if (_handledGeneration == widget.refreshController.generation) return;
+    _handledGeneration = widget.refreshController.generation;
+    _refreshLive();
+  }
+
+  Future<void> _refreshLive() async {
+    try {
+      final next = _load();
+      setState(() => _future = next);
+      await next;
+      widget.refreshController.reportSuccess();
+    } catch (error) {
+      widget.refreshController.reportFailure(error);
+    }
+  }
 
   void _apply(void Function() change) {
     setState(() {
@@ -247,7 +280,8 @@ class _Choice extends StatelessWidget {
 // ========================================================= LEAGUE ==========
 
 class LeagueScreen extends StatefulWidget {
-  const LeagueScreen({super.key});
+  const LeagueScreen({super.key, required this.refreshController});
+  final LiveRefreshController refreshController;
 
   @override
   State<LeagueScreen> createState() => _LeagueScreenState();
@@ -255,6 +289,7 @@ class LeagueScreen extends StatefulWidget {
 
 class _LeagueScreenState extends State<LeagueScreen> {
   late Future<_LeagueBundle> _future = _load();
+  int _handledGeneration = 0;
 
   Future<_LeagueBundle> _load() async {
     final results = await Future.wait([
@@ -262,6 +297,34 @@ class _LeagueScreenState extends State<LeagueScreen> {
       ArenaApi.instance.leagueArena().catchError((_) => <String, dynamic>{}),
     ]);
     return _LeagueBundle(league: results[0], arena: results[1]);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    widget.refreshController.addListener(_onLiveRefresh);
+  }
+
+  @override
+  void dispose() {
+    widget.refreshController.removeListener(_onLiveRefresh);
+    super.dispose();
+  }
+
+  void _onLiveRefresh() {
+    if (!widget.refreshController.isRefreshing || !mounted) return;
+    if (_handledGeneration == widget.refreshController.generation) return;
+    _handledGeneration = widget.refreshController.generation;
+    _refreshLive();
+  }
+
+  Future<void> _refreshLive() async {
+    try {
+      await _refresh();
+      widget.refreshController.reportSuccess();
+    } catch (error) {
+      widget.refreshController.reportFailure(error);
+    }
   }
 
   Future<void> _refresh() async {
@@ -415,7 +478,8 @@ class _LeagueHero extends StatelessWidget {
 // ========================================================= MARKET ==========
 
 class MarketScreen extends StatefulWidget {
-  const MarketScreen({super.key});
+  const MarketScreen({super.key, required this.refreshController});
+  final LiveRefreshController refreshController;
 
   @override
   State<MarketScreen> createState() => _MarketScreenState();
@@ -423,6 +487,35 @@ class MarketScreen extends StatefulWidget {
 
 class _MarketScreenState extends State<MarketScreen> {
   late Future<Map<String, dynamic>> _future = ArenaApi.instance.market();
+  int _handledGeneration = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.refreshController.addListener(_onLiveRefresh);
+  }
+
+  @override
+  void dispose() {
+    widget.refreshController.removeListener(_onLiveRefresh);
+    super.dispose();
+  }
+
+  void _onLiveRefresh() {
+    if (!widget.refreshController.isRefreshing || !mounted) return;
+    if (_handledGeneration == widget.refreshController.generation) return;
+    _handledGeneration = widget.refreshController.generation;
+    _refreshLive();
+  }
+
+  Future<void> _refreshLive() async {
+    try {
+      await _refresh();
+      widget.refreshController.reportSuccess();
+    } catch (error) {
+      widget.refreshController.reportFailure(error);
+    }
+  }
 
   Future<void> _refresh() async {
     final next = ArenaApi.instance.market();

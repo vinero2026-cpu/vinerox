@@ -5,13 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'api.dart';
+import 'live_refresh.dart';
 import 'theme.dart';
 import 'widgets.dart';
 
 /// MY TEAM — the club home. Rebuilt around three questions a manager asks:
 /// "How is my club doing?", "Who is playing?", "What should I do next?"
 class MyTeamScreen extends StatefulWidget {
-  const MyTeamScreen({super.key});
+  const MyTeamScreen({super.key, required this.refreshController});
+  final LiveRefreshController refreshController;
 
   @override
   State<MyTeamScreen> createState() => _MyTeamScreenState();
@@ -19,11 +21,35 @@ class MyTeamScreen extends StatefulWidget {
 
 class _MyTeamScreenState extends State<MyTeamScreen> {
   late Future<_TeamBundle> _future;
+  int _handledGeneration = 0;
 
   @override
   void initState() {
     super.initState();
     _future = _load();
+    widget.refreshController.addListener(_onLiveRefresh);
+  }
+
+  @override
+  void dispose() {
+    widget.refreshController.removeListener(_onLiveRefresh);
+    super.dispose();
+  }
+
+  void _onLiveRefresh() {
+    if (!widget.refreshController.isRefreshing || !mounted) return;
+    if (_handledGeneration == widget.refreshController.generation) return;
+    _handledGeneration = widget.refreshController.generation;
+    _refreshLive();
+  }
+
+  Future<void> _refreshLive() async {
+    try {
+      await _refresh();
+      widget.refreshController.reportSuccess();
+    } catch (error) {
+      widget.refreshController.reportFailure(error);
+    }
   }
 
   Future<_TeamBundle> _load() async {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'api.dart';
+import 'live_refresh.dart';
 import 'theme.dart';
 import 'widgets.dart';
 
@@ -11,7 +12,8 @@ import 'widgets.dart';
 /// real-money top-up packs are gated behind [kRealMoneyTopUpsEnabled] and stay
 /// off on Android until Play Billing is integrated.
 class ShopScreen extends StatefulWidget {
-  const ShopScreen({super.key});
+  const ShopScreen({super.key, required this.refreshController});
+  final LiveRefreshController refreshController;
 
   @override
   State<ShopScreen> createState() => _ShopScreenState();
@@ -19,11 +21,35 @@ class ShopScreen extends StatefulWidget {
 
 class _ShopScreenState extends State<ShopScreen> {
   late Future<_ShopBundle> _future;
+  int _handledGeneration = 0;
 
   @override
   void initState() {
     super.initState();
     _future = _load();
+    widget.refreshController.addListener(_onLiveRefresh);
+  }
+
+  @override
+  void dispose() {
+    widget.refreshController.removeListener(_onLiveRefresh);
+    super.dispose();
+  }
+
+  void _onLiveRefresh() {
+    if (!widget.refreshController.isRefreshing || !mounted) return;
+    if (_handledGeneration == widget.refreshController.generation) return;
+    _handledGeneration = widget.refreshController.generation;
+    _refreshLive();
+  }
+
+  Future<void> _refreshLive() async {
+    try {
+      await _refresh();
+      widget.refreshController.reportSuccess();
+    } catch (error) {
+      widget.refreshController.reportFailure(error);
+    }
   }
 
   Future<_ShopBundle> _load() async {

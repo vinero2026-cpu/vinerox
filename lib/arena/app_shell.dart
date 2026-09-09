@@ -3,6 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'api.dart';
 import 'my_team_screen.dart';
+import 'live_refresh.dart';
 import 'shop_screen.dart';
 import 'tabs.dart';
 import 'theme.dart';
@@ -17,17 +18,59 @@ class AppShell extends StatefulWidget {
   State<AppShell> createState() => _AppShellState();
 }
 
-class _AppShellState extends State<AppShell> {
+class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   int _index = 3;
+  late final LiveRefreshController _liveRefresh;
 
   static const _titles = ['Shop', 'Rank', 'League', 'My Team', 'Market'];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _liveRefresh = LiveRefreshController()..start();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _liveRefresh.request();
+    });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _liveRefresh.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _liveRefresh.request();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_titles[_index]),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(_titles[_index]),
+            _LiveStatus(controller: _liveRefresh),
+          ],
+        ),
         actions: [
+          IconButton(
+            tooltip: 'Refresh live data',
+            onPressed: _liveRefresh.isRefreshing
+                ? null
+                : () => _liveRefresh.request(),
+            icon: _liveRefresh.isRefreshing
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.sync_rounded),
+          ),
           IconButton(
             tooltip: 'Notifications',
             onPressed: () => showModalBottomSheet(
@@ -54,12 +97,12 @@ class _AppShellState extends State<AppShell> {
       ),
       body: IndexedStack(
         index: _index,
-        children: const [
-          _PageAtmosphere(kind: _PageAtmosphereKind.shop, child: ShopScreen()),
-          _PageAtmosphere(kind: _PageAtmosphereKind.rank, child: RankScreen()),
-          _PageAtmosphere(kind: _PageAtmosphereKind.league, child: LeagueScreen()),
-          _PageAtmosphere(kind: _PageAtmosphereKind.team, child: MyTeamScreen()),
-          _PageAtmosphere(kind: _PageAtmosphereKind.market, child: MarketScreen()),
+        children: [
+          _PageAtmosphere(kind: _PageAtmosphereKind.shop, child: ShopScreen(refreshController: _liveRefresh)),
+          _PageAtmosphere(kind: _PageAtmosphereKind.rank, child: RankScreen(refreshController: _liveRefresh)),
+          _PageAtmosphere(kind: _PageAtmosphereKind.league, child: LeagueScreen(refreshController: _liveRefresh)),
+          _PageAtmosphere(kind: _PageAtmosphereKind.team, child: MyTeamScreen(refreshController: _liveRefresh)),
+          _PageAtmosphere(kind: _PageAtmosphereKind.market, child: MarketScreen(refreshController: _liveRefresh)),
         ],
       ),
       bottomNavigationBar: NavigationBarTheme(
@@ -126,6 +169,56 @@ class _AppShellState extends State<AppShell> {
         ),
       ),
     );
+  }
+}
+
+class _LiveStatus extends StatelessWidget {
+  const _LiveStatus({required this.controller});
+  final LiveRefreshController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: controller,
+      builder: (context, _) {
+        final time = controller.lastUpdated;
+        final label = controller.isRefreshing
+            ? 'UPDATING ${controller.completed}/5'
+            : time == null
+                ? 'LIVE · CONNECTING'
+                : 'LIVE · ${_formatTime(time)}';
+        final color = controller.lastError != null
+            ? AC.warn
+            : controller.isRefreshing
+                ? AC.gold
+                : AC.teal;
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 6,
+              height: 6,
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+            ),
+            const SizedBox(width: 5),
+            Text(label,
+                style: TextStyle(
+                    color: color,
+                    fontSize: 8,
+                    letterSpacing: 1.1,
+                    fontWeight: FontWeight.w800)),
+          ],
+        );
+      },
+    );
+  }
+
+  String _formatTime(DateTime time) {
+    final local = time.toLocal();
+    final hour = local.hour.toString().padLeft(2, '0');
+    final minute = local.minute.toString().padLeft(2, '0');
+    final second = local.second.toString().padLeft(2, '0');
+    return '$hour:$minute:$second';
   }
 }
 
