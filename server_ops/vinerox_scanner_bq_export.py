@@ -20,6 +20,7 @@ MASTER_DB = Path(os.environ.get(
     'VINEROX_MASTER_DB', '/opt/vinerox/data/master_scores.db'))
 
 SNAPSHOT_TABLES = (
+    'master_live_scores',
     'explosion_candidates',
     'sp500_candidates',
     'microcap_rockets',

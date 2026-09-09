@@ -62,6 +62,7 @@ def main() -> None:
     backup = MASTER.with_suffix('.db.bak_online')
     try:
         source_sets = [
+            latest_by_ticker(rows(source, 'master_live_scores'), ('fetched_at',)),
             latest_by_ticker(rows(source, 'stock_score_history'), ('run_ts',)),
             latest_by_ticker(rows(source, 'explosion_candidates'), ('last_updated',)),
             latest_by_ticker(rows(source, 'sp500_candidates'), ('last_updated',)),
@@ -111,7 +112,7 @@ def main() -> None:
             row.get('logo_url', ''), str(fetched), json_value(row)))
 
     for index, source_set in enumerate(source_sets):
-        source_name = ('stock_score_history', 'explosion_candidates',
+        source_name = ('master_live_scores', 'stock_score_history', 'explosion_candidates',
                        'sp500_candidates', 'microcap_rockets',
                        'continuation_rockets')[index]
         for ticker, row in source_set.items():
