@@ -118,7 +118,7 @@ def main() -> None:
 
     master_rows = read_rows(MASTER_DB, 'master_scores')
     replace_table(client, 'master_scores_current', master_rows)
-    append_table(client, 'master_scores_history', [
+    append_table(client, 'master_scores_history_v2', [
         {**row, 'run_id': run_id, 'exported_at': now}
         for row in master_rows
     ])

@@ -1,0 +1,10 @@
+[Unit]
+Description=VINEROX MASTER online score publisher
+After=network-online.target vinerox.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/opt/vinerox
+ExecStart=/usr/bin/flock -n /run/vinerox-master-online.lock /opt/vinerox/.venv/bin/python /opt/vinerox/server_ops/vinerox_master_online.py
