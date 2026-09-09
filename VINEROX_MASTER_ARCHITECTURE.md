@@ -12,6 +12,10 @@ When the task says `VINEROX MASTER`, it refers to the live stock scanner at:
 This scope is separate from the Flutter mobile UI. Do not change Flutter screens
 when working on the MASTER scanner unless explicitly requested.
 
+The native Stock Arena app is now explicitly connected to this feed through its
+dedicated `MASTER` tab. It requests the full `/api/stocks/master` envelope,
+preserves every row, and renders `ok` rows as live and `stale` rows in red.
+
 ## Production Data Flow
 
 ```text

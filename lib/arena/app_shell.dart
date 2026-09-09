@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'api.dart';
 import 'my_team_screen.dart';
 import 'live_refresh.dart';
+import 'master_screen.dart';
 import 'shop_screen.dart';
 import 'tabs.dart';
 import 'theme.dart';
@@ -22,7 +23,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
   int _index = 3;
   late final LiveRefreshController _liveRefresh;
 
-  static const _titles = ['Shop', 'Rank', 'League', 'My Team', 'Market'];
+  static const _titles = ['Shop', 'Rank', 'League', 'My Team', 'Market', 'MASTER'];
 
   @override
   void initState() {
@@ -103,6 +104,7 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
           _PageAtmosphere(kind: _PageAtmosphereKind.league, child: LeagueScreen(refreshController: _liveRefresh)),
           _PageAtmosphere(kind: _PageAtmosphereKind.team, child: MyTeamScreen(refreshController: _liveRefresh)),
           _PageAtmosphere(kind: _PageAtmosphereKind.market, child: MarketScreen(refreshController: _liveRefresh)),
+          _PageAtmosphere(kind: _PageAtmosphereKind.master, child: MasterScreen(refreshController: _liveRefresh)),
         ],
       ),
       bottomNavigationBar: NavigationBarTheme(
@@ -164,6 +166,10 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
                 icon: Icon(Icons.swap_horiz_outlined),
                 selectedIcon: Icon(Icons.swap_horiz_rounded),
                 label: 'MARKET'),
+            NavigationDestination(
+              icon: Icon(Icons.radar_outlined),
+              selectedIcon: Icon(Icons.radar_rounded),
+              label: 'MASTER'),
             ],
           ),
         ),
@@ -183,7 +189,7 @@ class _LiveStatus extends StatelessWidget {
       builder: (context, _) {
         final time = controller.lastUpdated;
         final label = controller.isRefreshing
-            ? 'UPDATING ${controller.completed}/5'
+            ? 'UPDATING ${controller.completed}/6'
             : time == null
                 ? 'LIVE · CONNECTING'
                 : 'LIVE · ${_formatTime(time)}';
@@ -222,7 +228,7 @@ class _LiveStatus extends StatelessWidget {
   }
 }
 
-enum _PageAtmosphereKind { shop, rank, league, team, market }
+enum _PageAtmosphereKind { shop, rank, league, team, market, master }
 
 class _PageAtmosphere extends StatelessWidget {
   const _PageAtmosphere({required this.kind, required this.child});
@@ -237,6 +243,7 @@ class _PageAtmosphere extends StatelessWidget {
       _PageAtmosphereKind.league => const [Color(0xFF082A2A), AC.bg],
       _PageAtmosphereKind.team => const [Color(0xFF24152A), AC.bg],
       _PageAtmosphereKind.market => const [Color(0xFF0D241F), AC.bg],
+      _PageAtmosphereKind.master => const [Color(0xFF24130F), AC.bg],
     };
     return DecoratedBox(
       decoration: BoxDecoration(

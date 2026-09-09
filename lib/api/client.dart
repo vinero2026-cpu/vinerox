@@ -45,13 +45,16 @@ class ApiClient {
         .toList();
   }
 
+  Future<MasterFeed> masterFeed() async {
+    final r = await _dio.get('/api/stocks/master', queryParameters: {
+      '_ts': DateTime.now().toUtc().millisecondsSinceEpoch,
+    });
+    return MasterFeed.fromJson(Map<String, dynamic>.from(r.data));
+  }
+
   Future<List<MasterStock>> masterStocks({int limit = 100}) async {
-    final r =
-        await _dio.get('/api/stocks/master', queryParameters: {'limit': limit});
-    final list = (r.data['rows'] as List).cast<Map>();
-    return list
-        .map((row) => MasterStock.fromJson(Map<String, dynamic>.from(row)))
-        .toList();
+    final feed = await masterFeed();
+    return feed.rows.take(limit).toList(growable: false);
   }
 
   Future<Map<String, dynamic>> portfolio() async {

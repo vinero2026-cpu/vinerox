@@ -29,7 +29,7 @@ class LiveRefreshController extends ChangeNotifier {
     _timer = null;
   }
 
-  void request({int sources = 5}) {
+  void request({int sources = 6}) {
     _generation++;
     _pending = sources;
     _completed = 0;

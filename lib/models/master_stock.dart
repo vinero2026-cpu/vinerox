@@ -53,3 +53,33 @@ class MasterStock {
       ? Map<String, dynamic>.from(value)
       : const <String, dynamic>{};
 }
+
+class MasterFeed {
+  const MasterFeed({
+    required this.rows,
+    required this.createdAt,
+    required this.runId,
+    required this.rowCount,
+  });
+
+  factory MasterFeed.fromJson(Map<String, dynamic> json) {
+    final rawRows = json['rows'] is List ? json['rows'] as List : const [];
+    return MasterFeed(
+      rows: rawRows
+          .whereType<Map>()
+          .map((row) => MasterStock.fromJson(Map<String, dynamic>.from(row)))
+          .toList(growable: false),
+      createdAt: json['created_at']?.toString() ?? '',
+      runId: json['run_id']?.toString() ?? '',
+      rowCount: (json['row_count'] as num?)?.toInt() ?? rawRows.length,
+    );
+  }
+
+  final List<MasterStock> rows;
+  final String createdAt;
+  final String runId;
+  final int rowCount;
+
+  int get liveCount => rows.where((stock) => stock.status == 'ok').length;
+  int get staleCount => rows.where((stock) => stock.status != 'ok').length;
+}
