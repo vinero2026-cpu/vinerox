@@ -1,0 +1,13 @@
+[Unit]
+Description=VINEROX scanner and MASTER BigQuery mirror
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+Environment=GOOGLE_APPLICATION_CREDENTIALS=/opt/vinerox_arena/gcp-key.json
+Environment=BQ_PROJECT=psyched-ray-472608-f9
+Environment=BQ_SCANNER_DATASET=vinerox_scanner
+Environment=BQ_LOCATION=US
+WorkingDirectory=/opt/vinerox
+ExecStart=/opt/vinerox_arena/.venv/bin/python /opt/vinerox/server_ops/vinerox_scanner_bq_export.py
