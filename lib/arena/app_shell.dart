@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'api.dart';
+import 'blitz_screen.dart';
 import 'my_team_screen.dart';
 import 'live_refresh.dart';
 import 'master_screen.dart';
@@ -59,6 +60,14 @@ class _AppShellState extends State<AppShell> with WidgetsBindingObserver {
           ],
         ),
         actions: [
+          IconButton.filledTonal(
+            tooltip: 'Blitz Arena 1v1',
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const BlitzScreen()),
+            ),
+            icon: const Icon(Icons.bolt_rounded),
+          ),
+          const SizedBox(width: 4),
           IconButton(
             tooltip: 'Refresh live data',
             onPressed: _liveRefresh.isRefreshing

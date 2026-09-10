@@ -44,6 +44,12 @@ def json_value(value: object) -> str:
     return json.dumps(value, default=str, ensure_ascii=False)
 
 
+def raw_metrics(row: dict) -> str:
+    payload = dict(row)
+    payload.pop('raw_metrics', None)
+    return json_value(payload)
+
+
 def is_recent(value: object) -> bool:
     if not value:
         return False
@@ -79,10 +85,12 @@ def main() -> None:
         for ticker, row in source_set.items():
             fresh.setdefault(ticker, row)
 
-    old = sqlite3.connect(f'file:{MASTER}?mode=ro', uri=True, timeout=30)
-    old.row_factory = sqlite3.Row
-    old_rows = [dict(row) for row in old.execute('SELECT * FROM master_scores')]
-    old.close()
+    old_rows: list[dict] = []
+    if MASTER.exists():
+        old = sqlite3.connect(f'file:{MASTER}?mode=ro', uri=True, timeout=30)
+        old.row_factory = sqlite3.Row
+        old_rows = [dict(row) for row in old.execute('SELECT * FROM master_scores')]
+        old.close()
 
     connection = sqlite3.connect(master_tmp)
     connection.row_factory = sqlite3.Row
@@ -112,7 +120,7 @@ def main() -> None:
             'ok' if is_fresh else 'stale', None if is_fresh else 'source_not_refreshed',
             None if is_fresh else 'stale_source', None, company,
             row.get('exchange', ''), row.get('sector', ''), row.get('industry', ''),
-            row.get('logo_url', ''), str(fetched), json_value(row)))
+            row.get('logo_url', ''), str(fetched), raw_metrics(row)))
 
     for index, source_set in enumerate(source_sets):
         source_name = ('master_live_scores', 'stock_score_history', 'explosion_candidates',

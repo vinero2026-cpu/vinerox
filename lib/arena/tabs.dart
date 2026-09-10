@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'api.dart';
+import 'blitz_screen.dart';
 import 'live_refresh.dart';
 import 'theme.dart';
 import 'widgets.dart';
@@ -365,6 +366,32 @@ class _LeagueScreenState extends State<LeagueScreen> {
                 rank: rank,
                 size: size,
                 live: live,
+              ),
+              const SizedBox(height: 14),
+              SectionCard(
+                title: 'Blitz arena',
+                trailing: const Icon(Icons.bolt_rounded, color: AC.gold),
+                accent: AC.gold,
+                child: Row(
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        'Two-minute live calls. Win the Vinerox pot.',
+                        style: TextStyle(color: AC.textDim, fontSize: 12),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    IconButton.filled(
+                      tooltip: 'Enter Blitz Arena',
+                      style: IconButton.styleFrom(
+                          backgroundColor: AC.gold, foregroundColor: AC.bg),
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const BlitzScreen()),
+                      ),
+                      icon: const Icon(Icons.arrow_forward_rounded),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 14),
               MeterBar(

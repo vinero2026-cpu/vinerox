@@ -197,6 +197,35 @@ class ArenaApi {
   Future<Map<String, dynamic>> arenasToday() => getMap('/api/arenas/today');
   Future<Map<String, dynamic>> joinArena(String id, String pick) =>
       post('/api/arenas/$id/join', {'pick': pick});
+
+    // --------------------------------------------------------------- blitz ----
+
+    Future<Map<String, dynamic>> blitzInventory() =>
+      getMap('/api/blitz/inventory');
+    Future<Map<String, dynamic>> blitzCatalog() => getMap('/api/blitz/catalog');
+    Future<Map<String, dynamic>> saveBlitzLoadout(List<String> slots) =>
+      post('/api/blitz/loadout', {'slots': slots});
+    Future<Map<String, dynamic>> openBlitzLootbox() =>
+      post('/api/blitz/lootbox', {'count': 3});
+    Future<Map<String, dynamic>> startBlitzMatch({String mode = 'ranked'}) =>
+      post('/api/blitz/match/start', {'mode': mode});
+    Future<Map<String, dynamic>> submitBlitzResult({
+    required String matchId,
+    required int seed,
+    required String outcome,
+    required double myPnl,
+    required double opponentPnl,
+    required int stake,
+    }) =>
+      post('/api/blitz/match/result', {
+      'match_id': matchId,
+      'seed': seed,
+      'mode': 'ranked',
+      'outcome': outcome,
+      'my_pnl': myPnl,
+      'opp_pnl': opponentPnl,
+      'stake': stake,
+      });
 }
 
 /// Small helpers so widgets never crash on an unexpected payload shape.

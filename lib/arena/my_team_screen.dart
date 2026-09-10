@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'api.dart';
+import 'blitz_screen.dart';
 import 'live_refresh.dart';
 import 'theme.dart';
 import 'widgets.dart';
@@ -92,6 +93,13 @@ class _MyTeamScreenState extends State<MyTeamScreen> {
           children: [
             _ClubHeader(data: data),
             const SizedBox(height: 14),
+            _BlitzOneVsOneCard(
+              vineros: data.vineros,
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const BlitzScreen()),
+              ),
+            ),
+            const SizedBox(height: 14),
             _MoraleRow(data: data),
             const SizedBox(height: 14),
             _NextUpCard(data: data),
@@ -101,6 +109,73 @@ class _MyTeamScreenState extends State<MyTeamScreen> {
             _BoardRoomCard(data: data),
             const SizedBox(height: 14),
             _QuickActions(onDone: _refresh),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _BlitzOneVsOneCard extends StatelessWidget {
+  const _BlitzOneVsOneCard({required this.vineros, required this.onTap});
+
+  final int vineros;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(AC.radius),
+      onTap: onTap,
+      child: Ink(
+        padding: const EdgeInsets.all(18),
+        decoration: AC.panel(
+          border: AC.gold.withValues(alpha: .65),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [AC.gold.withValues(alpha: .28), AC.surface, AC.bgAlt],
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 54,
+              height: 54,
+              decoration: BoxDecoration(
+                color: AC.gold.withValues(alpha: .16),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: AC.gold.withValues(alpha: .7)),
+              ),
+              child: const Icon(Icons.bolt_rounded, color: AC.gold, size: 34),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('BLITZ 1v1',
+                      style: TextStyle(
+                          fontFamily: 'Fredoka',
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800)),
+                  const SizedBox(height: 3),
+                  const Text('2 MINUTES · WIN THE VINEROX POT',
+                      style: TextStyle(
+                          color: AC.textDim,
+                          fontSize: 10,
+                          letterSpacing: .8,
+                          fontWeight: FontWeight.w800)),
+                  const SizedBox(height: 8),
+                  Text('$vineros VINEROX READY',
+                      style: const TextStyle(
+                          color: AC.gold,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w900)),
+                ],
+              ),
+            ),
+            const Icon(Icons.arrow_forward_rounded, color: AC.gold),
           ],
         ),
       ),
