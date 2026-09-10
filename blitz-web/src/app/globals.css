@@ -1,0 +1,47 @@
+@import 'flag-icons/css/flag-icons.min.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: #05070c;
+  color: #f4f6fa;
+  overscroll-behavior: none;
+}
+
+::selection {
+  background: rgba(245, 195, 67, 0.35);
+}
+
+@keyframes float-coin {
+  0% {
+    transform: translate(0, 0) scale(0.6);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+    transform: translate(var(--dx-start, 0), -10px) scale(1);
+  }
+  100% {
+    transform: translate(var(--dx-end, 0), -180px) scale(0.9);
+    opacity: 0;
+  }
+}
+
+.coin-particle {
+  animation: float-coin 1.15s cubic-bezier(0.15, 0.7, 0.35, 1) forwards;
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
