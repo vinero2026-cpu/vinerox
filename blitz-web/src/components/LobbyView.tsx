@@ -5,8 +5,10 @@ import { motion } from 'framer-motion';
 import type { ChestDef, Profile, Wallet } from '@/lib/types';
 import { tierProgress } from '@/lib/economy';
 import { MILESTONE_TRACK, PREMIUM_TRACK, type MilestoneReward } from '@/lib/milestones';
+import type { DailyReward } from '@/lib/dailyBonus';
 import { AnimatedNumber } from './AnimatedNumber';
 import { CoinIcon } from './CoinIcon';
+import { DailyBonusCard } from './DailyBonusCard';
 import { PlayerBanner } from './PlayerBanner';
 import { ProfileModal } from './ProfileModal';
 import { RewardTrack } from './RewardTrack';
@@ -19,6 +21,9 @@ interface Props {
   claimedMilestones: number[];
   claimedPremiumMilestones: number[];
   onClaimMilestone: (reward: MilestoneReward, track?: 'free' | 'premium') => void;
+  lastDailyClaim: number | null;
+  dailyStreak: number;
+  onClaimDaily: () => DailyReward | null;
   onOpenChest: (chest: ChestDef) => void;
   onSaveProfile: (patch: { name: string; avatar: string; avatarImage?: string; flag: string; countryCode: string }) => void;
   muted: boolean;
@@ -35,6 +40,9 @@ export function LobbyView({
   claimedMilestones,
   claimedPremiumMilestones,
   onClaimMilestone,
+  lastDailyClaim,
+  dailyStreak,
+  onClaimDaily,
   onOpenChest,
   onSaveProfile,
   muted,
@@ -77,6 +85,8 @@ export function LobbyView({
         />
       </div>
       {next && <div className="mt-1 text-right text-xs text-textFaint">Next: {next}</div>}
+
+      <DailyBonusCard lastDailyClaim={lastDailyClaim} dailyStreak={dailyStreak} onClaim={onClaimDaily} />
 
       <div className="mt-6 grid grid-cols-2 gap-4">
         <div className="flex items-center gap-3 rounded-2xl border border-gold/50 bg-gradient-to-br from-gold/20 via-surface/50 to-bgAlt/50 p-4 shadow-[0_18px_40px_-24px_rgba(245,195,67,.5)] backdrop-blur-md">

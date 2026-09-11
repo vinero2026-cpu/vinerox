@@ -52,6 +52,8 @@ export default function Page() {
     chests,
     claimedMilestones,
     claimedPremiumMilestones,
+    lastDailyClaim,
+    dailyStreak,
     hydrated,
     setProfile,
     updateProfile,
@@ -63,6 +65,7 @@ export default function Page() {
     addChest,
     openChest,
     claimMilestone,
+    claimDaily,
     consumeBonusBoosts,
     setHydrated,
   } =
@@ -93,9 +96,9 @@ export default function Page() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleOnboardingComplete = async (data: { name: string; avatar: string; flag: string; countryCode: string }) => {
+  const handleOnboardingComplete = async (data: { name: string; avatar: string; avatarImage?: string; flag: string; countryCode: string }) => {
     const id = crypto.randomUUID();
-    setProfile({ id, name: data.name, avatar: data.avatar, flag: data.flag, countryCode: data.countryCode, createdAt: Date.now() });
+    setProfile({ id, name: data.name, avatar: data.avatar, avatarImage: data.avatarImage, flag: data.flag, countryCode: data.countryCode, createdAt: Date.now() });
     setStage('lobby');
     try {
       await fetch('/blitz/api/profile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, ...data }) });
@@ -125,6 +128,12 @@ export default function Page() {
     const reward = rollChestReward(chest.kind, unlockedLayers);
     sound.coin();
     openChest(chest.id, reward.coins, reward.layer, reward.banner, reward.shardCharacter, reward.shardAmount);
+  };
+
+  const handleClaimDaily = () => {
+    const reward = claimDaily();
+    if (reward) sound.coin();
+    return reward;
   };
 
   const confirmLoadout = (nextLoadout: LayerId[], stake: number) => {
@@ -233,6 +242,9 @@ export default function Page() {
             claimedMilestones={claimedMilestones}
             claimedPremiumMilestones={claimedPremiumMilestones}
             onClaimMilestone={claimMilestone}
+            lastDailyClaim={lastDailyClaim}
+            dailyStreak={dailyStreak}
+            onClaimDaily={handleClaimDaily}
             onOpenChest={handleOpenChest}
             onSaveProfile={handleSaveProfile}
             muted={muted}
@@ -328,6 +340,7 @@ export default function Page() {
             onContinue={() => {
               setActiveMatch(null);
               setResult(null);
+              setSentiment(0);
               setStage('lobby');
             }}
           />

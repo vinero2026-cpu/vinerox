@@ -12,6 +12,7 @@ import { PlayerHud } from './PlayerHud';
 import { CoinFountain, type CoinBurst } from './CoinFountain';
 import { AnimatedNumber } from './AnimatedNumber';
 import { AbilityCastOverlay } from './AbilityCastOverlay';
+import { ActiveAbilityAura } from './ActiveAbilityAura';
 import { TrophyIcon } from './TrophyIcon';
 import { sound } from '@/lib/sound';
 
@@ -77,10 +78,29 @@ export function MatchView({ match, stake, loadout, characterLevels, playerName, 
   const pendingBoostRef = useRef<BoostKind | null>(null);
   const abilityTimersRef = useRef<Record<string, { activeUntil: number; cooldownUntil: number }>>({});
   const chartRef = useRef<HTMLDivElement>(null);
+  const topHudRef = useRef<HTMLDivElement>(null);
+  const bottomDockRef = useRef<HTMLDivElement>(null);
+  const [chartInsets, setChartInsets] = useState({ top: 170, bottom: 220 });
 
   const streakBonus = Math.min(0.06, streak * 0.01);
   const layerBonus = activeLayers.reduce((sum, id) => sum + statsForLevel(id, characterLevels[id] ?? 1).bonus, 0);
   const chance = Math.min(0.88, 0.5 + layerBonus + streakBonus);
+
+  // Keep the chart's plotted safe-zone in sync with the ACTUAL rendered
+  // height of the floating HUD bars (they resize as the streak badge, active
+  // ability chips, etc. appear/disappear) so the line and its indicator
+  // overlays never end up hidden underneath them.
+  useEffect(() => {
+    const topEl = topHudRef.current;
+    const bottomEl = bottomDockRef.current;
+    if (!topEl || !bottomEl) return;
+    const update = () => setChartInsets({ top: topEl.offsetHeight + 12, bottom: bottomEl.offsetHeight + 12 });
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(topEl);
+    ro.observe(bottomEl);
+    return () => ro.disconnect();
+  }, []);
 
   useEffect(() => {
     sound.startCrowd();
@@ -299,22 +319,81 @@ export function MatchView({ match, stake, loadout, characterLevels, playerName, 
   const accent = leading ? '#28e07f' : '#ff4d5e';
   const tickerColor = colorForTicker(match.asset);
   const lastPrice = history[history.length - 1]?.price ?? 0;
-  const opponentTag = match.opponent.isBot ? { label: match.opponent.name, color: match.opponent.tierColor ?? '#9aa5b8' } : undefined;
 
   return (
     <div
-      className="relative min-h-dvh overflow-hidden"
+      className="relative h-dvh w-full overflow-hidden"
       style={{ background: `radial-gradient(circle at 50% 0%, ${accent}14, transparent 60%)` }}
     >
-      <div className="relative z-10 mx-auto flex min-h-dvh max-w-3xl flex-col px-4 py-4">
-        {/* 3D-styled asset badge — an original stylized ticker plate tinted with the stock's own brand color */}
+      {/* FULL-SCREEN CHART — the graph is the entire backdrop, everything else floats over it */}
+      <motion.div
+        ref={chartRef}
+        key={shakeKey}
+        animate={shakeKey ? { x: [0, -6, 6, -4, 4, 0] } : {}}
+        transition={{ duration: 0.4 }}
+        className="absolute inset-0 bg-gradient-to-b from-surface/80 to-bgAlt/90"
+      >
+        <TradingChart history={history} layers={activeLayers} leading={leading} topInset={chartInsets.top} bottomInset={chartInsets.bottom} />
+        <ActiveAbilityAura activeLayers={activeLayers} characterLevels={characterLevels} />
+        <AnimatePresence>
+          {impact && (
+            <motion.div
+              key={impact.id}
+              initial={{ opacity: 0.55, scale: 0.2 }}
+              animate={{ opacity: 0, scale: 2.6 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.7, ease: 'easeOut' }}
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background: `radial-gradient(circle at 50% 55%, ${impact.correct ? '#28e07f55' : '#ff4d5e55'}, transparent 60%)`,
+              }}
+            />
+          )}
+        </AnimatePresence>
+        <AnimatePresence>
+          {flash && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: 6 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl border px-4 py-2 font-bold backdrop-blur-sm"
+              style={{ borderColor: accent, color: accent, backgroundColor: '#0b0f18cc' }}
+            >
+              {flash}
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <AnimatePresence>
+          {boostFlash && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5, y: -10 }}
+              animate={{ opacity: 1, scale: [1.15, 1], y: 0 }}
+              exit={{ opacity: 0, scale: 0.6 }}
+              transition={{ duration: 0.4 }}
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border px-4 py-1.5 text-xs font-black uppercase shadow-[0_0_24px_rgba(245,195,67,.5)]"
+              style={{
+                borderColor: boostFlash === 'overdrive' ? '#f5c343' : '#2fe0c8',
+                color: boostFlash === 'overdrive' ? '#f5c343' : '#2fe0c8',
+                backgroundColor: '#0b0f18e6',
+              }}
+            >
+              {boostFlash === 'overdrive' ? '⚡ OVERDRIVE ARMED · NEXT CALL ×2' : '🛡 SHIELD ARMED · NEXT MISS SAFE'}
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <AbilityCastOverlay cast={castOverlay} />
+        <CoinFountain bursts={bursts} />
+      </motion.div>
+
+      {/* TOP HUD — floats over the chart, gradient scrim keeps text readable */}
+      <div ref={topHudRef} className="absolute inset-x-0 top-0 z-20 bg-gradient-to-b from-bg/95 via-bg/55 to-transparent px-4 pb-10 pt-4">
         <header className="flex items-center justify-between gap-3">
           <div className="relative" style={{ perspective: 500 }}>
             <motion.div
               initial={{ rotateY: -18 }}
               animate={{ rotateY: [-18, 18, -18] }}
               transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-              className="relative rounded-2xl border px-5 py-2.5 text-center"
+              className="relative rounded-xl border px-3 py-1.5 text-center"
               style={{
                 borderColor: `${tickerColor}80`,
                 background: `linear-gradient(160deg, ${tickerColor}35, #11161f 60%, #05070c)`,
@@ -323,7 +402,7 @@ export function MatchView({ match, stake, loadout, characterLevels, playerName, 
               }}
             >
               <div
-                className="font-display text-3xl font-black tracking-wider"
+                className="font-display text-lg font-black tracking-wider"
                 style={{
                   color: '#f4f6fa',
                   textShadow: `0 1px 0 ${tickerColor}, 0 2px 0 ${tickerColor}aa, 0 3px 6px rgba(0,0,0,.6)`,
@@ -331,33 +410,35 @@ export function MatchView({ match, stake, loadout, characterLevels, playerName, 
               >
                 {match.asset}
               </div>
-              <div className="text-[9px] uppercase tracking-widest text-textDim">Official Arena Feed · {new Date().toLocaleDateString()}</div>
+              <div className="font-display text-sm font-bold text-textDim">
+                $<AnimatedNumber value={lastPrice} format={(v) => v.toFixed(2)} duration={0.35} />
+              </div>
             </motion.div>
           </div>
 
           <div className="text-right">
-            <div className="font-display text-3xl font-black" style={{ color: secondsLeft < 15 ? '#ff4d5e' : '#f5c343' }}>
+            <div className="font-display text-xl font-black" style={{ color: secondsLeft < 15 ? '#ff4d5e' : '#f5c343' }}>
               {time}
             </div>
-            <motion.div
-              animate={{ opacity: [0.7, 1, 0.7] }}
-              transition={{ duration: 1.6, repeat: Infinity }}
-              className="mt-1 flex items-center justify-end gap-1 rounded-full border border-gold/60 bg-gold/10 px-2.5 py-0.5 text-xs font-black text-gold"
-            >
-              <TrophyIcon size={13} /> POT {stake * 2} V
-            </motion.div>
           </div>
         </header>
 
-        <div className="relative mt-4 flex items-center justify-between gap-3">
+        <div className="relative mt-3 flex items-center justify-between gap-2">
           <PlayerHud name={playerName} flag={playerFlag} countryCode={playerCountryCode} avatar={playerAvatar} pnl={myPnl} leading={leading} />
           <motion.div
-            animate={{ scale: [1, 1.1, 1], textShadow: [`0 0 10px ${accent}`, `0 0 20px ${accent}`, `0 0 10px ${accent}`] }}
+            animate={{ scale: [1, 1.06, 1] }}
             transition={{ duration: 1.6, repeat: Infinity }}
-            className="z-10 shrink-0 select-none font-display text-2xl font-black italic"
-            style={{ color: accent }}
+            className="z-10 flex shrink-0 flex-col items-center gap-0.5 select-none"
           >
-            VS
+            <span className="font-display text-[9px] font-black italic" style={{ color: accent }}>
+              VS
+            </span>
+            <div
+              className="flex items-center gap-1 whitespace-nowrap rounded-full border border-gold/60 bg-gold/10 px-2 py-0.5 font-display text-[11px] font-black text-gold"
+              style={{ boxShadow: `0 0 12px ${accent}55` }}
+            >
+              <TrophyIcon size={12} /> {stake * 2} V
+            </div>
           </motion.div>
           <PlayerHud
             name={match.opponent.name}
@@ -366,13 +447,12 @@ export function MatchView({ match, stake, loadout, characterLevels, playerName, 
             pnl={oppPnl}
             leading={!leading}
             align="right"
-            tag={opponentTag}
           />
         </div>
 
         <div className="mt-3 flex items-center gap-3">
           <div className="flex-1">
-            <div className="mb-1 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-textDim">
+            <div className="mb-1 flex items-center justify-between text-[10px] font-display font-bold uppercase tracking-wider text-textDim">
               <span>Call confidence</span>
               <span className="text-teal">{Math.round(chance * 100)}%</span>
             </div>
@@ -389,75 +469,17 @@ export function MatchView({ match, stake, loadout, characterLevels, playerName, 
               key={streak}
               initial={{ scale: 0.6, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="flex items-center gap-1 rounded-full border border-gold/50 bg-gold/10 px-2.5 py-1 text-xs font-black text-gold"
+              className="flex items-center gap-1 rounded-full border border-gold/50 bg-gold/10 px-2.5 py-1 font-display text-xs font-black text-gold"
             >
               🔥 {streak}
             </motion.div>
           )}
         </div>
+      </div>
 
-        <motion.div
-          ref={chartRef}
-          key={shakeKey}
-          animate={shakeKey ? { x: [0, -6, 6, -4, 4, 0] } : {}}
-          transition={{ duration: 0.4 }}
-          className="relative mt-3 flex-1 overflow-hidden rounded-2xl border border-stroke bg-gradient-to-b from-surface/80 to-bgAlt/90 shadow-[inset_0_1px_0_rgba(255,255,255,.04),0_20px_60px_-20px_rgba(0,0,0,.6)]"
-        >
-          <TradingChart history={history} layers={activeLayers} leading={leading} />
-          <div className="absolute left-4 top-4 font-display text-2xl font-bold">
-            $<AnimatedNumber value={lastPrice} format={(v) => v.toFixed(2)} duration={0.35} />
-          </div>
-          <AnimatePresence>
-            {impact && (
-              <motion.div
-                key={impact.id}
-                initial={{ opacity: 0.55, scale: 0.2 }}
-                animate={{ opacity: 0, scale: 2.6 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.7, ease: 'easeOut' }}
-                className="pointer-events-none absolute inset-0"
-                style={{
-                  background: `radial-gradient(circle at 50% 55%, ${impact.correct ? '#28e07f55' : '#ff4d5e55'}, transparent 60%)`,
-                }}
-              />
-            )}
-          </AnimatePresence>
-          <AnimatePresence>
-            {flash && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8, y: 6 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl border px-4 py-2 font-bold backdrop-blur-sm"
-                style={{ borderColor: accent, color: accent, backgroundColor: '#0b0f18cc' }}
-              >
-                {flash}
-              </motion.div>
-            )}
-          </AnimatePresence>
-          <AnimatePresence>
-            {boostFlash && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.5, y: -10 }}
-                animate={{ opacity: 1, scale: [1.15, 1], y: 0 }}
-                exit={{ opacity: 0, scale: 0.6 }}
-                transition={{ duration: 0.4 }}
-                className="absolute left-1/2 top-6 -translate-x-1/2 rounded-full border px-4 py-1.5 text-xs font-black uppercase shadow-[0_0_24px_rgba(245,195,67,.5)]"
-                style={{
-                  borderColor: boostFlash === 'overdrive' ? '#f5c343' : '#2fe0c8',
-                  color: boostFlash === 'overdrive' ? '#f5c343' : '#2fe0c8',
-                  backgroundColor: '#0b0f18e6',
-                }}
-              >
-                {boostFlash === 'overdrive' ? '⚡ OVERDRIVE ARMED · NEXT CALL ×2' : '🛡 SHIELD ARMED · NEXT MISS SAFE'}
-              </motion.div>
-            )}
-          </AnimatePresence>
-          <AbilityCastOverlay cast={castOverlay} />
-          <CoinFountain bursts={bursts} />
-        </motion.div>
-
-        <div className="mt-3 grid grid-cols-3 gap-2">
+      {/* BOTTOM CONTROL DOCK — floats over the chart at the very bottom of the screen */}
+      <div ref={bottomDockRef} className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-bg/95 via-bg/70 to-transparent px-4 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-10">
+        <div className="grid grid-cols-3 gap-1.5">
           {loadout.map((id) => {
             const char = characterFor(id);
             const rarityColor = RARITY_COLOR[char.rarity];
@@ -481,23 +503,20 @@ export function MatchView({ match, stake, loadout, characterLevels, playerName, 
                 whileTap={{ scale: 0.95 }}
                 animate={isActive ? { boxShadow: [`0 0 6px ${rarityColor}55`, `0 0 18px ${rarityColor}aa`, `0 0 6px ${rarityColor}55`] } : {}}
                 transition={isActive ? { duration: 1.1, repeat: Infinity } : {}}
-                className="relative flex flex-col items-center gap-0.5 overflow-hidden rounded-xl border px-2 py-2 text-center transition disabled:cursor-not-allowed"
+                className="relative flex flex-col items-center gap-0.5 overflow-hidden rounded-lg border px-1.5 py-1.5 text-center transition disabled:cursor-not-allowed"
                 style={{
                   borderColor: isActive || !isCooling ? rarityColor : '#232b3a',
                   background: isActive ? `${rarityColor}22` : isCooling ? 'rgba(17,22,31,.6)' : `linear-gradient(160deg, ${rarityColor}18, #11161f)`,
                   opacity: isCooling ? 0.6 : 1,
                 }}
               >
-                <span className="text-lg">{char.avatar}</span>
-                <span className="truncate text-xs font-black uppercase leading-tight" style={{ color: rarityColor }}>
+                <span className="text-sm">{char.avatar}</span>
+                <span className="truncate font-display text-[11px] font-black uppercase leading-tight" style={{ color: rarityColor }}>
                   {char.shortName}
                 </span>
-                <span className="text-[10px] font-bold text-textFaint">Lv.{level}</span>
-                {(isActive || isCooling) && (
-                  <span className="text-[10px] font-black" style={{ color: rarityColor }}>
-                    {secsLeft}s
-                  </span>
-                )}
+                <span className="font-display text-[9px] font-bold" style={{ color: isActive ? rarityColor : '#8892a4' }}>
+                  +{Math.round(stats.bonus * 100)}% {isActive ? `· ${secsLeft}s` : isCooling ? `· ${secsLeft}s` : `· Lv.${level}`}
+                </span>
                 {(isActive || isCooling) && (
                   <div className="absolute bottom-0 left-0 h-1 w-full bg-bgAlt">
                     <div className="h-full" style={{ width: `${pct * 100}%`, background: rarityColor }} />
@@ -508,11 +527,11 @@ export function MatchView({ match, stake, loadout, characterLevels, playerName, 
           })}
         </div>
 
-        <div className="mt-3 grid grid-cols-2 gap-2">
+        <div className="mt-2 grid grid-cols-2 gap-1.5">
           <button
             onClick={() => useBoost('overdrive')}
             disabled={finished || boostCharges.overdrive <= 0 || pendingBoost !== null}
-            className={`flex items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-black uppercase transition disabled:opacity-30 ${
+            className={`flex items-center justify-center gap-1.5 rounded-lg border px-2.5 py-1.5 font-display text-[11px] font-black uppercase transition disabled:opacity-30 ${
               pendingBoost === 'overdrive' ? 'border-gold bg-gold/20 text-gold' : 'border-gold/50 text-gold hover:bg-gold/10'
             }`}
           >
@@ -521,7 +540,7 @@ export function MatchView({ match, stake, loadout, characterLevels, playerName, 
           <button
             onClick={() => useBoost('shield')}
             disabled={finished || boostCharges.shield <= 0 || pendingBoost !== null}
-            className={`flex items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs font-black uppercase transition disabled:opacity-30 ${
+            className={`flex items-center justify-center gap-1.5 rounded-lg border px-2.5 py-1.5 font-display text-[11px] font-black uppercase transition disabled:opacity-30 ${
               pendingBoost === 'shield' ? 'border-teal bg-teal/20 text-teal' : 'border-teal/50 text-teal hover:bg-teal/10'
             }`}
           >
@@ -529,12 +548,12 @@ export function MatchView({ match, stake, loadout, characterLevels, playerName, 
           </button>
         </div>
 
-        <div className="mt-3 grid grid-cols-2 gap-3 pb-2">
+        <div className="mt-2.5 grid grid-cols-2 gap-3">
           <div className="relative overflow-hidden rounded-2xl">
             <button
               onClick={() => call(false)}
               disabled={cooling || finished}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-bear py-5 text-lg font-black uppercase text-white shadow-[0_0_20px_rgba(255,77,94,.4)] transition disabled:opacity-40"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-bear py-4 font-display text-lg font-black uppercase text-white shadow-[0_0_20px_rgba(255,77,94,.4)] transition disabled:opacity-40"
             >
               {isPenalty && cooling ? (
                 <>
@@ -561,7 +580,7 @@ export function MatchView({ match, stake, loadout, characterLevels, playerName, 
             <button
               onClick={() => call(true)}
               disabled={cooling || finished}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-bull py-5 text-lg font-black uppercase text-white shadow-[0_0_20px_rgba(40,224,127,.4)] transition disabled:opacity-40"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-bull py-4 font-display text-lg font-black uppercase text-white shadow-[0_0_20px_rgba(40,224,127,.4)] transition disabled:opacity-40"
             >
               {isPenalty && cooling ? (
                 <>
@@ -585,7 +604,7 @@ export function MatchView({ match, stake, loadout, characterLevels, playerName, 
             )}
           </div>
         </div>
-        <div className="pb-2 text-center text-[11px] text-textFaint">↑ / ↓ arrow keys · 1 = Overdrive · 2 = Shield</div>
+        <div className="pt-1.5 text-center text-[11px] text-textFaint">↑ / ↓ arrow keys · 1 = Overdrive · 2 = Shield</div>
       </div>
     </div>
   );

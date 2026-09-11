@@ -8,6 +8,11 @@ interface Props {
   history: PriceTick[];
   layers: LayerId[];
   leading: boolean;
+  /** Pixel-space top/bottom safe-zone insets (e.g. the height of HUD bars
+   * floating over a full-screen chart) so the plotted line and indicator
+   * overlays never render underneath those bars. */
+  topInset?: number;
+  bottomInset?: number;
 }
 
 type Pt = [number, number];
@@ -46,7 +51,7 @@ function ema(values: number[], period: number): number[] {
 }
 
 /** Canvas chart rendering the live price path plus any active cockpit layers. */
-export function TradingChart({ history, layers, leading }: Props) {
+export function TradingChart({ history, layers, leading, topInset, bottomInset }: Props) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -64,8 +69,8 @@ export function TradingChart({ history, layers, leading }: Props) {
 
     const width = cssW;
     const height = cssH;
-    const padTop = 26;
-    const padBottom = 46;
+    const padTop = topInset ?? 26;
+    const padBottom = bottomInset ?? 46;
 
     if (history.length < 2) return;
     const prices = history.map((h) => h.price);
@@ -261,7 +266,7 @@ export function TradingChart({ history, layers, leading }: Props) {
       const signal = ema(macdLine, 9);
       const hist = macdLine.map((v, i) => v - signal[i]!);
       const maxAbs = Math.max(0.2, ...hist.map((v) => Math.abs(v)));
-      const baseY = height - 8;
+      const baseY = height - padBottom - 8;
       const bandH = 30;
       ctx.save();
       hist.forEach((v, i) => {
@@ -286,7 +291,7 @@ export function TradingChart({ history, layers, leading }: Props) {
       const rs = losses === 0 ? gains : gains / Math.max(0.0001, losses);
       const rsi = 100 - 100 / (1 + rs);
       const cx = width - 34;
-      const cy = 34;
+      const cy = padTop + 34;
       const r = 20;
       ctx.save();
       ctx.strokeStyle = 'rgba(154,165,184,0.35)';
@@ -317,7 +322,7 @@ export function TradingChart({ history, layers, leading }: Props) {
     ctx.arc(lastPt[0], lastPt[1], 5.5, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
-  }, [history, layers, leading]);
+  }, [history, layers, leading, topInset, bottomInset]);
 
   return <canvas ref={ref} className="h-full w-full rounded-2xl" />;
 }

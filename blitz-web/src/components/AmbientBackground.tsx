@@ -53,6 +53,16 @@ export function AmbientBackground({ sentiment }: { sentiment: number }) {
       speed: 0.05 + Math.random() * 0.1,
     }));
 
+    // Floating gold coin glyphs — an original branded "V" coin, not a photo
+    // of any real currency/logo.
+    const coins = Array.from({ length: 7 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      z: 0.3 + Math.random() * 0.7,
+      speed: 0.04 + Math.random() * 0.08,
+      r: 5 + Math.random() * 4,
+    }));
+
     const ROWS = 11;
     const HALF_COLS = 5;
     let scrollPhase = 0;
@@ -117,6 +127,14 @@ export function AmbientBackground({ sentiment }: { sentiment: number }) {
       ctx.fillStyle = horizonGlow;
       ctx.fillRect(0, 0, width, height);
 
+      // a small, gentle overhead light — just a touch of extra lighting,
+      // nothing literal (no buildings/windows)
+      const overheadLight = ctx.createRadialGradient(width / 2, 0, 0, width / 2, 0, height * 0.55);
+      overheadLight.addColorStop(0, `rgba(${tint},${0.1 + Math.max(bull, bear) * 0.05})`);
+      overheadLight.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = overheadLight;
+      ctx.fillRect(0, 0, width, height);
+
       // slow-drifting glow orbs add parallax depth behind the particle field
       for (const orb of orbs) {
         const wobble = Math.sin(now / 4000 + orb.phase) * 24;
@@ -139,6 +157,27 @@ export function AmbientBackground({ sentiment }: { sentiment: number }) {
         ctx.fillText('$', d.x, d.y);
       }
       ctx.restore();
+
+      // floating gold coin glyphs — original branded "V" coin, not real currency art
+      for (const c of coins) {
+        c.y -= c.speed * c.z;
+        if (c.y < -20) c.y = height + 20;
+        ctx.save();
+        ctx.globalAlpha = 0.05 + c.z * 0.1;
+        const coinGrad = ctx.createRadialGradient(c.x - c.r * 0.3, c.y - c.r * 0.3, 0, c.x, c.y, c.r);
+        coinGrad.addColorStop(0, '#fff2c4');
+        coinGrad.addColorStop(1, '#c9902a');
+        ctx.fillStyle = coinGrad;
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(90,60,10,0.6)';
+        ctx.font = `700 ${Math.round(c.r * 1.1)}px var(--font-display, sans-serif)`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('V', c.x, c.y + 0.5);
+        ctx.restore();
+      }
 
       for (const p of particles) {
         p.y -= p.speed + bull * 0.4;

@@ -9,8 +9,9 @@ interface Props {
 }
 
 /** The signature "cast" moment for a character ability: the avatar rockets
- * to center, throws a shockwave ring at the chart, and a banner names the
- * indicator it just conjured — e.g. "The Oracle casts RSI". */
+ * to center and throws a shockwave ring at the chart. No name/caption text —
+ * the dock button already shows which ability is active, so a redundant
+ * banner would just cover the chart. */
 export function AbilityCastOverlay({ cast }: Props) {
   const char = cast ? characterFor(cast.id) : null;
   const color = char ? RARITY_COLOR[char.rarity] : '#f5c343';
@@ -34,22 +35,13 @@ export function AbilityCastOverlay({ cast }: Props) {
             style={{ border: `2px solid ${color}` }}
           />
           <motion.div
-            initial={{ scale: 0.2, opacity: 0, y: 60, rotate: -25 }}
-            animate={{ scale: [0.2, 1.8, 0.5], opacity: [0, 1, 0], y: [60, 0, -40], rotate: [-25, 0, 10] }}
-            transition={{ duration: 0.9, times: [0, 0.45, 1], ease: 'easeOut' }}
-            className="text-7xl"
-            style={{ filter: `drop-shadow(0 0 26px ${color})` }}
+            initial={{ scale: 0.2, opacity: 0, y: 40, rotate: -25 }}
+            animate={{ scale: [0.2, 1.3, 0.5], opacity: [0, 1, 0], y: [40, 0, -30], rotate: [-25, 0, 10] }}
+            transition={{ duration: 0.7, times: [0, 0.45, 1], ease: 'easeOut' }}
+            className="text-5xl"
+            style={{ filter: `drop-shadow(0 0 22px ${color})` }}
           >
             {char.avatar}
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.9 }}
-            animate={{ opacity: [0, 1, 1, 0], y: 0, scale: 1 }}
-            transition={{ duration: 1.1, times: [0, 0.2, 0.75, 1] }}
-            className="absolute bottom-8 rounded-full border px-4 py-1.5 text-xs font-black uppercase tracking-wide backdrop-blur-sm"
-            style={{ borderColor: color, color, backgroundColor: '#05070ce6' }}
-          >
-            {char.name} casts {char.shortName}
           </motion.div>
         </motion.div>
       )}

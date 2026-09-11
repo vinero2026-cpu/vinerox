@@ -5,6 +5,7 @@ import { persist } from 'zustand/middleware';
 import type { BannerId, ChestDef, LayerId, Profile, Wallet } from './types';
 import { MAX_CHARACTER_LEVEL, shardsRequired, upgradeCost } from './characters';
 import type { MilestoneReward } from './milestones';
+import { DAILY_REWARDS, calendarDayDiff, type DailyReward } from './dailyBonus';
 
 interface BlitzState {
   profile: Profile | null;
@@ -19,6 +20,8 @@ interface BlitzState {
   claimedMilestones: number[];
   claimedPremiumMilestones: number[];
   bonusBoosts: { overdrive: number; shield: number };
+  lastDailyClaim: number | null;
+  dailyStreak: number;
   hydrated: boolean;
   setProfile: (p: Profile) => void;
   updateProfile: (patch: Partial<Pick<Profile, 'name' | 'avatar' | 'avatarImage' | 'flag' | 'countryCode'>>) => void;
@@ -31,6 +34,7 @@ interface BlitzState {
   openChest: (id: string, coins: number, layer?: LayerId, banner?: BannerId, shardCharacter?: LayerId, shardAmount?: number) => void;
   claimMilestone: (reward: MilestoneReward, track?: 'free' | 'premium') => void;
   consumeBonusBoosts: () => { overdrive: number; shield: number };
+  claimDaily: () => DailyReward | null;
   setHydrated: () => void;
 }
 
@@ -51,6 +55,8 @@ export const useBlitzStore = create<BlitzState>()(
       claimedMilestones: [],
       claimedPremiumMilestones: [],
       bonusBoosts: { overdrive: 0, shield: 0 },
+      lastDailyClaim: null,
+      dailyStreak: 0,
       hydrated: false,
       setProfile: (profile) => set({ profile }),
       updateProfile: (patch) => set((s) => (s.profile ? { profile: { ...s.profile, ...patch } } : s)),
@@ -114,6 +120,23 @@ export const useBlitzStore = create<BlitzState>()(
             ? { ...s.bonusBoosts, [reward.boost.kind]: s.bonusBoosts[reward.boost.kind] + reward.boost.amount }
             : s.bonusBoosts,
         })),
+      claimDaily: () => {
+        const s = get();
+        const now = Date.now();
+        if (s.lastDailyClaim && calendarDayDiff(s.lastDailyClaim, now) === 0) return null;
+        const consecutive = s.lastDailyClaim != null && calendarDayDiff(s.lastDailyClaim, now) === 1;
+        const nextDay = consecutive ? (s.dailyStreak % DAILY_REWARDS.length) + 1 : 1;
+        const reward = DAILY_REWARDS[nextDay - 1]!;
+        set({
+          lastDailyClaim: now,
+          dailyStreak: nextDay,
+          wallet: { ...s.wallet, coins: s.wallet.coins + reward.coins },
+          bonusBoosts: reward.boost
+            ? { ...s.bonusBoosts, [reward.boost.kind]: s.bonusBoosts[reward.boost.kind] + reward.boost.amount }
+            : s.bonusBoosts,
+        });
+        return reward;
+      },
       consumeBonusBoosts: () => {
         const current = get().bonusBoosts;
         set({ bonusBoosts: { overdrive: 0, shield: 0 } });

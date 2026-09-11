@@ -1,3 +1,7 @@
+import { CARICATURES, caricatureById, isCaricatureId } from './caricatures';
+
+export { CARICATURES, isCaricatureId };
+
 /** A richer, more varied avatar set for players who skip the photo option —
  * broad mix of creatures so no two managers look alike at a glance. */
 export const AVATARS = [
@@ -36,6 +40,7 @@ const AVATAR_ACCENTS: Record<string, [string, string]> = {
 };
 
 export function avatarAccent(avatar: string): [string, string] {
+  if (isCaricatureId(avatar)) return caricatureById(avatar)?.accent ?? ['#3a4558', '#11161f'];
   return AVATAR_ACCENTS[avatar] ?? ['#3a4558', '#11161f'];
 }
 

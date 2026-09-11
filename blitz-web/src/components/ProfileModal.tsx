@@ -2,7 +2,9 @@
 
 import { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AVATARS, FLAGS, avatarAccent } from '@/lib/identity';
+import { CARICATURES, FLAGS, avatarAccent } from '@/lib/identity';
+import { AvatarGlyph } from './AvatarGlyph';
+import { CaricatureAvatar } from './CaricatureAvatar';
 import { FlagIcon } from './FlagIcon';
 
 interface Props {
@@ -68,7 +70,7 @@ export function ProfileModal({ name, avatar, avatarImage, flag, onSave, onClose 
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={draftImage} alt="Profile" className="h-full w-full object-cover" />
               ) : (
-                draftAvatar
+                <AvatarGlyph avatar={draftAvatar} className="h-full w-full" />
               )}
             </div>
             <div className="flex flex-1 flex-col gap-1.5">
@@ -89,26 +91,27 @@ export function ProfileModal({ name, avatar, avatarImage, flag, onSave, onClose 
 
           <div className="mt-4 text-xs font-bold uppercase tracking-wider text-textDim">Or pick an avatar</div>
           <div className="mt-2 grid grid-cols-6 gap-2">
-            {AVATARS.map((av) => {
-              const [c1, c2] = avatarAccent(av);
-              const selected = !draftImage && draftAvatar === av;
+            {CARICATURES.map((c) => {
+              const [c1, c2] = avatarAccent(c.id);
+              const selected = !draftImage && draftAvatar === c.id;
               return (
                 <motion.button
-                  key={av}
+                  key={c.id}
                   whileHover={{ scale: 1.08, y: -2 }}
                   whileTap={{ scale: 0.94 }}
                   onClick={() => {
-                    setDraftAvatar(av);
+                    setDraftAvatar(c.id);
                     setDraftImage(undefined);
                   }}
-                  className="grid aspect-square place-items-center rounded-xl border text-xl transition"
+                  title={c.name}
+                  className="grid aspect-square place-items-center rounded-xl border p-1 transition"
                   style={{
                     borderColor: selected ? c1 : '#232b3a',
                     background: `radial-gradient(circle at 35% 30%, ${c1}${selected ? '55' : '2e'}, ${c2}${selected ? 'e0' : '80'})`,
                     boxShadow: selected ? `0 0 16px ${c1}66` : 'none',
                   }}
                 >
-                  {av}
+                  <CaricatureAvatar id={c.id} className="h-full w-full" />
                 </motion.button>
               );
             })}

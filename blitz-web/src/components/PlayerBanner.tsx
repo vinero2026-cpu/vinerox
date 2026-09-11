@@ -5,6 +5,7 @@ import { BANNER_CATALOG, type BannerId } from '@/lib/types';
 import { avatarAccent } from '@/lib/identity';
 import { bannerPatternCss, bannerPatternSize } from '@/lib/bannerPatterns';
 import { AnimatedNumber } from './AnimatedNumber';
+import { AvatarGlyph } from './AvatarGlyph';
 import { FlagIcon } from './FlagIcon';
 import { TrophyIcon } from './TrophyIcon';
 
@@ -81,7 +82,7 @@ export function PlayerBanner({ name, avatar, avatarImage, countryCode, trophies,
             // eslint-disable-next-line @next/next/no-img-element
             <img src={avatarImage} alt={name} className="h-full w-full object-cover" />
           ) : (
-            avatar
+            <AvatarGlyph avatar={avatar} className="h-full w-full" />
           )}
         </motion.div>
         {countryCode && (
