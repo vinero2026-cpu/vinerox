@@ -39,6 +39,10 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
+# Blitz deploy artifacts (built locally, shipped via scp, never tracked)
+/blitz-web-deploy.tar.gz
+*.tar.gz
+
 # Android Studio will place build artifacts here
 /android/app/debug
 /android/app/profile

@@ -19,7 +19,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _username = TextEditingController();
   final _password = TextEditingController();
   bool _busy = false;
-  bool _registering = false;
 
   @override
   void dispose() {
@@ -51,15 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (AppConfig.useDevBypass) {
       return _run(() => Future<void>.delayed(const Duration(milliseconds: 200)));
     }
-    final user = _username.text.trim();
-    final pass = _password.text;
-    if (user.isEmpty || pass.isEmpty) {
-      _fail('Enter your username and password.');
-      return;
-    }
-    return _run(() => _registering
-        ? ArenaAuth.register(user, pass, null)
-        : ArenaAuth.login(user, pass));
+    return _run(ArenaAuth.guest);
   }
 
   void _fail(String message) {
@@ -120,31 +111,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: Theme.of(context).textTheme.bodySmall),
                 const SizedBox(height: 32),
                 if (!AppConfig.useDevBypass) ...[
-                  TextField(
-                    controller: _username,
-                    enabled: !_busy,
-                    autocorrect: false,
-                    enableSuggestions: false,
-                    textInputAction: TextInputAction.next,
-                    decoration: const InputDecoration(
-                      labelText: 'Username',
-                      prefixIcon: Icon(Icons.person_outline),
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: _password,
-                    enabled: !_busy,
-                    obscureText: true,
-                    textInputAction: TextInputAction.done,
-                    onSubmitted: (_) {
-                      if (!_busy) _enter();
-                    },
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                      prefixIcon: Icon(Icons.lock_outline),
-                      border: OutlineInputBorder(),
+                  Text(
+                    'Sign-up and login are currently disabled while the Blitz product is being rebuilt.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: VineroxTheme.accent.withValues(alpha: 0.9),
+                      height: 1.5,
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -156,33 +128,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: FilledButton.styleFrom(
                       backgroundColor: VineroxTheme.accent,
                       foregroundColor: Colors.black,
-                      padding:
-                          const EdgeInsets.symmetric(vertical: 16),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                     child: Text(_busy
                         ? 'Loading...'
                         : (AppConfig.useDevBypass
                             ? 'Enter (Dev mode)'
-                            : (_registering ? 'Create account' : 'Sign in'))),
+                            : 'Continue as guest')),
                   ),
                 ),
-                if (!AppConfig.useDevBypass) ...[
-                  TextButton(
-                    onPressed: _busy
-                        ? null
-                        : () => setState(() => _registering = !_registering),
-                    child: Text(_registering
-                        ? 'I already have an account'
-                        : 'Create a new account'),
-                  ),
-                  const Divider(height: 24),
-                  // Lets Play reviewers and testers in without creating an account.
-                  TextButton.icon(
-                    onPressed: _busy ? null : () => _run(ArenaAuth.guest),
-                    icon: const Icon(Icons.explore_outlined),
-                    label: const Text('Continue as guest'),
-                  ),
-                ],
                 if (AppConfig.useDevBypass) ...[
                   const SizedBox(height: 12),
                   Text('Dev bypass active — uid=${AppConfig.devUid}',

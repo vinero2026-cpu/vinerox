@@ -5,8 +5,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'api.dart';
+import '../config.dart';
 import 'theme.dart';
 import 'widgets.dart';
+
+_BlitzLobby buildBlitzLobby(List<Map<String, dynamic>> values) {
+  final inventory = values.length > 0 ? values[0] : const <String, dynamic>{};
+  final catalogMap = values.length > 1 ? values[1] : const <String, dynamic>{};
+  final profile = values.length > 2 ? values[2] : const <String, dynamic>{};
+
+  return _BlitzLobby(
+    inventory: inventory,
+    catalog: catalogMap.rows('cards'),
+    profile: profile,
+  );
+}
 
 class BlitzScreen extends StatefulWidget {
   const BlitzScreen({super.key});
@@ -22,16 +35,13 @@ class _BlitzScreenState extends State<BlitzScreen> {
   bool _opening = false;
 
   Future<_BlitzLobby> _load() async {
+    if (AppConfig.useDevBypass) return _localLobby();
     final values = await Future.wait([
-      ArenaApi.instance.blitzInventory(),
-      ArenaApi.instance.blitzCatalog(),
+      ArenaApi.instance.blitzInventory().catchError((_) => <String, dynamic>{}),
+      ArenaApi.instance.blitzCatalog().catchError((_) => <String, dynamic>{}),
       ArenaApi.instance.clubProfile().catchError((_) => <String, dynamic>{}),
     ]);
-    final lobby = _BlitzLobby(
-      inventory: values[0],
-      catalog: values[1].rows('cards'),
-      profile: values[2],
-    );
+    final lobby = buildBlitzLobby(values.cast<Map<String, dynamic>>());
     _loadout
       ..clear()
       ..addAll((lobby.inventory['loadout'] as List? ?? const [])
@@ -40,10 +50,41 @@ class _BlitzScreenState extends State<BlitzScreen> {
     return lobby;
   }
 
+  _BlitzLobby _localLobby() => const _BlitzLobby(
+        inventory: {
+          'balance': 1000,
+          'free_lootboxes_left': 1,
+          'cards': [
+            {'card_id': 'momentum'},
+            {'card_id': 'volume_spike'},
+            {'card_id': 'bollinger'},
+          ],
+        },
+        catalog: [
+          {'id': 'momentum', 'name': 'Momentum Pulse'},
+          {'id': 'volume_spike', 'name': 'Volume Spike'},
+          {'id': 'bollinger', 'name': 'Bollinger Bands'},
+        ],
+        profile: {'club_name': 'Blitz Manager', 'country_flag': '⚡'},
+      );
+
   Future<void> _refresh() async {
     final next = _load();
     setState(() => _future = next);
     await next;
+  }
+
+  String _describeFailure(Object? error) {
+    if (error == null) return 'Arena is temporarily unavailable.';
+    final text = error.toString();
+    if (text.contains('401') || text.contains('403')) {
+      return 'Your Arena session expired. Please sign back in and reconnect.';
+    }
+    if (text.contains('No connection') || text.contains('not responding')) {
+      return 'The Arena server is unreachable right now. Try again in a moment.';
+    }
+    if (text.contains('HTTP')) return 'Arena rejected the request. Please reconnect and retry.';
+    return text.length > 180 ? '${text.substring(0, 180)}…' : text;
   }
 
   Future<void> _openChest() async {
@@ -64,23 +105,36 @@ class _BlitzScreenState extends State<BlitzScreen> {
   }
 
   Future<void> _play(_BlitzLobby lobby) async {
-    try {
+    Map<String, dynamic> match;
+    if (AppConfig.useDevBypass) {
+      match = {
+        'match_id': 'local-blitz',
+        'seed': DateTime.now().millisecondsSinceEpoch,
+        'opponent': 'CPU Rival',
+      };
+    } else {
+      try {
       await ArenaApi.instance.saveBlitzLoadout(_loadout.toList());
-      final match = await ArenaApi.instance.startBlitzMatch();
-      if (!mounted) return;
-      await Navigator.of(context).push(MaterialPageRoute(
-        builder: (_) => BlitzQueueScreen(
-          match: match,
-          stake: _stake,
-          playerName: lobby.profile.str('club_name', 'You'),
-          playerFlag: lobby.profile.str('country_flag', '🏳️'),
-          layers: _loadout.toList(),
-        ),
-      ));
-      if (mounted) _refresh();
-    } on ApiException catch (error) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.message)));
+      match = await ArenaApi.instance.startBlitzMatch();
+      } on ApiException {
+        match = {
+          'match_id': 'local-blitz',
+          'seed': DateTime.now().millisecondsSinceEpoch,
+          'opponent': 'CPU Rival',
+        };
+      }
     }
+    if (!mounted) return;
+    await Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) => BlitzQueueScreen(
+        match: match,
+        stake: _stake,
+        playerName: lobby.profile.str('club_name', 'You'),
+        playerFlag: lobby.profile.str('country_flag', '🏳️'),
+        layers: _loadout.toList(),
+      ),
+    ));
+    if (mounted) _refresh();
   }
 
   @override
@@ -91,11 +145,32 @@ class _BlitzScreenState extends State<BlitzScreen> {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return Center(child: FilledButton.icon(
-              onPressed: _refresh,
-              icon: const Icon(Icons.refresh_rounded),
-              label: const Text('RECONNECT ARENA'),
-            ));
+            final errorText = _describeFailure(snapshot.error);
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 22),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.signal_wifi_off_rounded, size: 52, color: AC.gold),
+                    const SizedBox(height: 18),
+                    const Text('ARENA UNAVAILABLE', style: TextStyle(fontFamily: 'Fredoka', fontSize: 26, fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 10),
+                    Text(
+                      errorText,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: AC.textDim, fontSize: 13, height: 1.35),
+                    ),
+                    const SizedBox(height: 18),
+                    FilledButton.icon(
+                      onPressed: _refresh,
+                      icon: const Icon(Icons.refresh_rounded),
+                      label: const Text('RECONNECT ARENA'),
+                    ),
+                  ],
+                ),
+              ),
+            );
           }
           final lobby = snapshot.data!;
           final inventory = lobby.inventory;
@@ -345,6 +420,461 @@ class _BlitzHero extends StatelessWidget {
       IconButton(tooltip: freeBoxes > 0 ? 'Open reward chest' : 'Buy reward chest', onPressed: onChest, icon: Badge(isLabelVisible: freeBoxes > 0, label: Text('$freeBoxes'), child: const Icon(Icons.inventory_2_rounded, color: AC.gold)), color: AC.gold),
     ]),
   );
+}
+
+class _BlitzProductBlueprint extends StatelessWidget {
+  const _BlitzProductBlueprint();
+
+  @override
+  Widget build(BuildContext context) {
+    const stages = [
+      ['WEB-FIRST', 'vinero.app/blitz', 'Launch the playable product on the web first to validate the loop.'],
+      ['API-FIRST', 'blitz inventory + queue + wallet', 'All gameplay logic is served through a clean backend contract.'],
+      ['BOT Fallback', 'smart bot if no human rival', 'Queue 5–10s, then spawn a ranked bot with adaptive difficulty.'],
+      ['NATIVE PORT', 'same engine, new shell', 'When web flow is stable, port the exact logic to Flutter native.'],
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: AC.panel(
+        border: AC.teal.withValues(alpha: .7),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AC.teal.withValues(alpha: .12), AC.surface, AC.bgAlt],
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'BLITZ PRODUCT BLUEPRINT',
+            style: TextStyle(
+              fontFamily: 'Fredoka',
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+              letterSpacing: .8,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: const [
+              _BlueChip('API-first'),
+              _BlueChip('Queue + bot fallback'),
+              _BlueChip('Wallet settlement'),
+              _BlueChip('Native port later'),
+            ],
+          ),
+          const SizedBox(height: 14),
+          ...stages.map((stage) => Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 10,
+                      height: 10,
+                      margin: const EdgeInsets.only(top: 6, right: 10),
+                      decoration: const BoxDecoration(
+                        color: AC.gold,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    Expanded(
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: '${stage[0]} · ',
+                              style: const TextStyle(
+                                color: AC.gold,
+                                fontWeight: FontWeight.w900,
+                                fontSize: 12,
+                                letterSpacing: .7,
+                              ),
+                            ),
+                            TextSpan(
+                              text: '${stage[1]}\n',
+                              style: const TextStyle(
+                                color: AC.text,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 12,
+                              ),
+                            ),
+                            TextSpan(
+                              text: stage[2],
+                              style: const TextStyle(
+                                color: AC.textDim,
+                                fontSize: 11,
+                                height: 1.4,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+        ],
+      ),
+    );
+  }
+}
+
+class _BlueChip extends StatelessWidget {
+  const _BlueChip(this.label);
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: AC.teal.withValues(alpha: .12),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: AC.teal.withValues(alpha: .45)),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: AC.teal,
+          fontSize: 10,
+          fontWeight: FontWeight.w800,
+          letterSpacing: .8,
+        ),
+      ),
+    );
+  }
+}
+
+class _BlitzWebMvpFlow extends StatelessWidget {
+  const _BlitzWebMvpFlow();
+
+  @override
+  Widget build(BuildContext context) {
+    const steps = [
+      ('1', 'Lobby', 'Balance, rank, chests, start flow'),
+      ('2', 'Queue', 'Bot fallback after 5–10s'),
+      ('3', 'Match', '2-minute live chart battle'),
+      ('4', 'Result', 'Wallet, rank, reward chest'),
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: AC.panel(
+        border: AC.gold.withValues(alpha: .55),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AC.gold.withValues(alpha: .14), AC.surface, AC.bgAlt],
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'WEB MVP FLOW',
+            style: TextStyle(
+              fontFamily: 'Fredoka',
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+              letterSpacing: .8,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: steps.map((step) {
+              final id = step.$1;
+              final label = step.$2;
+              final detail = step.$3;
+              return SizedBox(
+                width: 150,
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AC.surfaceHi.withValues(alpha: .72),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: AC.gold.withValues(alpha: .4)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        id,
+                        style: const TextStyle(
+                          color: AC.gold,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                          fontFamily: 'Fredoka',
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        label,
+                        style: const TextStyle(
+                          color: AC.text,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 13,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        detail,
+                        style: const TextStyle(
+                          color: AC.textDim,
+                          fontSize: 11,
+                          height: 1.35,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BlitzProductStagePreview extends StatelessWidget {
+  const _BlitzProductStagePreview({required this.stage, required this.onSelect});
+  final int stage;
+  final ValueChanged<int> onSelect;
+
+  static const stages = ['Lobby', 'Queue', 'Match', 'Result'];
+
+  @override
+  Widget build(BuildContext context) {
+    final content = switch (stage) {
+      1 => _queuePreview(),
+      2 => _matchPreview(),
+      3 => _resultPreview(),
+      _ => _lobbyPreview(),
+    };
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: AC.panel(
+        border: AC.teal.withValues(alpha: .65),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AC.teal.withValues(alpha: .12), AC.surface, AC.bgAlt],
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Expanded(
+                child: Text(
+                  'VINERO.APP/BLITZ',
+                  style: TextStyle(
+                    fontFamily: 'Fredoka',
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+              Icon(Icons.public_rounded, color: AC.teal, size: 20),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                for (var i = 0; i < stages.length; i++)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: ChoiceChip(
+                      selected: stage == i,
+                      label: Text(stages[i]),
+                      selectedColor: AC.gold.withValues(alpha: .18),
+                      labelStyle: TextStyle(
+                        color: stage == i ? AC.gold : AC.text,
+                        fontWeight: FontWeight.w800,
+                      ),
+                      onSelected: (_) => onSelect(i),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 14),
+          content,
+        ],
+      ),
+    );
+  }
+
+  static Widget _lobbyPreview() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Lobby', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              _MiniStat(label: 'Balance', value: '340 V'),
+              const SizedBox(width: 10),
+              _MiniStat(label: 'Trophies', value: '1,240'),
+              const SizedBox(width: 10),
+              _MiniStat(label: 'Rank', value: 'Silver II'),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: AC.surfaceHi,
+              border: Border.all(color: AC.gold.withValues(alpha: .35)),
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.inventory_2_rounded, color: AC.gold),
+                SizedBox(width: 10),
+                Expanded(child: Text('Free chest ready • 2 lootboxes available')),
+              ],
+            ),
+          ),
+        ],
+      );
+
+  static Widget _queuePreview() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Queue', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+            decoration: BoxDecoration(
+              color: AC.surfaceHi,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: AC.teal.withValues(alpha: .45)),
+            ),
+            child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Searching rival…', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+                SizedBox(height: 8),
+                LinearProgressIndicator(color: AC.teal, backgroundColor: AC.bgAlt),
+                SizedBox(height: 8),
+                Text('Smart bot fallback enabled • 5s search window', style: TextStyle(color: AC.textDim)),
+              ],
+            ),
+          ),
+        ],
+      );
+
+  static Widget _matchPreview() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Live Match', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AC.bull.withValues(alpha: .12),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AC.bull.withValues(alpha: .4)),
+                  ),
+                  child: const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('YOU', style: TextStyle(fontWeight: FontWeight.w800)),
+                      Text('+1.82%', style: TextStyle(color: AC.bull, fontWeight: FontWeight.w900)),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AC.bear.withValues(alpha: .12),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AC.bear.withValues(alpha: .4)),
+                  ),
+                  child: const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('BOT', style: TextStyle(fontWeight: FontWeight.w800)),
+                      Text('-0.64%', style: TextStyle(color: AC.bear, fontWeight: FontWeight.w900)),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          const Text('Live price feed • NVDA • OFFICIAL ARENA FEED', style: TextStyle(color: AC.textDim)),
+        ],
+      );
+
+  static Widget _resultPreview() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Result', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: AC.gold.withValues(alpha: .12),
+              border: Border.all(color: AC.gold.withValues(alpha: .5)),
+            ),
+            child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('VICTORY', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
+                SizedBox(height: 4),
+                Text('+30 Vinerox • +18 trophies • Bronze chest unlocked', style: TextStyle(color: AC.textDim)),
+              ],
+            ),
+          ),
+        ],
+      );
+}
+
+class _MiniStat extends StatelessWidget {
+  const _MiniStat({required this.label, required this.value});
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: AC.surfaceHi,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AC.stroke),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(label, style: const TextStyle(fontSize: 10, color: AC.textDim)),
+            const SizedBox(height: 4),
+            Text(value, style: const TextStyle(fontWeight: FontWeight.w800)),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _PlayerHud extends StatelessWidget {
