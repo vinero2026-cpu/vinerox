@@ -22,6 +22,7 @@ interface BlitzState {
   bonusBoosts: { overdrive: number; shield: number };
   lastDailyClaim: number | null;
   dailyStreak: number;
+  seenBlitzTutorial: boolean;
   hydrated: boolean;
   setProfile: (p: Profile) => void;
   updateProfile: (patch: Partial<Pick<Profile, 'name' | 'avatar' | 'avatarImage' | 'flag' | 'countryCode'>>) => void;
@@ -35,6 +36,7 @@ interface BlitzState {
   claimMilestone: (reward: MilestoneReward, track?: 'free' | 'premium') => void;
   consumeBonusBoosts: () => { overdrive: number; shield: number };
   claimDaily: () => DailyReward | null;
+  markTutorialSeen: () => void;
   setHydrated: () => void;
 }
 
@@ -57,6 +59,7 @@ export const useBlitzStore = create<BlitzState>()(
       bonusBoosts: { overdrive: 0, shield: 0 },
       lastDailyClaim: null,
       dailyStreak: 0,
+      seenBlitzTutorial: false,
       hydrated: false,
       setProfile: (profile) => set({ profile }),
       updateProfile: (patch) => set((s) => (s.profile ? { profile: { ...s.profile, ...patch } } : s)),
@@ -142,6 +145,7 @@ export const useBlitzStore = create<BlitzState>()(
         set({ bonusBoosts: { overdrive: 0, shield: 0 } });
         return current;
       },
+      markTutorialSeen: () => set({ seenBlitzTutorial: true }),
       setHydrated: () => set({ hydrated: true }),
     }),
     {

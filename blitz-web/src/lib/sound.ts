@@ -126,6 +126,70 @@ class SoundEngine {
     [400, 320, 260].forEach((freq, i) => setTimeout(() => this.blip(freq, 0.35, 'sawtooth', 0.14), i * 120));
   }
 
+  /** "Boom-tzzka!" — a punchy sub-bass thump followed by a bright noise
+   * crackle and a sparkle tail. The big correct-call hit. */
+  successBoom() {
+    const ctx = this.ensure();
+    const now = ctx.currentTime;
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(170, now);
+    osc.frequency.exponentialRampToValueAtTime(45, now + 0.18);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.5, now + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
+    osc.connect(gain).connect(this.master!);
+    osc.start(now);
+    osc.stop(now + 0.3);
+
+    const noise = this.noiseBuffer(ctx, 0.12);
+    [0, 0.05, 0.1].forEach((delay, i) => {
+      const src = ctx.createBufferSource();
+      src.buffer = noise;
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'highpass';
+      filter.frequency.value = 3200 + i * 600;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, now + delay);
+      g.gain.exponentialRampToValueAtTime(0.22 - i * 0.05, now + delay + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + delay + 0.08);
+      src.connect(filter).connect(g).connect(this.master!);
+      src.start(now + delay);
+      src.stop(now + delay + 0.1);
+    });
+
+    [1318, 1568, 1976].forEach((freq, i) => setTimeout(() => this.blip(freq, 0.16, 'sine', 0.16), 120 + i * 45));
+  }
+
+  /** Comedic descending 4x "no-no-no-no" buzz — the missed-call sting. */
+  failBuzzer() {
+    const ctx = this.ensure();
+    [280, 250, 220, 190].forEach((freq, i) => {
+      setTimeout(() => {
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(freq, now);
+        osc.frequency.exponentialRampToValueAtTime(freq * 0.72, now + 0.14);
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.22, now + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
+        osc.connect(gain).connect(this.master!);
+        osc.start(now);
+        osc.stop(now + 0.18);
+      }, i * 150);
+    });
+  }
+
+  /** Stacked ascending chord blip — fired on streak milestones (3/5/7/...). */
+  comboHype(streak: number) {
+    const base = 660 + Math.min(6, streak) * 40;
+    [base, base * 1.26, base * 1.5].forEach((freq, i) => setTimeout(() => this.blip(freq, 0.22, 'triangle', 0.18), i * 40));
+  }
+
 
   setMuted(muted: boolean) {
     this.muted = muted;

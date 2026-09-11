@@ -33,7 +33,8 @@ export function ActiveAbilityAura({ activeLayers, characterLevels }: Props) {
           );
         })}
       </AnimatePresence>
-      <div className="pointer-events-none absolute right-3 top-1/2 z-10 flex -translate-y-1/2 flex-col items-end gap-1.5">
+      {/* Left side, so it never collides with the right-side indicator cast dock. */}
+      <div className="pointer-events-none absolute left-3 top-1/2 z-10 flex -translate-y-1/2 flex-col items-start gap-1.5">
         <AnimatePresence>
           {activeLayers.map((id) => {
             const char = characterFor(id);
@@ -42,9 +43,9 @@ export function ActiveAbilityAura({ activeLayers, characterLevels }: Props) {
             return (
               <motion.div
                 key={id}
-                initial={{ opacity: 0, x: 24, scale: 0.8 }}
+                initial={{ opacity: 0, x: -24, scale: 0.8 }}
                 animate={{ opacity: 1, x: 0, scale: 1 }}
-                exit={{ opacity: 0, x: 24, scale: 0.8 }}
+                exit={{ opacity: 0, x: -24, scale: 0.8 }}
                 className="flex items-center gap-1 rounded-full border px-2 py-0.5 font-display text-[11px] font-black backdrop-blur-sm"
                 style={{ borderColor: color, color, backgroundColor: '#05070ce6', boxShadow: `0 0 12px ${color}66` }}
               >

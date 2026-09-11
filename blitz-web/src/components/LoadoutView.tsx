@@ -157,8 +157,11 @@ export function LoadoutView({
                   {unlocked && (
                     <div className="mt-auto w-full pt-1.5">
                       {!maxed && (
-                        <div className="h-1 w-full overflow-hidden rounded-full bg-bgAlt">
-                          <div className="h-full rounded-full" style={{ width: `${Math.min(100, (shards / needed) * 100)}%`, background: rarityColor }} />
+                        <div className="h-1 w-full overflow-hidden rounded-full border border-stroke/60 bg-bgAlt">
+                          <div
+                            className="h-full rounded-full"
+                            style={{ width: `${Math.max(4, Math.min(100, (shards / needed) * 100))}%`, background: rarityColor }}
+                          />
                         </div>
                       )}
                       <button

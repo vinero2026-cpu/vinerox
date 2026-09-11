@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useBlitzStore } from '@/lib/store';
 import { sound } from '@/lib/sound';
 import { newChest, rollChestReward, settleMatch } from '@/lib/economy';
@@ -67,6 +68,8 @@ export default function Page() {
     claimMilestone,
     claimDaily,
     consumeBonusBoosts,
+    seenBlitzTutorial,
+    markTutorialSeen,
     setHydrated,
   } =
     useBlitzStore();
@@ -226,12 +229,32 @@ export default function Page() {
     }
   };
 
-  if (!hydrated) return <div className="grid min-h-dvh place-items-center text-textFaint">Loading Blitz Arena…</div>;
+  if (!hydrated)
+    return (
+      <div className="grid min-h-dvh place-items-center bg-bg">
+        <div className="flex flex-col items-center gap-3">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1.1, repeat: Infinity, ease: 'linear' }}
+            className="grid h-12 w-12 place-items-center rounded-full border-2 border-gold/25 border-t-gold"
+          />
+          <span className="font-display text-sm font-bold uppercase tracking-widest text-textFaint">Loading Blitz Arena…</span>
+        </div>
+      </div>
+    );
 
   return (
     <div className="relative min-h-dvh">
       <AmbientBackground sentiment={sentiment} />
       <div className="relative z-10">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={stage}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.22, ease: 'easeOut' }}
+          >
         {stage === 'onboarding' && <OnboardingView onComplete={handleOnboardingComplete} />}
 
         {stage === 'lobby' && profile && (
@@ -326,6 +349,8 @@ export default function Page() {
             playerAvatar={profile.avatar}
             bonusBoosts={matchBonusBoosts}
             socket={socketRef.current}
+            showTutorial={!seenBlitzTutorial}
+            onTutorialDone={markTutorialSeen}
             onSentiment={setSentiment}
             onFinish={handleFinish}
           />
@@ -345,18 +370,30 @@ export default function Page() {
             }}
           />
         )}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
-      {HUB_STAGES.includes(stage) && (
-        <BottomNav
-          active={stage as NavStage}
-          onNavigate={(next) => setStage(next)}
-          onCompete={() => {
-            setSentiment(0);
-            setStage('loadout');
-          }}
-        />
-      )}
+      <AnimatePresence>
+        {HUB_STAGES.includes(stage) && (
+          <motion.div
+            key="bottom-nav"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 24 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+          >
+            <BottomNav
+              active={stage as NavStage}
+              onNavigate={(next) => setStage(next)}
+              onCompete={() => {
+                setSentiment(0);
+                setStage('loadout');
+              }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

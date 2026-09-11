@@ -65,21 +65,28 @@ export function TradingChart({ history, layers, leading, topInset, bottomInset }
     canvas.width = cssW * dpr;
     canvas.height = cssH * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, cssW, cssH);
 
     const width = cssW;
     const height = cssH;
     const padTop = topInset ?? 26;
     const padBottom = bottomInset ?? 46;
 
-    if (history.length < 2) return;
+    let raf = 0;
+    // Redraws every frame (not just on tick) so time-based glows/pulses
+    // (volume bars, sentiment sweep) actually animate instead of stepping
+    // once per second alongside the underlying price ticks.
+    const draw = () => {
+      ctx.clearRect(0, 0, width, height);
+      if (history.length < 2) {
+        raf = requestAnimationFrame(draw);
+        return;
+      }
     const prices = history.map((h) => h.price);
     const min = Math.min(...prices);
     const max = Math.max(...prices);
     const span = Math.max(0.5, max - min);
     const stepX = width / Math.max(1, history.length - 1);
     const toY = (p: number) => height - padBottom - ((p - min) / span) * (height - padTop - padBottom);
-    const points: Pt[] = history.map((h, i) => [i * stepX, toY(h.price)]);
     const accent = leading ? '#28e07f' : '#ff4d5e';
 
     // background grid + price axis labels
@@ -127,16 +134,18 @@ export function TradingChart({ history, layers, leading, topInset, bottomInset }
       ctx.restore();
     }
 
-    // volume profile — synthetic bars from price delta magnitude
+    // volume profile — synthetic bars from price delta magnitude, breathing
+    // in and out on a slow sine pulse so it reads as "alive", not static
     if (layers.includes('volume')) {
+      const pulse = 0.78 + 0.22 * Math.sin(Date.now() / 260);
       history.forEach((h, i) => {
         if (i === 0) return;
         const prev = history[i - 1]!;
         const delta = Math.abs(h.price - prev.price);
-        const barH = Math.min((height - padTop - padBottom) * 0.3, delta * 14 + 3);
+        const barH = Math.min((height - padTop - padBottom) * 0.3, delta * 14 + 3) * pulse;
         const grad = ctx.createLinearGradient(0, height - padBottom, 0, height - padBottom - barH);
         grad.addColorStop(0, 'rgba(58,140,255,0.15)');
-        grad.addColorStop(1, 'rgba(58,140,255,0.55)');
+        grad.addColorStop(1, 'rgba(58,140,255,0.6)');
         ctx.fillStyle = grad;
         ctx.fillRect(i * stepX - 2, height - padBottom - barH, 4, barH);
       });
@@ -162,7 +171,8 @@ export function TradingChart({ history, layers, leading, topInset, bottomInset }
       ctx.restore();
     }
 
-    // Bollinger bands — rolling volatility channel with translucent fill
+    // Bollinger bands — rolling volatility channel, neon glow so it reads as
+    // an energy tunnel rather than a plain line overlay.
     if (layers.includes('bollinger')) {
       const window = 10;
       const upper: Pt[] = [];
@@ -182,7 +192,9 @@ export function TradingChart({ history, layers, leading, topInset, bottomInset }
       ctx.closePath();
       ctx.fillStyle = 'rgba(47,224,200,0.08)';
       ctx.fill();
-      ctx.strokeStyle = 'rgba(47,224,200,0.55)';
+      ctx.shadowColor = '#2fe0c8';
+      ctx.shadowBlur = 10;
+      ctx.strokeStyle = 'rgba(47,224,200,0.9)';
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       smoothPath(ctx, upper);
@@ -193,7 +205,9 @@ export function TradingChart({ history, layers, leading, topInset, bottomInset }
       ctx.restore();
     }
 
-    // gradient area fill beneath the live price line
+    // live price line — smooth glowing curve with a soft gradient area fill
+    // beneath it (the requested reversion away from a candlestick chart).
+    const points: Pt[] = history.map((h, i) => [i * stepX, toY(h.price)]);
     ctx.save();
     const areaGrad = ctx.createLinearGradient(0, padTop, 0, height - padBottom);
     areaGrad.addColorStop(0, `${accent}33`);
@@ -207,7 +221,6 @@ export function TradingChart({ history, layers, leading, topInset, bottomInset }
     ctx.fill();
     ctx.restore();
 
-    // live price line with a soft glow
     ctx.save();
     ctx.shadowColor = accent;
     ctx.shadowBlur = 14;
@@ -322,6 +335,10 @@ export function TradingChart({ history, layers, leading, topInset, bottomInset }
     ctx.arc(lastPt[0], lastPt[1], 5.5, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
+      raf = requestAnimationFrame(draw);
+    };
+    raf = requestAnimationFrame(draw);
+    return () => cancelAnimationFrame(raf);
   }, [history, layers, leading, topInset, bottomInset]);
 
   return <canvas ref={ref} className="h-full w-full rounded-2xl" />;

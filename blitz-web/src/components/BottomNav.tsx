@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { CompeteIcon, HomeIcon, LeagueIcon, MasterIcon, RankIcon, ShopIcon } from './NavIcons';
+import { CompeteIcon, HomeIcon, LeagueIcon, RankIcon, ShopIcon } from './NavIcons';
 
 export type NavStage = 'lobby' | 'shop' | 'rank' | 'league' | 'master';
 
@@ -19,7 +19,6 @@ const SIDE_ITEMS: { id: NavStage; label: string; Icon: typeof HomeIcon }[] = [
 const RIGHT_ITEMS: { id: NavStage; label: string; Icon: typeof HomeIcon }[] = [
   { id: 'rank', label: 'Rank', Icon: RankIcon },
   { id: 'league', label: 'League', Icon: LeagueIcon },
-  { id: 'master', label: 'Master', Icon: MasterIcon },
 ];
 
 /** Fixed bottom navigation bar shown across every hub screen (home/shop/rank/
@@ -58,13 +57,22 @@ export function BottomNav({ active, onNavigate, onCompete }: Props) {
 
 function NavButton({ label, active, onClick, children }: { label: string; active: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
-    <button
+    <motion.button
       onClick={onClick}
-      className="grid w-14 place-items-center gap-0.5 rounded-2xl px-1 py-1.5 transition"
-      style={{ color: active ? '#2fe0c8' : '#7c879c', background: active ? 'rgba(47,224,200,.12)' : 'transparent' }}
+      whileTap={{ scale: 0.9 }}
+      className="relative grid w-14 place-items-center gap-0.5 rounded-2xl px-1 py-1.5 transition"
+      style={{ color: active ? '#2fe0c8' : '#7c879c' }}
     >
-      {children}
-      <span className="text-[9px] font-black uppercase tracking-wide">{label}</span>
-    </button>
+      {active && (
+        <motion.div
+          layoutId="navActivePill"
+          transition={{ type: 'spring', stiffness: 420, damping: 34 }}
+          className="absolute inset-0 rounded-2xl"
+          style={{ background: 'rgba(47,224,200,.12)' }}
+        />
+      )}
+      <span className="relative">{children}</span>
+      <span className="relative text-[9px] font-black uppercase tracking-wide">{label}</span>
+    </motion.button>
   );
 }

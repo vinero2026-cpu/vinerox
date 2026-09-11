@@ -30,11 +30,11 @@ export function RankView({ profile, wallet }: Props) {
           <span className="text-xs font-bold uppercase tracking-wider text-textDim">Current tier</span>
           <span className="font-display text-lg font-black text-teal">{tier}</span>
         </div>
-        <div className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-surface shadow-inner">
+        <div className="mt-3 h-2.5 w-full overflow-hidden rounded-full border border-stroke/70 bg-surface shadow-inner">
           <motion.div
             className="h-full rounded-full bg-gradient-to-r from-teal to-gold"
             initial={{ width: 0 }}
-            animate={{ width: `${pct * 100}%` }}
+            animate={{ width: `${Math.max(3, pct * 100)}%` }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
           />
         </div>

@@ -33,12 +33,14 @@ export function RewardTrack({ title, track, matchesPlayed, claimedMilestones, on
 
   return (
     <div className="mt-6">
-      <div className="mb-2 flex items-center justify-between">
-        <span className="text-xs font-bold uppercase tracking-wider text-textDim [text-shadow:0_1px_3px_rgba(0,0,0,.8)]">
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
+        <span className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-textDim [text-shadow:0_1px_3px_rgba(0,0,0,.8)]">
           {title}
-          {locked && <span className="ml-2 rounded-full border border-stroke px-1.5 py-0.5 text-[9px] normal-case text-textFaint">🔒 Coming soon</span>}
+          {locked && (
+            <span className="whitespace-nowrap rounded-full border border-stroke px-1.5 py-0.5 text-[9px] normal-case text-textFaint">🔒 Coming soon</span>
+          )}
         </span>
-        <span className="text-xs text-textFaint [text-shadow:0_1px_3px_rgba(0,0,0,.8)]">{matchesPlayed} matches played</span>
+        <span className="whitespace-nowrap text-xs text-textFaint [text-shadow:0_1px_3px_rgba(0,0,0,.8)]">{matchesPlayed} matches played</span>
       </div>
 
       <div className="scrollbar-hide relative snap-x snap-mandatory overflow-x-auto pb-3 pt-6" style={{ maskImage: 'linear-gradient(90deg, transparent, black 5%, black 95%, transparent)' }}>

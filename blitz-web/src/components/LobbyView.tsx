@@ -76,15 +76,18 @@ export function LobbyView({
         </button>
       </header>
 
-      <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-surface shadow-inner">
+      <div className="mt-4 flex items-center justify-between text-xs font-bold uppercase tracking-wider">
+        <span className="text-gold">{tier}</span>
+        {next && <span className="text-textFaint">Next: {next}</span>}
+      </div>
+      <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full border border-stroke/70 bg-surface shadow-inner">
         <motion.div
           className="h-full rounded-full bg-gradient-to-r from-teal to-gold"
           initial={{ width: 0 }}
-          animate={{ width: `${pct * 100}%` }}
+          animate={{ width: `${Math.max(3, pct * 100)}%` }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
         />
       </div>
-      {next && <div className="mt-1 text-right text-xs text-textFaint">Next: {next}</div>}
 
       <DailyBonusCard lastDailyClaim={lastDailyClaim} dailyStreak={dailyStreak} onClaim={onClaimDaily} />
 

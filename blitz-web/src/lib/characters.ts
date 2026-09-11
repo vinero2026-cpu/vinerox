@@ -20,6 +20,9 @@ export interface CharacterDef {
   /** Plain-language "explain it to a kid" description: what it measures,
    * why it helps, what info it adds — shown when tapping the level badge. */
   explain: string;
+  /** Short Hebrew UX tag shown under the in-match indicator dock icon
+   * (e.g. "שוק תנודתי") — a plain-language mood tag, not a translation of shortName. */
+  heLabel: string;
 }
 
 /** Each cockpit instrument is fronted by a character whose "spell" is that
@@ -35,6 +38,7 @@ export const CHARACTER_CATALOG: CharacterDef[] = [
     rarity: 'common',
     explain:
       'Bollinger Bands draw a stretchy tunnel around the price. A wide tunnel means the price is bouncing around a lot; a narrow tunnel means things are calm. When the price pokes outside the tunnel, it often snaps back — that\u2019s your clue for which way to call.',
+    heLabel: 'שוק תנודתי',
   },
   {
     id: 'volume',
@@ -45,6 +49,7 @@ export const CHARACTER_CATALOG: CharacterDef[] = [
     rarity: 'common',
     explain:
       'Volume measures how many trades are happening \u2014 like how loud the crowd is cheering. Tall bars mean lots of people are trading right now, which usually means the next move will be a bigger one.',
+    heLabel: 'לחץ קונים',
   },
   {
     id: 'vwap',
@@ -55,6 +60,7 @@ export const CHARACTER_CATALOG: CharacterDef[] = [
     rarity: 'rare',
     explain:
       'VWAP is the \u201cfair price\u201d line \u2014 the average price everyone has paid today. Above the line, buyers are winning the tug-of-war; below the line, sellers are winning. It tells you which team currently has the upper hand.',
+    heLabel: 'מחיר הוגן',
   },
   {
     id: 'macd',
@@ -65,6 +71,7 @@ export const CHARACTER_CATALOG: CharacterDef[] = [
     rarity: 'rare',
     explain:
       'MACD compares a fast-moving average and a slow-moving average. When the fast one catches up and crosses the slow one, it often means the direction is about to change \u2014 like the moment a runner overtakes the leader in a race.',
+    heLabel: 'שינוי מומנטום',
   },
   {
     id: 'rsi',
@@ -75,6 +82,7 @@ export const CHARACTER_CATALOG: CharacterDef[] = [
     rarity: 'rare',
     explain:
       'RSI is like a speedometer for the price, from 0 to 100. Above 70 means it\u2019s going \u201ctoo fast\u201d (overbought) and might slow down soon. Below 30 means it\u2019s \u201ctoo slow\u201d (oversold) and might speed back up.',
+    heLabel: 'קצב תנועה',
   },
   {
     id: 'fibonacci',
@@ -85,6 +93,7 @@ export const CHARACTER_CATALOG: CharacterDef[] = [
     rarity: 'epic',
     explain:
       'Fibonacci levels are invisible steps traders like to bounce off, based on a number pattern found all over nature. When the price pulls back after a move, it often pauses at one of these steps before continuing.',
+    heLabel: 'רמות תמיכה',
   },
   {
     id: 'heatmap',
@@ -95,6 +104,7 @@ export const CHARACTER_CATALOG: CharacterDef[] = [
     rarity: 'epic',
     explain:
       'The heatmap paints the background green or red depending on how many traders are feeling bullish (up) or bearish (down) right now \u2014 like a mood ring for the whole crowd watching the chart.',
+    heLabel: 'מצב רוח שוק',
   },
   {
     id: 'orderflow',
@@ -105,6 +115,7 @@ export const CHARACTER_CATALOG: CharacterDef[] = [
     rarity: 'legendary',
     explain:
       'Order Flow counts who is pushing harder right now \u2014 buyers or sellers \u2014 like an arm-wrestling match. The side with more pressure usually wins the next few seconds of price action.',
+    heLabel: 'לחץ קונים/מוכרים',
   },
   {
     id: 'sentiment',
@@ -115,6 +126,7 @@ export const CHARACTER_CATALOG: CharacterDef[] = [
     rarity: 'legendary',
     explain:
       'The Sentiment Radar listens to everyone\u2019s mood at once and shows which way the crowd is leaning. If most people are feeling \u201cup\u201d, the price often follows that crowd for a little while.',
+    heLabel: 'מגמת קהל',
   },
 ];
 
