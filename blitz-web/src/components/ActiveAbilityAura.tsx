@@ -33,8 +33,9 @@ export function ActiveAbilityAura({ activeLayers, characterLevels }: Props) {
           );
         })}
       </AnimatePresence>
-      {/* Left side, so it never collides with the right-side indicator cast dock. */}
-      <div className="pointer-events-none absolute left-3 top-1/2 z-10 flex -translate-y-1/2 flex-col items-start gap-1.5">
+      {/* Upper-left, above the left-side indicator cast dock (which sits
+          vertically centered), so the two never collide. */}
+      <div className="pointer-events-none absolute left-3 top-20 z-10 flex flex-col items-start gap-1.5">
         <AnimatePresence>
           {activeLayers.map((id) => {
             const char = characterFor(id);

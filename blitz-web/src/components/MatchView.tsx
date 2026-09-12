@@ -297,7 +297,9 @@ export function MatchView({ match, stake, loadout, characterLevels, playerName, 
       if (magnitude > 0.65) setShakeKey((k) => k + 1);
 
       // Tower Siege: a correct call fires a projectile at the rival's tower.
-      const dmg = Math.min(22, Math.abs(magnitude) * 22);
+      // Scaled so a realistic run of correct calls takes most of the match's
+      // durationSeconds to KO, instead of a handful of clicks in ~15s.
+      const dmg = Math.min(9, Math.abs(magnitude) * 6);
       const nextOppHp = Math.max(0, oppTowerHpRef.current - dmg);
       oppTowerHpRef.current = nextOppHp;
       setOppTowerHp(nextOppHp);
@@ -315,7 +317,7 @@ export function MatchView({ match, stake, loadout, characterLevels, playerName, 
       // Tower Siege: an ordinary miss (not the big reload penalty, which
       // already carries its own heavy consequence) takes a bite out of yours.
       if (!penaltyTriggered) {
-        const dmg = 6;
+        const dmg = 2;
         const nextMyHp = Math.max(0, myTowerHpRef.current - dmg);
         myTowerHpRef.current = nextMyHp;
         setMyTowerHp(nextMyHp);
@@ -382,9 +384,12 @@ export function MatchView({ match, stake, loadout, characterLevels, playerName, 
     sound.powerUp(rarityIntensity[char.rarity] ?? 0.5);
     setCastOverlay({ id, key: Date.now() });
     setTimeout(() => setCastOverlay(null), 950);
+    // Anchored to the chart's left edge (same column as ActiveAbilityAura's
+    // chip stack) so the rising icon burst never drifts up through the price
+    // line in the middle/right of the chart.
     const rect = chartRef.current?.getBoundingClientRect();
-    const x = rect ? rect.left + rect.width / 2 : window.innerWidth / 2;
-    const y = rect ? rect.top + rect.height / 2 : window.innerHeight * 0.5;
+    const x = rect ? rect.left + 40 : 40;
+    const y = rect ? rect.top + rect.height - 48 : window.innerHeight * 0.7;
     const burstId = Date.now();
     setBursts((b) => [...b, { id: burstId, x, y, icon: char.avatar, count: 10 }]);
     setTimeout(() => setBursts((b) => b.filter((burst) => burst.id !== burstId)), 1200);
@@ -550,8 +555,9 @@ export function MatchView({ match, stake, loadout, characterLevels, playerName, 
         <AbilityCastOverlay cast={castOverlay} />
 
         {/* Indicators panel — vertical stack of circular icon buttons with a
-            progress ring, replacing the old bottom row of ability buttons. */}
-        <div className="absolute right-2 top-1/2 z-20 flex -translate-y-1/2 flex-col gap-3">
+            progress ring. Kept on the LEFT so it never sits over the chart's
+            leading (right) edge, which is where the price trend is heading. */}
+        <div className="absolute left-2 top-1/2 z-20 flex -translate-y-1/2 flex-col gap-3">
           {loadout.map((id) => {
             const char = characterFor(id);
             const rarityColor = RARITY_COLOR[char.rarity];
@@ -614,15 +620,21 @@ export function MatchView({ match, stake, loadout, characterLevels, playerName, 
         <SiegeTower align="left" hpFraction={myTowerHp / 100} accent="#2fe0c8" hitKey={myHitKey} label="You" />
         <SiegeTower align="right" hpFraction={oppTowerHp / 100} accent={match.opponent.tierColor ?? '#ff4d5e'} hitKey={oppHitKey} label="Rival" />
         {projectiles.map((p) => {
-          const color = p.from === 'me' ? '#2fe0c8' : (match.opponent.tierColor ?? '#ff4d5e');
+          // A chunk knocked loose from whichever tower just took the hit,
+          // flying over to whoever landed it — "their building becomes
+          // yours", and vice versa on a miss. Tinted with the DEFENDER's
+          // tower color (the building it broke off of), not the attacker's.
+          const defenderColor = p.from === 'me' ? (match.opponent.tierColor ?? '#ff4d5e') : '#2fe0c8';
+          const hitSide = p.from === 'me' ? '92%' : '6%';
+          const landsSide = p.from === 'me' ? '6%' : '92%';
           return (
             <motion.div
               key={p.id}
-              initial={{ left: p.from === 'me' ? '6%' : '92%', bottom: '22%', opacity: 1 }}
-              animate={{ left: p.from === 'me' ? '92%' : '6%', bottom: ['22%', '34%', '20%'] }}
+              initial={{ left: hitSide, bottom: '22%', opacity: 1, rotate: 0 }}
+              animate={{ left: landsSide, bottom: ['22%', '34%', '20%'], rotate: 220 }}
               transition={{ duration: 0.42, ease: 'easeInOut' }}
-              className="pointer-events-none absolute z-10 h-1.5 w-7 -translate-x-1/2 rounded-full"
-              style={{ background: color, boxShadow: `0 0 10px ${color}` }}
+              className="pointer-events-none absolute z-10 h-3 w-3 -translate-x-1/2 rounded-sm"
+              style={{ background: defenderColor, boxShadow: `0 0 10px ${defenderColor}` }}
             />
           );
         })}
